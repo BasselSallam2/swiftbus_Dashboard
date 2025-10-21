@@ -1,0 +1,302 @@
+<%- include('header') %>
+    <!--/.navbar-->
+    <div class="body-content">
+        <div class="card-header">
+            <h6 class="fs-17 fw-semi-bold mb-0"><%=tickets[0].coustmer_name%></h6>
+            <h6 class="fs-17 fw-semi-bold mb-0"><%=tickets[0].coustmer_phone%></h6>
+
+            <div class="row g-2">
+    <div class="col-md-2">
+      <input type="text" id="filterTicketCode" class="form-control" placeholder="Ticket Code">
+    </div>
+    <div class="col-md-2">
+      <input type="date" id="filterDate" class="form-control">
+    </div>
+    <div class="col-md-2">
+      <input type="text" id="filterStation" class="form-control" placeholder="Station / City">
+    </div>
+    <div class="col-md-2">
+      <button type="button" class="btn btn-secondary w-100" id="resetFilters">Reset</button>
+    </div>
+  </div>
+</div>
+
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="text-end">
+                    
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table display table-bordered table-striped table-hover basic" id="agentlist">
+                        <thead>
+                            <tr>
+                                
+                                <th scope="col">Ticket Code</th>
+                                <th scope="col">Trip Go ID</th>
+                                <th scope="col">Trip Back ID</th>
+                                <th scope="col">Trip Go Date</th>
+                                <th scope="col">Trip Back Date</th>
+                                <th scope="col">Trip Route GO</th>
+                                <th scope="col">Trip Route Back</th>
+                                <th scope="col">Takeoff Station (GO)</th>
+                                <th scope="col">Arrival Station (GO)</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">PaymentMethod</th>
+                                <th scope="col">Settled</th>
+                                <th scope="col">Refunded</th>
+                                <th scope="col">Current Money</th>
+                                <th scope="col">Seats Counter</th>
+                                <th scope="col">Go Seats Number</th>
+                                <th scope="col">Back Seats Number</th>
+                                <th scope="col">Voucher</th>
+                                <th scope="col">Booked By</th>
+                                <th scope="col">Cancelled By</th>
+                                <th scope="col">Cancelation Reason</th>
+                                <th scope="col">Created At</th>
+                                <th scope="col">Action</th>
+
+                                <% for(let i = 0 ; i < tickets.length ; i++) { %>
+                                  
+                                       
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                
+                                <td><%=tickets[i].code%></td>
+                                <td><%=tickets[i].trip_go_id%></td>
+                                <td><%=tickets[i].tripBackId%></td>
+                                <td><%=tickets[i].trip_date%></td>
+                                <td><%=tickets[i].back_trip_date%></td>
+                                <td><%=tickets[i].trip_go_route%></td>
+                                <td><%=tickets[i].trip_back_route%></td>
+                                <td><%=tickets[i].GoStation%></td>
+                                <td><%=tickets[i].BackStation%></td>
+                                <td><%=tickets[i].status%></td>
+                                <td><%=tickets[i].price%></td>
+                                <td><%=tickets[i].paymentmethod%></td>
+                                <td><%=tickets[i].settled%></td>
+                                <td><%=tickets[i].refunded%></td>
+                                <td><%=tickets[i].currentmoney%></td>
+                                <td><%=tickets[i].seatsCounter%></td>
+                                <td><%=tickets[i].seats%></td>
+                                <td><%=tickets[i].Backseats%></td>
+                                <td><%=tickets[i].voucher%></td>
+                                <td><%=tickets[i].BookEmpolyee%></td>
+                                <td><%=tickets[i].CancellEmployee%></td>
+                                <td><%=tickets[i].cancelReason%></td>
+                                <td><%=tickets[i].CreatedAt%></td>
+
+                                <td>
+
+
+
+                                    <a href="/coustmer/ticket/<%=tickets[i].id%>" class="btn btn-sm btn-info text-white" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    
+                                </td>
+                            </tr>
+
+                            <% } %>
+                             <script>
+  const ticketCodeInput = document.getElementById("filterTicketCode");
+  const customerNameInput = document.getElementById("filterCustomerName");
+  const customerPhoneInput = document.getElementById("filterCustomerPhone");
+  const dateInput = document.getElementById("filterDate");
+  const stationInput = document.getElementById("filterStation");
+  const resetBtn = document.getElementById("resetFilters");
+
+  const table = document.getElementById("agentlist");
+  const rows = table.getElementsByTagName("tr");
+
+  function filterTable() {
+    const ticketCode = ticketCodeInput.value.toLowerCase();
+    const date = dateInput.value;
+    const station = stationInput.value.toLowerCase();
+
+    for (let i = 1; i < rows.length; i++) { // نبدأ من 1 عشان نتجنب الـ <thead>
+      let cells = rows[i].getElementsByTagName("td");
+      if (!cells.length) continue;
+
+      let code = cells[0].textContent.toLowerCase();
+      let tripDate = cells[3].textContent;
+      let backDate = cells[4].textContent;
+      let goStation = cells[7].textContent.toLowerCase();
+      let backStation = cells[8].textContent.toLowerCase();
+      let route = cells[5].textContent.toLowerCase();
+
+      let match = true;
+
+      if (ticketCode && !code.includes(ticketCode)) match = false;
+      if (station && !(goStation.includes(station) || route.includes(station) || backStation.includes(station))) match = false;
+
+      if (date) {
+        // بنشيك لو التاريخ موجود في أي من الرحلتين
+        let rowDate = tripDate.split("T")[0]; // assuming format ISO "2025-09-10T12:00"
+        let rowBackDate = backDate.split("T")[0];
+        if (rowDate !== date && rowBackDate !== date) {
+          match = false;
+        }
+      }
+
+      rows[i].style.display = match ? "" : "none";
+    }
+  }
+
+  ticketCodeInput.addEventListener("input", filterTable);
+  dateInput.addEventListener("change", filterTable);
+  stationInput.addEventListener("input", filterTable);
+
+  resetBtn.addEventListener("click", () => {
+    ticketCodeInput.value = "";
+    dateInput.value = "";
+    stationInput.value = "";
+    filterTable();
+  });
+</script>
+
+                            
+
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">The Following Data Will Be Deleted</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="confirmationMessage">
+                        <form action="#" method="post">
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                Agent
+                            </h5>
+                            <ul>
+                                <li style="list-style-type: none;">Agent 02 (2)</li>
+                            </ul>
+                            <br>
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                Ticket
+                            </h5>
+                            <ul>
+                                <li style="list-style-type: none;">TBLHZ9RKPI (21)</li>
+                                <li style="list-style-type: none;">TBX0SUT37F (22)</li>
+                            </ul>
+                            <br>
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                ticket ratings
+                            </h5>
+                            <ul>
+                                <li style="list-style-type: none;">4 good service (4)</li>
+                            </ul>
+                            <br>
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                PartialPaid
+                            </h5>
+                            <ul>
+                                <li style="list-style-type: none;">TBLHZ9RKPI- Paid amount: 2266 (21)</li>
+                                <li style="list-style-type: none;">TBX0SUT37F- Paid amount: 2266 (22)</li>
+                            </ul>
+                            <br>
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                TicketJourney List
+                            </h5>
+                            <ul>
+                                <li style="list-style-type: none;">John task on booking TBLHZ9RKPI (22)</li>
+                                <li style="list-style-type: none;"> on booking TBLHZ9RKPI (23)</li>
+                                <li style="list-style-type: none;">John task on booking TBX0SUT37F (24)</li>
+                                <li style="list-style-type: none;"> on booking TBX0SUT37F (25)</li>
+                            </ul>
+                            <br>
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                Payment MethodTotalAmount
+                            </h5>
+
+                            <ul>
+                                <li style="list-style-type: none;"> - Amount: 2266 (11)</li>
+                                <li style="list-style-type: none;"> - Amount: 2266 (12)</li>
+                            </ul>
+                            <br>
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                agent payments
+                            </h5>
+
+                            <ul>
+                                <li style="list-style-type: none;">Amount: 113.3 (4)</li>
+                                <li style="list-style-type: none;">Amount: 113.3 (5)</li>
+                            </ul>
+                            <br>
+
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                AgentTotal
+                            </h5>
+
+                            <ul>
+                                <li style="list-style-type: none;">Income: 2266 Expense: 0 (5)</li>
+                                <li style="list-style-type: none;">Income: 2266 Expense: 0 (6)</li>
+                            </ul>
+                            <br>
+
+
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                AgentCommission
+                            </h5>
+
+                            <ul>
+                                <li style="list-style-type: none;">113.3% on ticket TBLHZ9RKPI (4)</li>
+                                <li style="list-style-type: none;">113.3% on ticket TBX0SUT37F (5)</li>
+                            </ul>
+                            <br>
+                            <div class="text-end">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger">Confirm</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/.body content-->
+    </div>
+    <!--/.main content-->
+    </div>
+    <!--/.wrapper-->
+    <div class="overlay"></div>
+    </div>
+    </div>
+
+    </body>
+
+    <script src="js/metisMenu/metisMenu.min.js"></script>
+    <script src="js/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+    <!-- message hide -->
+    <script src="js/sidebar.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/dynamicinput.js"></script>
+
+    </html>

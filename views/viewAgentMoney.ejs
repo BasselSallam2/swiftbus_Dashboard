@@ -1,0 +1,274 @@
+<%- include('header') %>
+
+<div class="body-content">
+    <div class="card-header">
+        <h6 class="fs-17 fw-semi-bold mb-0">Agent Payment Details</h6>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <!-- Agent Information Section -->
+            <div class="agent-info p-3 mb-4 bg-light rounded">
+                <h5 class="fw-bold">Agent Information</h5>
+                <p><strong>Name:</strong> <%= Agent.name %></p>
+                <p><strong>Phone:</strong> <%= Agent.phone %></p>
+                <p><strong>Address:</strong> <%= Agent.address %></p>
+                <p><strong>Commission Percentage:</strong> <%= Agent.percentage %>%</p>
+                <input type="hidden" id="agentPercentage" value="<%= Agent.percentage %>">
+            </div>
+
+            <!-- Financial Summary -->
+            <div class="financial-summary p-3 mb-4 bg-light rounded">
+                <h5 class="fw-bold">Financial Summary</h5>
+                <p><strong>Total Sales:</strong> <span id="totalSales"><%=Agent.totalsales%></span> EGP</p>
+                <p>cash: <span id="totalSales"><%=Agent.cash%></span> EGP</p>
+                <p>visa: <span id="totalSales"><%=Agent.visa%></span> EGP</p>
+                <p>wallets: <span id="totalSales"><%=Agent.wallet%></span> EGP</p>
+                <p><strong>Needed Commissions:</strong> <span id="neededCommissions"><%=Agent.neededcommetions%></span> EGP</p>
+                <p><strong>Settled:</strong> <span id="settledAmount"><%=Agent.setteled || 0%></span> EGP</p>
+                <h1 class="text-center" style="font-size: 1.4rem;"><strong>Total Remaining:</strong> <span id="settledAmount"><%=Agent.neededcommetions-Agent.setteled%></span> EGP</h1>
+                <button class="btn btn-success" onclick="openSettlePopup()">Settle New Money</button>
+            </div>
+
+            <!-- Show Details Button -->
+            <div class="text-end">
+                <button class="btn btn-primary" onclick="toggleDetails()">Show Details</button>
+            </div>
+
+            
+
+            <!-- Details List (Initially Hidden) -->
+            <div class="table-responsive" id="detailsList" style="display: none;">
+
+                <!-- Filter Section -->
+<div class="filters mb-4 p-3 bg-light rounded">
+    <h5 class="fw-bold">Filters</h5>
+    <div class="row g-3">
+        <div class="col-md-4">
+            <label for="cityFilter" class="form-label">City Routes</label>
+            <select id="cityFilter" class="form-select">
+    <option value="">All</option>
+    <% 
+      // Collect unique full routes
+      let uniqueRoutes = new Set();
+      Agent.tickets.forEach(t => uniqueRoutes.add(t.city_Routes.join(", ")));
+      uniqueRoutes.forEach(route => { 
+    %>
+        <option value="<%= route %>"><%= route %></option>
+    <% }) %>
+</select>
+        </div>
+
+        <div class="col-md-3">
+            <label for="fromDate" class="form-label">From</label>
+            <input type="date" id="fromDate" class="form-control">
+        </div>
+
+        <div class="col-md-3">
+            <label for="toDate" class="form-label">To</label>
+            <input type="date" id="toDate" class="form-control">
+        </div>
+
+        <div class="col-md-2 d-flex align-items-end">
+            <button class="btn btn-primary w-100" onclick="applyFilters()">Apply</button>
+        </div>
+    </div>
+</div>
+
+<!-- Total Sum Result -->
+<div class="text-end mb-3">
+    <h5>Total Commissions (Filtered): <span id="totalFilteredPrice">0</span> EGP</h5>
+</div>
+
+
+                <table class="table display table-bordered table-striped table-hover basic" id="agentlist">
+                    <thead>
+                        <tr>
+                            <th scope="col">Tick number</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Cancelled By</th>
+                            <th scope="col">Cancellation Reason</th>
+                            <th scope="col">Trip Type</th>
+                            <th scope="col">Seat Counter</th>
+                            <th scope="col">City Routes</th>
+                            <th scope="col">Station Routes</th>
+                            <th scope="col">Trip Date</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Customer Name</th>
+                            <th scope="col">Customer Phone</th>
+                            <th scope="col">Payment Method</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      
+                        <% for(let i = 0; i < Agent.tickets.length; i++) { %>
+                            <tr>
+                                <td><%= Agent.tickets[i].ticketNumber %></td>
+                                <td><%= Agent.tickets[i].status %></td>
+                                <td><%= Agent.tickets[i].cancelled_by %></td>
+                                <td><%= Agent.tickets[i].cancel_reason %></td>
+                                <td><%= Agent.tickets[i].trip_type %></td>
+                                <td><%= Agent.tickets[i].seatsCounter %></td>
+                                <td><%= Agent.tickets[i].city_Routes.join(', ') %></td>
+                                <td><%= Agent.tickets[i].station_Routes.join(', ') %></td>
+                                <td><%= Agent.tickets[i].trip_date %></td>
+                                <td><%= Agent.tickets[i].price %></td>
+                                <td><%= Agent.tickets[i].coustmer_name %></td>
+                                <td><%= Agent.tickets[i].coustmer_phone %></td>
+                                <td><%= Agent.tickets[i].paymentMethod %></td>
+                            </tr>
+                            
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Settle New Money Modal -->
+<div id="settleModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeSettlePopup()">&times;</span>
+        <h5>Settle New Amount</h5>
+        <form id="settleForm" method="POST" action="/agent/<%= Agent.id %>/settle">
+            <input type="number" id="settleAmountInput" name="settleAmount" class="form-control mb-3" placeholder="Enter amount" min="0" required>
+            <button type="submit" class="btn btn-success">Confirm</button>
+        </form>
+    </div>
+</div>
+
+<!-- CSS for Modal -->
+<style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        width: 300px;
+        text-align: center;
+    }
+
+    .close {
+        float: right;
+        font-size: 20px;
+        cursor: pointer;
+    }
+</style>
+
+<!-- JavaScript -->
+<script>
+    // let totalSales = 10;
+    // let commissionPercentage = 20 ;
+    // let settledAmount = 0;
+
+    // document.getElementById("totalSales").textContent = totalSales;
+    // document.getElementById("neededCommissions").textContent = (totalSales * commissionPercentage / 100).toFixed(2);
+
+    function toggleDetails() {
+        let detailsList = document.getElementById("detailsList");
+        let button = document.querySelector(".btn-primary");
+
+        if (detailsList.style.display === "none") {
+            detailsList.style.display = "block";
+            button.textContent = "Hide Details";
+        } else {
+            detailsList.style.display = "none";
+            button.textContent = "Show Details";
+        }
+    }
+
+    function openSettlePopup() {
+        document.getElementById("settleModal").style.display = "flex";
+    }
+
+    function closeSettlePopup() {
+        document.getElementById("settleModal").style.display = "none";
+    }
+
+    function settleMoney() {
+        let inputAmount = parseFloat(document.getElementById("settleAmountInput").value);
+
+        if (isNaN(inputAmount) || inputAmount <= 0) {
+            alert("Please enter a valid amount.");
+            return;
+        }
+
+        settledAmount += inputAmount;
+        document.getElementById("settledAmount").textContent = settledAmount.toFixed(2);
+        document.getElementById("settleAmountInput").value = "";
+        closeSettlePopup();
+
+        
+    }
+</script>
+
+<script>
+function applyFilters() {
+    let percentage = parseFloat(document.getElementById("agentPercentage").value);
+    let route = document.getElementById("cityFilter").value.trim();
+    let fromDate = document.getElementById("fromDate").value;
+    let toDate = document.getElementById("toDate").value;
+
+    let rows = document.querySelectorAll("#agentlist tbody tr");
+    let totalPrice = 0;
+
+    rows.forEach(row => {
+        let routeCell = row.children[6].textContent.trim();  // full City Routes string
+        let tripDate = row.children[8].textContent.trim();   // Trip Date
+        let price = parseFloat(row.children[9].textContent) || 0;
+        let status = row.children[1].textContent.trim();     // Status column
+
+        let show = true;
+
+        // 🔹 Filter by full route
+        if (route && routeCell !== route) {
+            show = false;
+        }
+
+        // 🔹 Filter by date range
+        if (fromDate || toDate) {
+            let tripTime = new Date(tripDate).getTime();
+            if (fromDate && tripTime < new Date(fromDate).getTime()) show = false;
+            if (toDate && tripTime > new Date(toDate).getTime()) show = false;
+        }
+
+        if (show) {
+            row.style.display = "";
+            // 🔹 Only add price if ticket is Booked
+            if (status.toLowerCase() === "booked") {
+                totalPrice += (price * percentage / 100);
+            }
+        } else {
+            row.style.display = "none";
+        }
+       
+        
+    });
+
+    // Update filtered total
+    document.getElementById("totalFilteredPrice").textContent = totalPrice.toFixed(2);
+}
+</script>
+
+
+<!-- Scripts -->
+<script src="js/metisMenu/metisMenu.min.js"></script>
+<script src="js/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+<script src="js/sidebar.js"></script>
+<script src="js/common.js"></script>
+
+</html>

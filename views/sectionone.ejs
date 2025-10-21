@@ -1,0 +1,44 @@
+<%- include('header') %>
+<!--/.navbar-->
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4>Section One</h4>
+        </div>
+        <div class="card-body">
+            <img src="https://i.imgur.com/zyhYHlk.png" alt="Image" class="img-fluid mb-3">
+            <form action="/section1" method="POST">
+                <div class="mb-3">
+                    <label for="arabicphone" class="form-label">Arabic Phone</label>
+                    <input type="text" class="form-control" id="arabicphone" name="Arabicphone" placeholder="Enter Arabic phone" value="<%=Arabicone.phone %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="englishphone" class="form-label">English Phone</label>
+                    <input type="text" class="form-control" id="englishphone" name="Englishphone" placeholder="Enter English phone" value="<%=Englishone.phone %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="arabicworkinghours" class="form-label">Arabic Working Hours</label>
+                    <input type="text" class="form-control" id="arabicworkinghours" name="ArabicWorkingHours" placeholder="Enter Arabic working hours" value="<%=Arabicone.WorkingHours %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="englishworkinghours" class="form-label">English Working Hours</label>
+                    <input type="text" class="form-control" id="englishworkinghours" name="EnglishWorkingHours" placeholder="Enter English working hours" value="<%=Englishone.WorkingHours %>" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Settings</button>
+            </form>
+        </div>
+    </div>
+    <!--/.body content-->
+</div>
+<!--/.main content-->
+<div class="overlay"></div>
+</div>
+</div>
+</body>
+<script src="js/metisMenu/metisMenu.min.js"></script>
+<script src="js/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+<!-- message hide -->
+<script src="js/sidebar.js"></script>
+<script src="js/common.js"></script>
+<script src="js/dynamicinput.js"></script>
+</html>

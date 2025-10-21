@@ -1,0 +1,117 @@
+                <%- include('header') %>
+                <div class="body-content">
+                    <div class="card-header">
+                        <h6 class="fs-17 fw-semi-bold mb-0">Ticket Instructions </h6>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <img src="https://i.imgur.com/n31FWmI.png" alt="Image" class="img-fluid mb-3">
+
+                            <form action="/instructions" method="POST">
+                                <div class="bg-light p-3 my-2">
+                                    <strong class="mb-1">Edit Instructions</strong>
+                                    <div id="instructionsContainer">
+                                        <% for (let i = 0; i < ArabicInst.length; i++) { %>
+                                            <div class="row mt-2 instruction-row">
+                                                <div class="col-md-5">
+                                                    <label class="form-label">Arabic Instructions *</label>
+                                                    <input type="text" name="Arabicinst[]" class="form-control" value="<%= ArabicInst[i].Instructions %>" required />
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <label class="form-label">English Instructions *</label>
+                                                    <input type="text" name="Englishinst[]" class="form-control" value="<%= EnglishInst[i] ? EnglishInst[i].Instructions : '' %>" required />
+                                                </div>
+                                                <div class="col-md-2 mt-4">
+                                                    <button type="button" class="btn btn-danger" onclick="removeField(this)">×</button>
+                                    
+                                                    <!-- Show "+" button only on the last row -->
+                                                    <% if (i === ArabicInst.length - 1) { %>
+                                                        <button type="button" class="btn btn-success add-btn" onclick="addField()">+</button>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                        <% } %>
+                                    </div>
+            
+                                    
+                                <button type="submit" class="btn btn-success">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+</body>
+<script src="js/metisMenu/metisMenu.min.js"></script>
+<script src="js/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+<!-- message hide -->
+<script src="js/sidebar.js"></script>
+<script src="js/common.js"></script>
+<script> 
+  function addField() {
+    let container = document.getElementById("instructionsContainer");
+
+    // Remove the old "+" button before adding a new row
+    let existingAddButton = container.querySelector(".add-btn");
+    if (existingAddButton) {
+        existingAddButton.remove();
+    }
+
+    // Create a new row
+    let newRow = document.createElement("div");
+    newRow.className = "row mt-2 instruction-row";
+
+    let arabicDiv = document.createElement("div");
+    arabicDiv.className = "col-md-5";
+    arabicDiv.innerHTML = `
+        <label class="form-label">Arabic Instructions *</label>
+        <input type="text" name="Arabicinst[]" class="form-control" placeholder="ادخل تعليمات" required />
+    `;
+
+    let englishDiv = document.createElement("div");
+    englishDiv.className = "col-md-5";
+    englishDiv.innerHTML = `
+        <label class="form-label">English Instructions *</label>
+        <input type="text" name="Englishinst[]" class="form-control" placeholder="Enter Instructions" required />
+    `;
+
+    let removeDiv = document.createElement("div");
+    removeDiv.className = "col-md-2 mt-4";
+    removeDiv.innerHTML = `
+        <button class="btn btn-danger" onclick="removeField(this)">×</button>
+        <button type="button" class="btn btn-success add-btn" onclick="addField()">+</button>
+    `;
+
+    newRow.appendChild(arabicDiv);
+    newRow.appendChild(englishDiv);
+    newRow.appendChild(removeDiv);
+
+    container.appendChild(newRow);
+}
+
+function removeField(element) {
+    let row = element.parentElement.parentElement;
+    let container = document.getElementById("instructionsContainer");
+
+    // Remove the row
+    row.remove();
+
+    // Ensure the "+" button stays in the last row
+    let rows = container.getElementsByClassName("instruction-row");
+    if (rows.length > 0) {
+        let lastRow = rows[rows.length - 1];
+        let addButtonExists = lastRow.querySelector(".add-btn");
+        if (!addButtonExists) {
+            let addButton = document.createElement("button");
+            addButton.type = "button";
+            addButton.className = "btn btn-success add-btn";
+            addButton.innerText = "+";
+            addButton.onclick = addField;
+            lastRow.querySelector(".col-md-2.mt-4").appendChild(addButton);
+        }
+    }
+}
+
+    </script>
+
+</html>

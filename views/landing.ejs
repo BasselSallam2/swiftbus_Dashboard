@@ -1,0 +1,686 @@
+
+                <%- include('header') %>
+                <div class="body-content">
+                    <div class="row g-3">
+
+                        <% if(numbertrips) { %>
+                        <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                            <div
+                                class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-five">
+                                <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                    style="width: 8rem; height: 8rem;"></div>
+                                <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                    style="width: 6.5rem; height: 6.5rem;"></div>
+                                <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                    style="width: 5rem; height: 5rem;"></div>
+                                <span class="info-box-icon d-flex align-self-center text-center">
+                                    <img src="image/icone/img/icon/png/supplier.png" alt="" height="64" width="64">
+                                </span>
+                                <div class="info-box-content d-flex flex-column justify-content-center">
+                                    <span class="info-box-text fw-bold fs-17px">Total Trip </span>
+                                    <span class="info-box-number d-block fw-black counter"><%=numbertrips%></span>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 70%"></div>
+                                    </div>
+                                    <div class="progress-description fs-14"><i class="fa fa-caret-down"></i>Until Now</div>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                            <!-- /.info-box -->
+                        </div>
+                        <!-- /.col -->
+
+                        <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                            <div
+                                class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-one">
+                                <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                    style="width: 8rem; height: 8rem;"></div>
+                                <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                    style="width: 6.5rem; height: 6.5rem;"></div>
+                                <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                    style="width: 5rem; height: 5rem;"></div>
+                                <span class="info-box-icon d-flex align-self-center text-center">
+                                    <img src="image/icone/img/icon/png/choices.png" width="64">
+                                </span>
+                                <div class="info-box-content d-flex flex-column justify-content-center">
+                                    <span class="info-box-text fw-bold fs-17px">Total Passenger</span>
+                                    <span class="info-box-number d-block fw-black counter"><%=numberpassenger%></span>
+                                    <div class="progress">
+                                        <div class="progress-bar w-75"></div>
+                                    </div>
+                                    <div class="progress-description fs-14"><i class="fa fa-caret-down"></i> Until Now</div>
+                                </div>
+                            </div>
+                            </div>
+                        
+                                <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                                    <div
+                                        class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-five">
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                            style="width: 8rem; height: 8rem;"></div>
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                            style="width: 6.5rem; height: 6.5rem;"></div>
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                            style="width: 5rem; height: 5rem;"></div>
+                                        <span class="info-box-icon d-flex align-self-center text-center">
+                                            <img src="https://cdn-icons-png.flaticon.com/512/2357/2357048.png" alt="" height="64" width="64">
+                                        </span>
+                                        <div class="info-box-content d-flex flex-column justify-content-center">
+                                            <span class="info-box-text fw-bold fs-17px">Booked Tickes</span>
+                                            <span class="info-box-number d-block fw-black counter"><%=BookedTickets%></span>
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: 70%"></div>
+                                            </div>
+                                            <div class="progress-description fs-14"><i class="fa fa-caret-down"></i>Until Now</div>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                    <!-- /.info-box -->
+                                </div>
+                                <!-- /.col -->
+
+                                <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                                    <div
+                                        class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-seven">
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                            style="width: 8rem; height: 8rem;"></div>
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                            style="width: 6.5rem; height: 6.5rem;"></div>
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                            style="width: 5rem; height: 5rem;"></div>
+                                        <span class="info-box-icon d-flex align-self-center text-center">
+                                            <img src="https://icons.iconarchive.com/icons/custom-icon-design/flatastic-1/512/cancel-icon.png" width="64">
+                                        </span>
+                                        <div class="info-box-content d-flex flex-column justify-content-center">
+                                            <span class="info-box-text fw-bold fs-17px">Cancelled Tickets</span>
+                                            <span class="info-box-number d-block fw-black counter"><%=CancelledTickets%></span>
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: 70%"></div>
+                                            </div>
+                                            <div class="progress-description fs-14"><i class="fa fa-caret-down"></i> Until Now</div>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                    <!-- /.info-box -->
+                                </div>
+                                <!-- /.col -->
+
+                                <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                                    <div class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-six">
+                                <div class=" position-br mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                        style="width: 8rem; height: 8rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                        style="width: 6.5rem; height: 6.5rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                        style="width: 5rem; height: 5rem;"></div>
+                                    <span class="info-box-icon d-flex align-self-center text-center">
+                                        <img src="https://cdn-icons-png.freepik.com/256/976/976438.png?semt=ais_hybrid" alt="" height="64" width="64">
+                                    </span>
+                                    <div class="info-box-content d-flex flex-column justify-content-center">
+                                        <span class="info-box-text fw-bold fs-17px">Pending Tickets</span>
+                                        <span class="info-box-number d-block fw-black counter"><%=PendingTickets%></span>
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: 70%"></div>
+                                        </div>
+                                        <div class="progress-description fs-14"><i class="fa fa-caret-down"></i> Until Now</div>
+                                    </div>
+                                    <!-- /.info-box-content -->
+                                </div>
+                                <!-- /.info-box -->
+                            </div>
+
+                            
+                            <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                                <div
+                                    class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-seven">
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                        style="width: 8rem; height: 8rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                        style="width: 6.5rem; height: 6.5rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                        style="width: 5rem; height: 5rem;"></div>
+                                    <span class="info-box-icon d-flex align-self-center text-center">
+                                        <img src="https://icons.iconarchive.com/icons/custom-icon-design/flatastic-1/512/cancel-icon.png" width="64">
+                                    </span>
+                                    <div class="info-box-content d-flex flex-column justify-content-center">
+                                        <span class="info-box-text fw-bold fs-17px">Absent Tickets</span>
+                                        <span class="info-box-number d-block fw-black counter"><%=AbsentTickets%></span>
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: 70%"></div>
+                                        </div>
+                                        <div class="progress-description fs-14"><i class="fa fa-caret-down"></i> Until Now</div>
+                                    </div>
+                                    <!-- /.info-box-content -->
+                                </div>
+                                <!-- /.info-box -->
+                            </div>
+                            <!-- /.col -->
+
+                            
+                            <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                                <div
+                                    class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-seven">
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                        style="width: 8rem; height: 8rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                        style="width: 6.5rem; height: 6.5rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                        style="width: 5rem; height: 5rem;"></div>
+                                    <span class="info-box-icon d-flex align-self-center text-center">
+                                        <img src="https://icons.iconarchive.com/icons/custom-icon-design/flatastic-1/512/cancel-icon.png" width="64">
+                                    </span>
+                                    <div class="info-box-content d-flex flex-column justify-content-center">
+                                        <span class="info-box-text fw-bold fs-17px">Refunded Tickets</span>
+                                        <span class="info-box-number d-block fw-black counter"><%=RefundedTickets%></span>
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: 70%"></div>
+                                        </div>
+                                        <div class="progress-description fs-14"><i class="fa fa-caret-down"></i> Until Now</div>
+                                    </div>
+                                    <!-- /.info-box-content -->
+                                </div>
+                                <!-- /.info-box -->
+                            </div>
+                            <!-- /.col -->
+
+                            <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                                <div
+                                    class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-five">
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                        style="width: 8rem; height: 8rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                        style="width: 6.5rem; height: 6.5rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                        style="width: 5rem; height: 5rem;"></div>
+                                    <span class="info-box-icon d-flex align-self-center text-center">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/2357/2357048.png" alt="" height="64" width="64">
+                                    </span>
+                                    <div class="info-box-content d-flex flex-column justify-content-center">
+                                        <span class="info-box-text fw-bold fs-17px">Partial Paid Tickes</span>
+                                        <span class="info-box-number d-block fw-black counter"><%=PartialPaidTickets%></span>
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: 70%"></div>
+                                        </div>
+                                        <div class="progress-description fs-14"><i class="fa fa-caret-down"></i>Until Now</div>
+                                    </div>
+                                    <!-- /.info-box-content -->
+                                </div>
+                                <!-- /.info-box -->
+                            </div>
+                            <!-- /.col -->
+
+                            <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                                <div
+                                    class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-five">
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                        style="width: 8rem; height: 8rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                        style="width: 6.5rem; height: 6.5rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                        style="width: 5rem; height: 5rem;"></div>
+                                    <span class="info-box-icon d-flex align-self-center text-center">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/2510/2510743.png" alt="" height="64" width="64">
+                                    </span>
+                                    <div class="info-box-content d-flex flex-column justify-content-center">
+                                        <span class="info-box-text fw-bold fs-17px">Your Total Cash from Website </span>
+                                        <span class="info-box-number d-block fw-black counter"><%=cashWeb%> EGP</span>
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: 70%"></div>
+                                        </div>
+                                        <div class="progress-description fs-14"><i class="fa fa-caret-down"></i>Until Now</div>
+                                    </div>
+                                    <!-- /.info-box-content -->
+                                </div>
+                                <!-- /.info-box -->
+                            </div>
+                            <!-- /.col -->
+
+                            <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                                <div
+                                    class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-five">
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                        style="width: 8rem; height: 8rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                        style="width: 6.5rem; height: 6.5rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                        style="width: 5rem; height: 5rem;"></div>
+                                    <span class="info-box-icon d-flex align-self-center text-center">
+                                        <img src="https://cdn3d.iconscout.com/3d/free/thumb/free-credit-card-3d-illustration-download-in-png-blend-fbx-gltf-file-formats--master-logo-payment-debit-atm-business-pack-illustrations-3145175.png?f=webp" alt="" height="64" width="64">
+                                    </span>
+                                    <div class="info-box-content d-flex flex-column justify-content-center">
+                                        <span class="info-box-text fw-bold fs-17px">Your Total Visa from website</span>
+                                        <span class="info-box-number d-block fw-black counter"><%=visaWeb%> EGP</span>
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: 70%"></div>
+                                        </div>
+                                        <div class="progress-description fs-14"><i class="fa fa-caret-down"></i>Until Now</div>
+                                    </div>
+                                    <!-- /.info-box-content -->
+                                </div>
+                                <!-- /.info-box -->
+                            </div>
+                            <!-- /.col -->
+
+                         
+
+                            <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                                <div
+                                    class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-five">
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                        style="width: 8rem; height: 8rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                        style="width: 6.5rem; height: 6.5rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                        style="width: 5rem; height: 5rem;"></div>
+                                    <span class="info-box-icon d-flex align-self-center text-center">
+                                        <img src="https://cdn3d.iconscout.com/3d/premium/thumb/mobile-wallet-3d-icon-download-in-png-blend-fbx-gltf-file-formats--digital-payment-smartphone-financial-technology-pack-business-icons-7866331.png" alt="" height="64" width="64">
+                                    </span>
+                                    <div class="info-box-content d-flex flex-column justify-content-center">
+                                        <span class="info-box-text fw-bold fs-17px">Your Total Mobile Wallet from website</span>
+                                        <span class="info-box-number d-block fw-black counter"><%=WalletWeb%> EGP </span>
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: 70%"></div>
+                                        </div>
+                                        <div class="progress-description fs-14"><i class="fa fa-caret-down"></i>Until Now</div>
+                                    </div>
+                                    <!-- /.info-box-content -->
+                                </div>
+                                <!-- /.info-box -->
+                            </div>
+                            <!-- /.col -->
+
+                            <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                                <div
+                                    class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-five">
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                        style="width: 8rem; height: 8rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                        style="width: 6.5rem; height: 6.5rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                        style="width: 5rem; height: 5rem;"></div>
+                                    <span class="info-box-icon d-flex align-self-center text-center">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/2510/2510743.png" alt="" height="64" width="64">
+                                    </span>
+                                    <div class="info-box-content d-flex flex-column justify-content-center">
+                                        <span class="info-box-text fw-bold fs-17px">Your Total Cash from Agents</span>
+                                        <span class="info-box-number d-block fw-black counter"><%=cashAgents%> EGP</span>
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: 70%"></div>
+                                        </div>
+                                        <div class="progress-description fs-14"><i class="fa fa-caret-down"></i>Until Now</div>
+                                    </div>
+                                    <!-- /.info-box-content -->
+                                </div>
+                                <!-- /.info-box -->
+                            </div>
+                            <!-- /.col -->
+
+                            <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                                <div
+                                    class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-five">
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                        style="width: 8rem; height: 8rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                        style="width: 6.5rem; height: 6.5rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                        style="width: 5rem; height: 5rem;"></div>
+                                    <span class="info-box-icon d-flex align-self-center text-center">
+                                        <img src="https://cdn3d.iconscout.com/3d/free/thumb/free-credit-card-3d-illustration-download-in-png-blend-fbx-gltf-file-formats--master-logo-payment-debit-atm-business-pack-illustrations-3145175.png?f=webp" alt="" height="64" width="64">
+                                    </span>
+                                    <div class="info-box-content d-flex flex-column justify-content-center">
+                                        <span class="info-box-text fw-bold fs-17px">Your Total Visa From Agents</span>
+                                        <span class="info-box-number d-block fw-black counter"><%=visaAgents%> EGP</span>
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: 70%"></div>
+                                        </div>
+                                        <div class="progress-description fs-14"><i class="fa fa-caret-down"></i>Until Now</div>
+                                    </div>
+                                    <!-- /.info-box-content -->
+                                </div>
+                                <!-- /.info-box -->
+                            </div>
+                            <!-- /.col -->
+
+                         
+
+                            <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                                <div
+                                    class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-five">
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                        style="width: 8rem; height: 8rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                        style="width: 6.5rem; height: 6.5rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                        style="width: 5rem; height: 5rem;"></div>
+                                    <span class="info-box-icon d-flex align-self-center text-center">
+                                        <img src="https://cdn3d.iconscout.com/3d/premium/thumb/mobile-wallet-3d-icon-download-in-png-blend-fbx-gltf-file-formats--digital-payment-smartphone-financial-technology-pack-business-icons-7866331.png" alt="" height="64" width="64">
+                                    </span>
+                                    <div class="info-box-content d-flex flex-column justify-content-center">
+                                        <span class="info-box-text fw-bold fs-17px">Your Total Mobile Wallet From Agents</span>
+                                        <span class="info-box-number d-block fw-black counter"><%=WalletAgents%> EGP </span>
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: 70%"></div>
+                                        </div>
+                                        <div class="progress-description fs-14"><i class="fa fa-caret-down"></i>Until Now</div>
+                                    </div>
+                                    <!-- /.info-box-content -->
+                                </div>
+                                <!-- /.info-box -->
+                            </div>
+                            <!-- /.col -->
+
+
+
+                    <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                        <div
+                            class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-one">
+                            <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                style="width: 8rem; height: 8rem;"></div>
+                            <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                style="width: 6.5rem; height: 6.5rem;"></div>
+                            <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                style="width: 5rem; height: 5rem;"></div>
+                            <span class="info-box-icon d-flex align-self-center text-center">
+                                <img src="image/icone/img/icon/png/choices.png" width="64">
+                            </span>
+                            <div class="info-box-content d-flex flex-column justify-content-center">
+                                <span class="info-box-text fw-bold fs-17px">Total Money</span>
+                                <span class="info-box-number d-block fw-black counter"><%=totalmoney%></span>
+                                <div class="progress">
+                                    <div class="progress-bar w-75"></div>
+                                </div>
+                                <div class="progress-description fs-14"><i class="fa fa-caret-down"></i> Until Now</div>
+                            </div>
+                            <% } %>
+
+                            <% if(currentUser.type == "Agent") { %>
+
+
+                                <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                                    <div
+                                        class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-five">
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                            style="width: 8rem; height: 8rem;"></div>
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                            style="width: 6.5rem; height: 6.5rem;"></div>
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                            style="width: 5rem; height: 5rem;"></div>
+                                        <span class="info-box-icon d-flex align-self-center text-center">
+                                            <img src="https://cdn-icons-png.flaticon.com/512/2357/2357048.png" alt="" height="64" width="64">
+                                        </span>
+                                        <div class="info-box-content d-flex flex-column justify-content-center">
+                                            <span class="info-box-text fw-bold fs-17px">Booked Tickes</span>
+                                            <span class="info-box-number d-block fw-black counter"><%=booked_tickes%></span>
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: 70%"></div>
+                                            </div>
+                                            <div class="progress-description fs-14"><i class="fa fa-caret-down"></i>Until Now</div>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                    <!-- /.info-box -->
+                                </div>
+                                <!-- /.col -->
+
+                                <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                                    <div
+                                        class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-seven">
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                            style="width: 8rem; height: 8rem;"></div>
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                            style="width: 6.5rem; height: 6.5rem;"></div>
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                            style="width: 5rem; height: 5rem;"></div>
+                                        <span class="info-box-icon d-flex align-self-center text-center">
+                                            <img src="https://icons.iconarchive.com/icons/custom-icon-design/flatastic-1/512/cancel-icon.png" width="64">
+                                        </span>
+                                        <div class="info-box-content d-flex flex-column justify-content-center">
+                                            <span class="info-box-text fw-bold fs-17px">Cancelled Tickets</span>
+                                            <span class="info-box-number d-block fw-black counter"><%=cancelled_tickets%></span>
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: 70%"></div>
+                                            </div>
+                                            <div class="progress-description fs-14"><i class="fa fa-caret-down"></i> Until Now</div>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                    <!-- /.info-box -->
+                                </div>
+                                <!-- /.col -->
+
+                                <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                                    <div class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-six">
+                                <div class=" position-br mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                        style="width: 8rem; height: 8rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                        style="width: 6.5rem; height: 6.5rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                        style="width: 5rem; height: 5rem;"></div>
+                                    <span class="info-box-icon d-flex align-self-center text-center">
+                                        <img src="https://cdn-icons-png.freepik.com/256/976/976438.png?semt=ais_hybrid" alt="" height="64" width="64">
+                                    </span>
+                                    <div class="info-box-content d-flex flex-column justify-content-center">
+                                        <span class="info-box-text fw-bold fs-17px">Pending Tickets</span>
+                                        <span class="info-box-number d-block fw-black counter"><%=pending_tickets%></span>
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: 70%"></div>
+                                        </div>
+                                        <div class="progress-description fs-14"><i class="fa fa-caret-down"></i> Until Now</div>
+                                    </div>
+                                    <!-- /.info-box-content -->
+                                </div>
+                                <!-- /.info-box -->
+                            </div>
+
+                            <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                                <div
+                                    class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-five">
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                        style="width: 8rem; height: 8rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                        style="width: 6.5rem; height: 6.5rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                        style="width: 5rem; height: 5rem;"></div>
+                                    <span class="info-box-icon d-flex align-self-center text-center">
+                                        <img src="https://icons.iconarchive.com/icons/graphicloads/100-flat/256/percentage-icon.png" alt="" height="64" width="64">
+                                    </span>
+                                    <div class="info-box-content d-flex flex-column justify-content-center">
+                                        <span class="info-box-text fw-bold fs-17px">Your Percantge of money</span>
+                                        <span class="info-box-number d-block fw-black counter"><%=percentage%>%</span>
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: 70%"></div>
+                                        </div>
+                                        <div class="progress-description fs-14"><i class="fa fa-caret-down"></i>Until Now</div>
+                                    </div>
+                                    <!-- /.info-box-content -->
+                                </div>
+                                <!-- /.info-box -->
+                            </div>
+                            <!-- /.col -->
+
+
+                                <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                                    <div
+                                        class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-five">
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                            style="width: 8rem; height: 8rem;"></div>
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                            style="width: 6.5rem; height: 6.5rem;"></div>
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                            style="width: 5rem; height: 5rem;"></div>
+                                        <span class="info-box-icon d-flex align-self-center text-center">
+                                            <img src="https://cdn-icons-png.flaticon.com/512/2510/2510743.png" alt="" height="64" width="64">
+                                        </span>
+                                        <div class="info-box-content d-flex flex-column justify-content-center">
+                                            <span class="info-box-text fw-bold fs-17px">Your Total Cash Sales</span>
+                                            <span class="info-box-number d-block fw-black counter"><%=total_cash%> EGP</span>
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: 70%"></div>
+                                            </div>
+                                            <div class="progress-description fs-14"><i class="fa fa-caret-down"></i>Until Now</div>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                    <!-- /.info-box -->
+                                </div>
+                                <!-- /.col -->
+
+                                <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                                    <div
+                                        class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-five">
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                            style="width: 8rem; height: 8rem;"></div>
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                            style="width: 6.5rem; height: 6.5rem;"></div>
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                            style="width: 5rem; height: 5rem;"></div>
+                                        <span class="info-box-icon d-flex align-self-center text-center">
+                                            <img src="https://cdn3d.iconscout.com/3d/free/thumb/free-credit-card-3d-illustration-download-in-png-blend-fbx-gltf-file-formats--master-logo-payment-debit-atm-business-pack-illustrations-3145175.png?f=webp" alt="" height="64" width="64">
+                                        </span>
+                                        <div class="info-box-content d-flex flex-column justify-content-center">
+                                            <span class="info-box-text fw-bold fs-17px">Your Total Visa card Sales</span>
+                                            <span class="info-box-number d-block fw-black counter"><%=total_visa%> EGP</span>
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: 70%"></div>
+                                            </div>
+                                            <div class="progress-description fs-14"><i class="fa fa-caret-down"></i>Until Now</div>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                    <!-- /.info-box -->
+                                </div>
+                                <!-- /.col -->
+
+                             
+
+                                <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                                    <div
+                                        class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-five">
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                            style="width: 8rem; height: 8rem;"></div>
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                            style="width: 6.5rem; height: 6.5rem;"></div>
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                            style="width: 5rem; height: 5rem;"></div>
+                                        <span class="info-box-icon d-flex align-self-center text-center">
+                                            <img src="https://cdn3d.iconscout.com/3d/premium/thumb/mobile-wallet-3d-icon-download-in-png-blend-fbx-gltf-file-formats--digital-payment-smartphone-financial-technology-pack-business-icons-7866331.png" alt="" height="64" width="64">
+                                        </span>
+                                        <div class="info-box-content d-flex flex-column justify-content-center">
+                                            <span class="info-box-text fw-bold fs-17px">Your Total Mobile Wallet Sales</span>
+                                            <span class="info-box-number d-block fw-black counter"><%=total_wallet%> EGP </span>
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: 70%"></div>
+                                            </div>
+                                            <div class="progress-description fs-14"><i class="fa fa-caret-down"></i>Until Now</div>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                    <!-- /.info-box -->
+                                </div>
+                                <!-- /.col -->
+
+                                <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                                    <div
+                                        class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-five">
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                            style="width: 8rem; height: 8rem;"></div>
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                            style="width: 6.5rem; height: 6.5rem;"></div>
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                            style="width: 5rem; height: 5rem;"></div>
+                                        <span class="info-box-icon d-flex align-self-center text-center">
+                                            <img src="https://cdn-icons-png.flaticon.com/512/10384/10384161.png" alt="" height="64" width="64">
+                                        </span>
+                                        <div class="info-box-content d-flex flex-column justify-content-center">
+                                            <span class="info-box-text fw-bold fs-17px">Your Total Sales</span>
+                                            <span class="info-box-number d-block fw-black counter"><%=total_sales%> EGP </span>
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: 70%"></div>
+                                            </div>
+                                            <div class="progress-description fs-14"><i class="fa fa-caret-down"></i>Until Now</div>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                    <!-- /.info-box -->
+                                </div>
+                                <!-- /.col -->
+
+                                <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                                    <div
+                                        class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-five">
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                            style="width: 8rem; height: 8rem;"></div>
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                            style="width: 6.5rem; height: 6.5rem;"></div>
+                                        <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                            style="width: 5rem; height: 5rem;"></div>
+                                        <span class="info-box-icon d-flex align-self-center text-center">
+                                            <img src="https://images.vexels.com/media/users/3/263272/isolated/preview/513f5d260e57958943405d8abcbfd77e-money-business-falling-bills-icon.png" alt="" height="64" width="64">
+                                        </span>
+                                        <div class="info-box-content d-flex flex-column justify-content-center">
+                                            <span class="info-box-text fw-bold fs-17px">Your Needed Money </span>
+                                            <span class="info-box-number d-block fw-black counter"><%=commission%> EGP </span>
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: 70%"></div>
+                                            </div>
+                                            <div class="progress-description fs-14"><i class="fa fa-caret-down"></i>Until Now</div>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                    <!-- /.info-box -->
+                                </div>
+                                <!-- /.col -->
+
+                               
+
+                          
+                            <div class="col-sm-6 col-md-12 col-lg-6 col-xl-3 d-flex">
+                                <div
+                                    class="info-box d-flex position-relative rounded flex-fill w-100 overflow-hidden gradient-one">
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l3 opacity-3"
+                                        style="width: 8rem; height: 8rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l2 opacity-5"
+                                        style="width: 6.5rem; height: 6.5rem;"></div>
+                                    <div class="position-br	mb-n5 mr-n5 radius-round bgc-purple-l1 opacity-5"
+                                        style="width: 5rem; height: 5rem;"></div>
+                                    <span class="info-box-icon d-flex align-self-center text-center">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/2506/2506012.png" width="64">
+                                    </span>
+                                    <div class="info-box-content d-flex flex-column justify-content-center">
+                                        <span class="info-box-text fw-bold fs-17px">Your Collected Money</span>
+                                        <span class="info-box-number d-block fw-black counter"><%=Collected%> EGP </span>
+                                        <div class="progress">
+                                            <div class="progress-bar w-75"></div>
+                                        </div>
+
+                                      
+                                    </div>
+
+                                    
+
+                                    <% } %>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+                </div>
+                <!--/.body content-->
+            </div>
+            <!--/.main content-->
+        </div>
+        <!--/.wrapper-->
+        <div class="overlay"></div>
+    </div>
+
+
+    
+</body>
+
+<script src="js/metisMenu/metisMenu.min.js"></script>
+<script src="js/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+<!-- message hide -->
+<script src="js/sidebar.js"></script>
+<script src="js/common.js"></script>
+<script src="js/dynamicinput.js"></script>
+<script src="js/main-h.js"></script>
+</html>

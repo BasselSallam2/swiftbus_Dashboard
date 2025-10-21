@@ -1,0 +1,145 @@
+<%- include('header') %>
+<!--/.navbar-->
+<div class="body-content">
+    <div class="card-header">
+        <h6 class="fs-17 fw-semi-bold mb-0">Trips List</h6>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="text-end">
+                <a class="btn btn-success" href="/tripcreate">
+                    <i class="fas fa-user-plus"></i>
+                    Add New Trip
+                </a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover basic" id="agentlist">
+                    <thead>
+                        <tr>
+                            <th scope="col">Trip ID</th>
+                            <th scope="col">Trip City Routes</th>
+                            <th scope="col">Trip Station Routes</th>
+                            <th scope="col">Bus Type</th>
+                            <th scope="col">Date From</th>
+                            <th scope="col">Date To</th>
+                            <th scope="col">Holidays</th>
+                            <th scope="col">inactive</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for(let i = 0 ; i < trips.length ; i++) { %>
+                            <tr class="<%= trips[i].inactive ? 'inactive-row' : '' %>">
+                            <td><%= trips[i].id %></td>
+                            <td><%= trips[i].cityRoutes%></td>
+                            <td><%= trips[i].stationRoutes%></td>
+                            <td><%= trips[i].bus %></td>
+                            <td><%= trips[i].from %></td>
+                            <td><%= trips[i].to %></td>
+                            <td><%= trips[i].holidays %></td>
+                            <td><%= trips[i].inactive %></td>
+                      
+
+
+                            <td style="display: flex; gap: 5px;">
+                                <a href="/trip/<%=trips[i].id%>" class="btn btn-sm btn-info text-white" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="/trip/<%=trips[i].id%>/delete" class="btn btn-sm btn-danger text-white" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                                <a href="/trip/ticket/<%=trips[i].id%>" class="btn btn-sm btn-primary text-white" title="Tickets">
+                                    <i class="fas fa-ticket-alt"></i>
+                                </a>
+                               
+                                
+                               
+
+                            </td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">The Following Data Will Be Deleted</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="confirmationMessage">
+                <form action="#" method="post">
+                    <h5 style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                        Agent
+                    </h5>
+                    <ul>
+                        <li style="list-style-type: none;">Agent 02 (2)</li>
+                    </ul>
+                    <br>
+                    <h5 style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                        Ticket
+                    </h5>
+                    <ul>
+                        <li style="list-style-type: none;">TBLHZ9RKPI (21)</li>
+                        <li style="list-style-type: none;">TBX0SUT37F (22)</li>
+                    </ul>
+                    <br>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Confirm</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom CSS for Alternating Row Colors -->
+<style>
+    /* Ensure alternating colors work */
+    table tbody tr:nth-child(odd) {
+        background-color: #f8f9fa !important; /* Light gray */
+    }
+
+    table tbody tr:nth-child(even) {
+        background-color: #ffffff !important; /* White */
+    }
+
+    /* Ensure buttons are aligned next to each other */
+    .action-buttons {
+        display: flex;
+        gap: 5px;
+    }
+</style>
+
+<style>
+    /* Inactive rows: Low light / shutdown effect */
+    .inactive-row {
+        background-color: #d6d6d6 !important; /* Light gray */
+        color: #8a8a8a !important; /* Dimmed text */
+        opacity: 0.6; /* Slight transparency effect */
+    }
+
+    /* Ensure buttons are visible & fully functional */
+    .inactive-row .action-buttons a {
+        opacity: 1 !important; /* Keep buttons clear */
+    }
+</style>
+
+
+
+<!-- JavaScript and Scripts -->
+<script src="js/metisMenu/metisMenu.min.js"></script>
+<script src="js/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+<script src="js/sidebar.js"></script>
+<script src="js/common.js"></script>
+<script src="js/dynamicinput.js"></script>

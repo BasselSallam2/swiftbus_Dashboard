@@ -1,0 +1,101 @@
+<%- include('header') %>
+<!--/.navbar-->
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4>Section Three </h4>
+        </div>
+        <div class="card-body">
+            <img src="https://i.imgur.com/PHMeLEG.png" alt="Image" class="img-fluid mb-3">
+            <form action="/section3" method="POST">
+                
+                <div class="mb-3">
+                    <label for="arabictitle2" class="form-label">Picture</label>
+                    <input type="text" class="form-control" id="arabictitle2" name="picture" placeholder="Enter Picture URL" value="<%= Arabicthree.Title2Picture %>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="arabictitle2" class="form-label">Arabic Title 2</label>
+                    <input type="text" class="form-control" id="arabictitle2" name="ArabicTitle2" placeholder="Enter Arabic Title 2" value="<%= Arabicthree.Title2 %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="arabicsubtitle2" class="form-label">Arabic SubTitle 2</label>
+                    <input type="text" class="form-control" id="arabicsubtitle2" name="ArabicSubTitle2" placeholder="Enter Arabic SubTitle 2" value="<%= Arabicthree.SubTitle2 %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="arabicrightnumber" class="form-label">Arabic Right Number</label>
+                    <input type="text" class="form-control" id="arabicrightnumber" name="ArabicRightNumber" placeholder="Enter Arabic Right Number" value="<%= Arabicthree.RightNumber %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="arabicleftnumber" class="form-label">Arabic Left Number</label>
+                    <input type="text" class="form-control" id="arabicleftnumber" name="ArabicLeftNumber" placeholder="Enter Arabic Left Number" value="<%= Arabicthree.LeftNumber %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="arabictitlerightnumber" class="form-label">Arabic Title Right Number</label>
+                    <input type="text" class="form-control" id="arabictitlerightnumber" name="ArabicTitleRightNumber" placeholder="Enter Arabic Title Right Number" value="<%= Arabicthree.TitleRightNumber %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="arabicsubtitlerightnumber" class="form-label">Arabic SubTitle Right Number</label>
+                    <input type="text" class="form-control" id="arabicsubtitlerightnumber" name="ArabicSubTitleRightNumber" placeholder="Enter Arabic SubTitle Right Number" value="<%= Arabicthree.SubTitleRightNumber %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="arabictitleleftnumber" class="form-label">Arabic Title Left Number</label>
+                    <input type="text" class="form-control" id="arabictitleleftnumber" name="ArabicTitleLeftNumber" placeholder="Enter Arabic Title Left Number" value="<%= Arabicthree.TitleLeftNumber %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="arabicsubtitleleftnumber" class="form-label">Arabic SubTitle Left Number</label>
+                    <input type="text" class="form-control" id="arabicsubtitleleftnumber" name="ArabicSubTitleLeftNumber" placeholder="Enter Arabic SubTitle Left Number" value="<%= Arabicthree.SubTitleLeftNumber %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="englishtitle2" class="form-label">English Title 2</label>
+                    <input type="text" class="form-control" id="englishtitle2" name="EnglishTitle2" placeholder="Enter English Title 2" value="<%= Englishthree.Title2 %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="englishsubtitle2" class="form-label">English SubTitle 2</label>
+                    <input type="text" class="form-control" id="englishsubtitle2" name="EnglishSubTitle2" placeholder="Enter English SubTitle 2" value="<%= Englishthree.SubTitle2 %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="englishrightnumber" class="form-label">English Right Number</label>
+                    <input type="text" class="form-control" id="englishrightnumber" name="EnglishRightNumber" placeholder="Enter English Right Number" value="<%= Englishthree.RightNumber %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="englishleftnumber" class="form-label">English Left Number</label>
+                    <input type="text" class="form-control" id="englishleftnumber" name="EnglishLeftNumber" placeholder="Enter English Left Number" value="<%= Englishthree.LeftNumber %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="englishtitlerightnumber" class="form-label">English Title Right Number</label>
+                    <input type="text" class="form-control" id="englishtitlerightnumber" name="EnglishTitleRightNumber" placeholder="Enter English Title Right Number" value="<%= Englishthree.TitleRightNumber %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="englishsubtitlerightnumber" class="form-label">English SubTitle Right Number</label>
+                    <input type="text" class="form-control" id="englishsubtitlerightnumber" name="EnglishSubTitleRightNumber" placeholder="Enter English SubTitle Right Number" value="<%= Englishthree.SubTitleRightNumber %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="englishtitleleftnumber" class="form-label">English Title Left Number</label>
+                    <input type="text" class="form-control" id="englishtitleleftnumber" name="EnglishTitleLeftNumber" placeholder="Enter English Title Left Number" value="<%= Englishthree.TitleLeftNumber %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="englishsubtitleleftnumber" class="form-label">English SubTitle Left Number</label>
+                    <input type="text" class="form-control" id="englishsubtitleleftnumber" name="EnglishSubTitleLeftNumber" placeholder="Enter English SubTitle Left Number" value="<%= Englishthree.SubTitleLeftNumber %>" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg">Save Settings</button>
+            </form>
+        </div>
+    </div>
+    <!--/.body content-->
+</div>
+<!--/.main content-->
+<div class="overlay"></div>
+</div>
+</div>
+
+</body>
+
+<script src="js/metisMenu/metisMenu.min.js"></script>
+<script src="js/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+<!-- message hide -->
+<script src="js/sidebar.js"></script>
+<script src="js/common.js"></script>
+<script src="js/dynamicinput.js"></script>
+
+</html>

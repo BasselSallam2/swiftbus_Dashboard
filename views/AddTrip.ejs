@@ -1,0 +1,669 @@
+<%- include('header') %>
+
+    <div class="body-content">
+        <div class="card-header">
+            <h6 class="fs-17 fw-semi-bold mb-0">Add new Trip</h6>
+        </div>
+        <div class="card mb-4 custom-form">
+            <div class="card-body">
+                <% if(trip.id) { %>
+                    <form action="/trip/<%=trip.id%>" method="POST">
+                <% } else { %>
+                    <form action="/trip" method="POST">
+                <% } %>
+
+                    <!-- Date Inputs (YYYY-MM-DD) -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Date From</label>
+                            <input type="date" id="dateFrom" name="dateFrom" value="<%=data.from%>"  required>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label">Date To</label>
+                            <input type="date" id="dateTo" name="dateTo" value="<%=data.to%>" required>
+                        </div>
+                    </div>
+                    <!-- Multi-Selector Dropdown for Days -->
+<div class="mb-3">
+    <label class="form-label">Holidays</label>
+    <div class="custom-dropdown">
+        <button type="button" class="custom-dropdown-btn days-btn" 
+            onclick="toggleDropdown()" 
+            data-default-holidays='<%= JSON.stringify(data.holidays) %>'>
+            Select Days
+        </button>
+        <div class="custom-dropdown-content" id="dayDropdown">
+            <label><input type="checkbox" value="Sunday" onchange="updateSelection()"> Sunday</label>
+            <label><input type="checkbox" value="Monday" onchange="updateSelection()"> Monday</label>
+            <label><input type="checkbox" value="Tuesday" onchange="updateSelection()"> Tuesday</label>
+            <label><input type="checkbox" value="Wednesday" onchange="updateSelection()"> Wednesday</label>
+            <label><input type="checkbox" value="Thursday" onchange="updateSelection()"> Thursday</label>
+            <label><input type="checkbox" value="Friday" onchange="updateSelection()"> Friday</label>
+            <label><input type="checkbox" value="Saturday" onchange="updateSelection()"> Saturday</label>
+        </div>
+    </div>
+    <input type="hidden" name="selectedDays" id="selectedDays">
+</div>
+
+
+                    <!-- Multi-Selector Dropdown for Payment Methods -->
+                    <div class="mb-3">
+                        <label class="form-label">Payment Methods</label>
+                        <div class="custom-dropdown">
+                            <button type="button" class="custom-dropdown-btn payment-btn"
+                                onclick="toggleDropdown2()" data-default-payments='<%= JSON.stringify(data.payment) %>'>Select Payment Methods</button>
+                            <div class="custom-dropdown-content" id="payment-dropdown">
+                                <label><input type="checkbox" value="Cash" onchange="updateSelection2()">Cash</label>
+                                <label><input type="checkbox" value="Visa" onchange="updateSelection2()">Visa</label>
+                                <label><input type="checkbox" value="VFcash"
+                                        onchange="updateSelection2()">Wallets</label>
+                            </div>
+                        </div>
+                        <input type="hidden" name="payment" id="payment-input">
+                    </div>
+
+                    
+                <div class="mb-3" id="percentageField">
+                    <label for="percentage" class="form-label">Cash Limit</label>
+                    <input type="number" class="form-control" id="percentage" name="cashlimit" value="<%=data.cashlimit%>" placeholder="Enter cash limit">
+                </div>
+
+                    
+                <div class="mb-3" id="percentageField">
+                    <label for="percentage" class="form-label">Expire Hours</label>
+                    <input type="number" class="form-control" id="percentage" name="expireHours" value="<%=data.expirehours%>" placeholder="Enter expire hours">
+                </div>
+
+
+                <div class="mb-3">
+                    <label for="stationType" class="form-label">Select Bus </label>
+                    <select class="form-control" id="bus" name="bus" required onchange="updateSeats()">
+                        <% for(let bus of buses) { %>
+                        <option value="<%=bus.id%>" data-seats="<%=bus.seats%>" <%= data.bus == bus.type ? 'selected' : '' %>> <%=bus.type%> </option>
+                        <% } %>
+                    </select>
+                </div>
+                
+                <div class="mb-3" id="seats">
+                    <label for="percentage" class="form-label">Available Seats</label>
+                    <input type="number" class="form-control" id="seatsNumber" value="<%=data.seats%>" name="seats">
+                </div>
+
+
+                    <!-- Dynamic City Route Selector -->
+                    <div class="mb-3">
+                        <label class="form-label">Trip City Routes</label>
+                        <div id="cityRouteContainer" data-default-cities='<%= JSON.stringify(data.cityRoutes) %>'>
+                            <!-- Default first input row -->
+                            <div class="city-route-container" >
+                                <select name="cityRoutes[]" class="city-select" required>
+                                    <option value="" disabled selected>Select City</option>
+                                    <% for(let i=0 ; i < cities.length ; i++) { %>
+                                        <option id="<%=cities[i].name%>" value="<%=cities[i].id%>">
+                                            <%=cities[i].name%>
+                                        </option>
+                                        <% } %>
+                                </select>
+                                <button type="button" class="btn btn-add" onclick="addCityRoute()">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label class="form-label">Station Details</label>
+                        <div id="stationDetailsContainer" 
+                             data-default-stations='<%= JSON.stringify(data.stationIds) %>'
+                             data-default-times='<%= JSON.stringify(data.arrivalTimes) %>'>
+                            <!-- Default first input row -->
+                            <div class="station-detail-container">
+                                <select name="stationNames[]" class="station-select" required>
+                                    <option value="" disabled selected>Select Station</option>
+                                    <% for(let i=0 ; i < stations.length ; i++) { %>
+                                        <option value="<%= stations[i].id %>">
+                                            <%= stations[i].name %>
+                                        </option>
+                                    <% } %>
+                                </select>
+                                <input type="time" name="arriveTimes[]" class="arrive-time" required>
+                                <button type="button" class="btn btn-add" onclick="addStationDetails()">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ✅ Cost Inputs Section (Fixed) -->
+                    <div class="mb-3">
+                        <label class="form-label">Trip Costs</label>
+                        <div id="costInputsContainer" data-default-costs='<%= JSON.stringify(data.cost) %>'></div>
+                        <div id="costInputsContainer">
+                            <!-- Dynamic cost inputs will be generated here -->
+                        </div>
+                    </div>
+
+                    <!-- Inactive Checkbox -->
+                    <div class="mb-3">
+                        <label class="form-label">Inactive</label>
+                        <input type="checkbox" name="inactive" id="inactive" <%= data.inactive ? 'checked' : '' %>>
+                    </div>
+                  
+
+
+
+
+
+                    <!-- Submit Button -->
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-success" onclick="console.log('Submit button clicked');">Submit</button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+
+        </body>
+
+        <style>
+            .custom-form input[type="date"] {
+                width: 100%;
+                padding: 8px;
+                margin: 5px 0;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+
+            .custom-dropdown {
+                position: relative;
+                display: inline-block;
+                width: 100%;
+            }
+
+            .custom-dropdown-btn {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ccc;
+                background: white;
+                text-align: left;
+                cursor: pointer;
+                border-radius: 5px;
+            }
+
+            .custom-dropdown-content {
+                display: none;
+                position: absolute;
+                background: white;
+                border: 1px solid #ccc;
+                width: 100%;
+                max-height: 150px;
+                overflow-y: auto;
+                border-radius: 5px;
+                z-index: 1000;
+                /* Ensure it appears above other elements */
+            }
+
+            .custom-dropdown-content label {
+                display: block;
+                padding: 5px 10px;
+                cursor: pointer;
+            }
+
+            .custom-dropdown-content label:hover {
+                background: #f0f0f0;
+            }
+
+            /* Styling for input and dropdown */
+            .custom-form input[type="date"],
+            .custom-form select,
+            .city-route-container input {
+                width: 100%;
+                padding: 8px;
+                margin: 5px 0;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+
+            /* City Route Row */
+            .city-route-container {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 10px;
+            }
+
+            /* Button Styling */
+            .btn {
+                padding: 8px 12px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            .btn-add {
+                background: green;
+                color: white;
+            }
+
+            .btn-remove {
+                background: red;
+                color: white;
+            }
+        </style>
+
+        <script src="js/metisMenu/metisMenu.min.js"></script>
+        <script src="js/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+        <!-- message hide -->
+        <script src="js/sidebar.js"></script>
+        <script src="js/common.js"></script>
+
+
+        
+        <script>
+            function updateSeats() {
+                let busSelect = document.getElementById("bus");
+                let selectedOption = busSelect.options[busSelect.selectedIndex];
+                let seats = selectedOption.getAttribute("data-seats"); // Get seats from data attribute
+                document.getElementById("seatsNumber").value = seats; // Set seats in input field
+            }
+        
+            // Run this function on page load to set the seats automatically
+            window.onload = function() {
+                updateSeats();
+            };
+        </script>
+
+        <script>
+            function toggleDropdown() {
+                let dropdown = document.getElementById("dayDropdown");
+                dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+            }
+
+            function updateSelection() {
+                let checkboxes = document.querySelectorAll("#dayDropdown input[type='checkbox']");
+                let selected = Array.from(checkboxes).filter(checkbox => checkbox.checked).map(checkbox => checkbox.value);
+
+                document.querySelector(".days-btn").innerText = selected.length > 0 ? selected.join(", ") : "Select Days";
+                document.getElementById("selectedDays").value = selected.join(",");
+            }
+
+            function toggleDropdown2() {
+                let dropdown2 = document.getElementById("payment-dropdown");
+                dropdown2.style.display = dropdown2.style.display === "block" ? "none" : "block";
+            }
+
+            function updateSelection2() {
+                let checkboxes2 = document.querySelectorAll("#payment-dropdown input[type='checkbox']");
+                let selected2 = Array.from(checkboxes2).filter(checkbox => checkbox.checked).map(checkbox => checkbox.value);
+
+                document.querySelector(".payment-btn").innerText = selected2.length > 0 ? selected2.join(", ") : "Select Payment Methods";
+                document.getElementById("payment-input").value = selected2.join(",");
+            }
+        </script>
+
+
+        <script>
+            function addCityRoute() {
+                let container = document.getElementById("cityRouteContainer");
+
+                // Clone the first select element
+                let newRow = document.createElement("div");
+                newRow.classList.add("city-route-container");
+
+                newRow.innerHTML = `
+
+            <img src="https://pixsector.com/cache/0688783e/avbf566659ab2bdf82f87.png" alt="City Icon" style="width: 30px; height: 30px; display: block; margin: 0 auto 10px;">
+            <select name="cityRoutes[]" class="city-select" required onchange="updateCityOptions()">
+                <option value="" disabled selected>Select City</option>
+                <% for(let i = 0 ; i < cities.length ; i++) { %>
+                <option id="<%=cities[i].name%>"  value="<%=cities[i].id%>"><%=cities[i].name%></option>
+                <% } %>
+            </select>
+            
+            <button type="button" class="btn btn-remove" onclick="removeCityRoute(this)">-</button>
+            
+        `;
+
+                container.appendChild(newRow);
+                updateCityOptions();
+            }
+
+            function removeCityRoute(button) {
+                button.parentElement.remove();
+                updateCityOptions();
+            }
+
+            function updateCityOptions() {
+                let selects = document.querySelectorAll(".city-select");
+                let selectedValues = new Set();
+
+                // Collect all selected values
+                selects.forEach(select => {
+                    if (select.value) {
+                        selectedValues.add(select.value);
+                    }
+                });
+
+                // Update each select box
+                selects.forEach(select => {
+                    let options = select.querySelectorAll("option");
+
+                    options.forEach(option => {
+                        if (option.value && selectedValues.has(option.value) && option.value !== select.value) {
+                            option.style.display = "none";
+                        } else {
+                            option.style.display = "block";
+                        }
+                    });
+                });
+            }
+        </script>
+        <script>
+            function addStationDetails() {
+                let container = document.getElementById("stationDetailsContainer");
+
+                // Create a new station details row
+                let newRow = document.createElement("div");
+                newRow.classList.add("station-detail-container");
+
+                newRow.innerHTML = `
+            <select name="stationNames[]" class="station-select" required onchange="updateStationOptions(); updateCostInputs();">
+                <option value="" disabled selected>Select Station</option>
+                <% for(let i = 0 ; i < stations.length ; i++) { %>
+                <option value="<%=stations[i].id%>"><%=stations[i].name%></option>
+                <% } %>
+            </select>
+            <input type="time" name="arriveTimes[]" class="arrive-time" required>
+            <button type="button" class="btn btn-remove" onclick="removeStationDetails(this)">-</button>
+        `;
+
+                container.appendChild(newRow);
+                updateStationOptions();
+                updateCostInputs(); // ✅ Ensures costs update
+            }
+
+            function removeStationDetails(button) {
+                button.parentElement.remove();
+                updateStationOptions();
+                updateCostInputs(); // ✅ Ensures costs update
+            }
+
+            function updateStationOptions() {
+                let selects = document.querySelectorAll(".station-select");
+                let selectedValues = new Set();
+
+                selects.forEach(select => {
+                    if (select.value) selectedValues.add(select.value);
+                });
+
+                selects.forEach(select => {
+                    let options = select.querySelectorAll("option");
+                    options.forEach(option => {
+                        if (option.value && selectedValues.has(option.value) && option.value !== select.value) {
+                            option.style.display = "none";
+                        } else {
+                            option.style.display = "block";
+                        }
+                    });
+                });
+            }
+
+
+        </script>
+
+        <script>
+            function updateCostInputs() {
+                let container = document.getElementById("costInputsContainer");
+                container.innerHTML = ""; // ✅ Clear previous inputs
+
+                let selectedCities = Array.from(document.querySelectorAll(".city-select"))
+                    .map(select => select.options[select.selectedIndex]?.text) // Use value, not text
+                    .filter(Boolean);
+
+                // ✅ Generate cost input for every city-to-city route
+                for (let i = 0; i < selectedCities.length - 1; i++) {
+                    for (let j = i + 1; j < selectedCities.length; j++) {
+                        let fromCity = selectedCities[i];
+                        let toCity = selectedCities[j];
+
+                        let costRow = document.createElement("div");
+                        costRow.classList.add("cost-detail-container");
+
+                        costRow.innerHTML = `
+                    <label class="form-label">${fromCity} to ${toCity}</label>
+                    <input type="hidden" name="costRoutes[]" value="${fromCity} to ${toCity}">
+                    <input type="number" name="normalfare[]" placeholder="Normal Fare" required>
+                    <input type="number" name="specialfare[]" placeholder="Special Fare" required>
+                    <input type="number" name="twowaydiscount[]" placeholder="Two-way Discount" required>
+                `;
+
+                        container.appendChild(costRow);
+                    }
+                }
+
+                // ✅ Debugging - Check if inputs exist before form submission
+                console.log("Generated Cost Inputs:", container.innerHTML);
+            }
+
+            // ✅ Ensure cost section updates when user selects a city
+            document.addEventListener("change", function (event) {
+                if (event.target.classList.contains("city-select")) {
+                    updateCostInputs();
+                }
+            });
+        </script>
+
+<script>
+ 
+    function setDefaultPayments() {
+        let button = document.querySelector(".payment-btn");
+        let defaultSelectedPayments = JSON.parse(button.getAttribute("data-default-payments")); // Get array from HTML
+
+        let checkboxes = document.querySelectorAll("#payment-dropdown input[type='checkbox']");
+        let selectedPayments = [];
+
+        checkboxes.forEach(checkbox => {
+            if (defaultSelectedPayments.includes(checkbox.value)) {
+                checkbox.checked = true;
+                selectedPayments.push(checkbox.value);
+            }
+        });
+
+        button.innerText = selectedPayments.length > 0 ? selectedPayments.join(", ") : "Select Payment Methods";
+        document.getElementById("payment-input").value = selectedPayments.join(",");
+    }
+
+    // Run function on page load
+    window.onload = function() {
+        setDefaultPayments();
+        updateSeats(); // Keep the existing function call
+    };
+
+</script>
+
+<script>
+    function setDefaultHolidays() {
+    let button = document.querySelector(".days-btn");
+    let defaultSelectedHolidays = JSON.parse(button.getAttribute("data-default-holidays")); // Get array from HTML
+
+    let checkboxes = document.querySelectorAll("#dayDropdown input[type='checkbox']");
+    let selectedHolidays = [];
+
+    checkboxes.forEach(checkbox => {
+        if (defaultSelectedHolidays.includes(checkbox.value)) {
+            checkbox.checked = true;
+            selectedHolidays.push(checkbox.value);
+        }
+    });
+
+    button.innerText = selectedHolidays.length > 0 ? selectedHolidays.join(", ") : "Select Days";
+    document.getElementById("selectedDays").value = selectedHolidays.join(",");
+}
+
+// Run function on page load
+window.onload = function() {
+    setDefaultPayments();  // Payment Methods
+    setDefaultHolidays();  // Holidays
+    updateSeats();         // Keep the existing function call
+};
+
+</script>
+
+<script>
+    function setDefaultCityRoutes() {
+        let container = document.getElementById("cityRouteContainer");
+        let defaultCities = JSON.parse(container.getAttribute("data-default-cities")); // Get the cities array
+
+        let selects = document.querySelectorAll(".city-select");
+
+        // Ensure the correct number of dropdowns exist
+        while (selects.length < defaultCities.length) {
+            addCityRoute();
+            selects = document.querySelectorAll(".city-select");
+        }
+
+        // Assign values to each dropdown
+        selects.forEach((select, index) => {
+            if (defaultCities[index]) {
+                let options = select.options;
+                for (let i = 0; i < options.length; i++) {
+                    if (options[i].text === defaultCities[index]) {
+                        select.value = options[i].value;
+                        break;
+                    }
+                }
+            }
+        });
+    }
+
+    // Run function on page load
+    window.onload = function() {
+        setDefaultPayments();  // Payment Methods
+        setDefaultHolidays();  // Holidays
+        setDefaultCityRoutes(); // City Routes
+        updateSeats();         // Keep the existing function call
+    };
+</script>
+
+<script>
+ function setDefaultStations() {
+    let container = document.getElementById("stationDetailsContainer");
+    let defaultStations = JSON.parse(container.getAttribute("data-default-stations")); // Array of station names
+    let defaultTimes = JSON.parse(container.getAttribute("data-default-times")); // Array of arrival times
+
+    let selects = document.querySelectorAll(".station-select");
+    let timeInputs = document.querySelectorAll(".arrive-time");
+
+    // Ensure the correct number of dropdowns exist
+    while (selects.length < defaultStations.length) {
+        addStationDetails(); // Function that adds a new station dropdown dynamically
+        selects = document.querySelectorAll(".station-select");
+        timeInputs = document.querySelectorAll(".arrive-time");
+    }
+
+    // Assign values to each dropdown and input field
+    selects.forEach((select, index) => {
+        if (defaultStations[index]) {
+            let optionFound = false;
+            for (let option of select.options) {
+                if (option.text.trim() === defaultStations[index]) {  // Match by name
+                    select.value = option.value; // Set selected value
+                    optionFound = true;
+                    break;
+                }
+            }
+            if (!optionFound) {
+                console.error(`Station Name not found in dropdown: ${defaultStations[index]}`);
+            }
+        }
+
+        if (defaultTimes[index]) {
+            timeInputs[index].value = convertTo24HourFormat(defaultTimes[index]); // Set time value
+        }
+    });
+}
+
+// Convert AM/PM Time to 24-Hour Format (for input[type="time"])
+function convertTo24HourFormat(timeStr) {
+    let [time, modifier] = timeStr.split(" ");
+    let [hours, minutes] = time.split(":");
+    if (modifier === "PM" && hours !== "12") {
+        hours = parseInt(hours) + 12;
+    } else if (modifier === "AM" && hours === "12") {
+        hours = "00";
+    }
+    return `${hours.toString().padStart(2, '0')}:${minutes}`;
+}
+
+// Run function on page load
+window.onload = function() {
+    setDefaultPayments();   // Payment Methods
+    setDefaultHolidays();   // Holidays
+    setDefaultCityRoutes(); // City Routes
+    setDefaultStations();   // Station Details (Now matches by station name)
+    updateSeats();          // Keep the existing function call
+};
+
+
+
+
+</script>
+
+<script>
+    function setDefaultTripCosts() {
+        let costContainer = document.getElementById("costInputsContainer");
+        let tripCosts = JSON.parse(costContainer.getAttribute("data-default-costs")); // Get cost array
+
+        let costRows = document.querySelectorAll("#costInputsContainer .cost-detail-container");
+
+        costRows.forEach((row) => {
+            let fromToLabel = row.querySelector("label").innerText.trim(); // Get "Cairo to Tabaa"
+            let [fromCity, toCity] = fromToLabel.split(" to ").map(city => city.trim()); // Extract city names
+
+            let matchingCost = tripCosts.find(cost => cost.fromcity === fromCity && cost.tocity === toCity);
+
+            if (matchingCost) {
+                let inputs = row.querySelectorAll("input[type='number']");
+                inputs[0].value = matchingCost.fare;            // Normal Fare
+                inputs[1].value = matchingCost.specialfare;     // Special Fare
+                inputs[2].value = matchingCost.twowaydiscount;  // Two-way Discount
+            }
+        });
+    }
+
+    // Run function on page load
+    window.onload = function() {
+        setDefaultPayments();  // Payment Methods
+        setDefaultHolidays();  // Holidays
+        setDefaultCityRoutes(); // City Routes
+        setDefaultStations();   // Stations
+        setDefaultTripCosts();  // Trip Costs
+        updateSeats();         // Keep the existing function call
+    };
+</script>
+
+
+
+
+        <style>
+            .station-detail-container,
+            .cost-detail-container {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 10px;
+            }
+
+            .cost-detail-container input {
+                width: 100px;
+                padding: 5px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+            }
+        </style>
+
+
+
+
+
+
+        </html>

@@ -1,0 +1,160 @@
+import prisma from "../prisma/prisma.js";
+
+import { name } from "ejs";
+
+import path from "path";
+import { fileURLToPath } from "url";
+import PDFDocument from "pdfkit";
+import { generateTicketTablePDF } from "../util/service/Reservationprint.js";
+import {
+  ticketMapper,
+  ticketMapperBack,
+} from "../util/service/TicketMapper.js";
+
+function parseTime12h(timeStr) {
+  const [time, modifier] = timeStr.split(" "); // ["2:15", "AM"]
+  let [hours, minutes] = time.split(":").map(Number);
+
+  if (modifier === "PM" && hours !== 12) {
+    hours += 12;
+  }
+  if (modifier === "AM" && hours === 12) {
+    hours = 0;
+  }
+
+  return hours * 60 + minutes; // total minutes
+}
+
+export const Viewreservations = async (req, res, next) => {
+  try {
+    const Reservations = await prisma.reservation.findMany({
+      include: {
+        Trips: { include: { Bus: true } },
+      },
+    });
+
+    const MappedReservations = await Promise.all(
+      Reservations.map(async (reserve) => {
+        const routeIds = Array.isArray(reserve.Trips.routes)
+          ? reserve.Trips.routes.map((route) => route.toString())
+          : [];
+
+        const tripDetails = (
+          await prisma.stationDetails.findMany({
+            where: { trip_id: reserve.Trips.id },
+          })
+        ).sort((a, b) => {
+          return parseTime12h(a.arrivaleTime) - parseTime12h(b.arrivaleTime);
+        });
+
+        const tripTime = [
+          tripDetails[0].arrivaleTime,
+          tripDetails[tripDetails.length - 1].arrivaleTime,
+        ];
+        
+
+        let Route = await Promise.all(
+          routeIds.map(
+            async (route) =>
+              (
+                await prisma.city.findUnique({
+                  where: { id: route },
+                  select: { name: true },
+                })
+              ).name
+          )
+        );
+
+        return {
+          id: reserve.id,
+          trip_id: reserve.trip_id,
+          trip_date: reserve.trip_date,
+          reservedSeats_counter: reserve.reservedSeats_counter,
+          reservedSeats: reserve.reservedSeats,
+          available_seats:
+            reserve.Trips.avaliableseats - reserve.reservedSeats_counter,
+          bus: reserve.Trips.Bus.type,
+          route_names: Route,
+            trip_time: tripTime,
+        };
+      })
+    );
+
+    res.render("viewreservation", { reservations: MappedReservations });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const PrintReservation = async (req, res, next) => {
+  const { ID } = req.params;
+  try {
+    // --- استعلام واحد شامل ومُحسَّن ---
+    const reservation = await prisma.reservation.findUnique({
+      where: { id: ID },
+      include: {
+        Trips: {
+          include: {
+            Bus: true,
+            StationDetails: true,
+          },
+        },
+        // استخدام الأسماء الصحيحة كما هي في schema.prisma
+        Gotickets: {
+          where: { status: { not: "Cancelled" } },
+          include: { CoustmerID: true },
+        },
+        Backtickets: {
+          where: { status: { not: "Cancelled" } },
+          include: { CoustmerID: true },
+        },
+      },
+    });
+
+    // التأكد من وجود الحجز والرحلة قبل المتابعة
+    if (!reservation || !reservation.Trips) {
+      return res.status(404).json({ message: "Reservation not found." });
+    }
+
+    // استخلاص البيانات من الكائن المدمج وتحديث أسماء المتغيرات
+    const { Trips, Gotickets, Backtickets } = reservation;
+    const bustype = Trips.Bus.type;
+    const TripDate = reservation.trip_date;
+
+    // فرز تفاصيل المحطات
+    const tripDetails = Trips.StationDetails.sort(
+      (a, b) => parseTime12h(a.arrivaleTime) - parseTime12h(b.arrivaleTime)
+    );
+    const tripTime = [
+      tripDetails[0]?.arrivaleTime, // استخدام optional chaining لتجنب الأخطاء
+      tripDetails[tripDetails.length - 1]?.arrivaleTime,
+    ];
+
+    // جلب أسماء المدن لمسار الرحلة
+    const TripRouteArray = Array.isArray(Trips.routes)
+      ? Trips.routes
+      : Object.values(Trips.routes || {});
+
+    let TripRoute = [];
+    if (TripRouteArray.length > 0) {
+      const cities = await prisma.city.findMany({
+        where: { id: { in: TripRouteArray } },
+        select: { id: true, Arabicname: true },
+      });
+      const cityMap = Object.fromEntries(cities.map((c) => [c.id, c.Arabicname]));
+      TripRoute = TripRouteArray.map((id) => cityMap[id] || id);
+    }
+    
+    // افترض وجود هذه الدوال لديك
+    // Assuming these functions exist and are defined elsewhere in your project
+    const ResultGo = await ticketMapper(Gotickets);
+    const ResultBack = await ticketMapperBack(Backtickets);
+
+    // إنشاء وإرسال ملف PDF
+    generateTicketTablePDF(ResultGo, ResultBack, bustype, TripDate, TripRoute, tripTime, res);
+
+  } catch (error) {
+    // إرسال الخطأ إلى معالج الأخطاء في Express
+    next(error);
+  }
+};

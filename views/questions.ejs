@@ -1,0 +1,186 @@
+<%- include('header') %>
+
+<div class="body-content">
+    <div class="card-header">
+        <h6 class="fs-17 fw-semi-bold mb-0">Frequent Questions</h6>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form action="/questions" method="POST">
+                <!-- Arabic Questions Section -->
+                <div class="bg-light p-3 my-2">
+                    <strong class="mb-1">Arabic Questions</strong>
+                    <div id="arabicInstructionsContainer">
+                        <% for (let i = 0; i < ArabicQuestions.length; i++) { %>
+                            <div class="row mt-2 arabic-row">
+                                <div class="col-md-5">
+                                    <label class="form-label">Arabic Question</label>
+                                    <input type="text" name="Arabicquestion[]" class="form-control" value="<%= ArabicQuestions[i].question %>" required />
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="form-label">Arabic Answer</label>
+                                    <input type="text" name="Arabicanswer[]" class="form-control" value="<%= ArabicQuestions[i].answer %>" required />
+                                </div>
+                                <div class="col-md-2 mt-4 d-flex gap-2">
+                                    <button type="button" class="btn btn-danger" onclick="removeField(this)">×</button>
+
+                                    <!-- Show "+" button only on the last row of Arabic section -->
+                                    <% if (i === ArabicQuestions.length - 1) { %>
+                                        <button type="button" class="btn btn-success arabic-add-btn" onclick="addArabicField()">+</button>
+                                    <% } %>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+
+                <!-- English Questions Section -->
+                <div class="bg-light p-3 my-2">
+                    <strong class="mb-1">English Questions</strong>
+                    <div id="englishInstructionsContainer">
+                        <% for (let i = 0; i < EnglishQuestions.length; i++) { %>
+                            <div class="row mt-2 english-row">
+                                <div class="col-md-5">
+                                    <label class="form-label">English Question</label>
+                                    <input type="text" name="Englishquestion[]" class="form-control" value="<%= EnglishQuestions[i].question %>" required />
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="form-label">English Answer</label>
+                                    <input type="text" name="Englishanswer[]" class="form-control" value="<%= EnglishQuestions[i].answer %>" required />
+                                </div>
+                                <div class="col-md-2 mt-4 d-flex gap-2">
+                                    <button type="button" class="btn btn-danger" onclick="removeField(this)">×</button>
+
+                                    <!-- Show "+" button only on the last row of English section -->
+                                    <% if (i === EnglishQuestions.length - 1) { %>
+                                        <button type="button" class="btn btn-success english-add-btn" onclick="addEnglishField()">+</button>
+                                    <% } %>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="js/metisMenu/metisMenu.min.js"></script>
+<script src="js/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+<!-- message hide -->
+<script src="js/sidebar.js"></script>
+<script src="js/common.js"></script>
+<script> function addArabicField() {
+    let container = document.getElementById("arabicInstructionsContainer");
+
+    // Remove the old "+" button before adding a new row
+    let existingAddButton = container.querySelector(".arabic-add-btn");
+    if (existingAddButton) {
+        existingAddButton.remove();
+    }
+
+    // Create a new row
+    let newRow = document.createElement("div");
+    newRow.className = "row mt-2 arabic-row";
+
+    let arabicQuestionDiv = document.createElement("div");
+    arabicQuestionDiv.className = "col-md-5";
+    arabicQuestionDiv.innerHTML = `
+        <label class="form-label">Arabic Question</label>
+        <input type="text" name="Arabicquestion[]" class="form-control" placeholder="ادخل السؤال" required />
+    `;
+
+    let arabicAnswerDiv = document.createElement("div");
+    arabicAnswerDiv.className = "col-md-5";
+    arabicAnswerDiv.innerHTML = `
+        <label class="form-label">Arabic Answer</label>
+        <input type="text" name="Arabicanswer[]" class="form-control" placeholder="ادخل اجابة" required />
+    `;
+
+    let buttonDiv = document.createElement("div");
+    buttonDiv.className = "col-md-2 mt-4 d-flex gap-2";
+    buttonDiv.innerHTML = `
+        <button class="btn btn-danger" onclick="removeField(this)">×</button>
+        <button type="button" class="btn btn-success arabic-add-btn" onclick="addArabicField()">+</button>
+    `;
+
+    newRow.appendChild(arabicQuestionDiv);
+    newRow.appendChild(arabicAnswerDiv);
+    newRow.appendChild(buttonDiv);
+
+    container.appendChild(newRow);
+}
+
+function addEnglishField() {
+    let container = document.getElementById("englishInstructionsContainer");
+
+    // Remove the old "+" button before adding a new row
+    let existingAddButton = container.querySelector(".english-add-btn");
+    if (existingAddButton) {
+        existingAddButton.remove();
+    }
+
+    // Create a new row
+    let newRow = document.createElement("div");
+    newRow.className = "row mt-2 english-row";
+
+    let englishQuestionDiv = document.createElement("div");
+    englishQuestionDiv.className = "col-md-5";
+    englishQuestionDiv.innerHTML = `
+        <label class="form-label">English Question</label>
+        <input type="text" name="Englishquestion[]" class="form-control" placeholder="Enter question" required />
+    `;
+
+    let englishAnswerDiv = document.createElement("div");
+    englishAnswerDiv.className = "col-md-5";
+    englishAnswerDiv.innerHTML = `
+        <label class="form-label">English Answer</label>
+        <input type="text" name="Englishanswer[]" class="form-control" placeholder="Enter answer" required />
+    `;
+
+    let buttonDiv = document.createElement("div");
+    buttonDiv.className = "col-md-2 mt-4 d-flex gap-2";
+    buttonDiv.innerHTML = `
+        <button class="btn btn-danger" onclick="removeField(this)">×</button>
+        <button type="button" class="btn btn-success english-add-btn" onclick="addEnglishField()">+</button>
+    `;
+
+    newRow.appendChild(englishQuestionDiv);
+    newRow.appendChild(englishAnswerDiv);
+    newRow.appendChild(buttonDiv);
+
+    container.appendChild(newRow);
+}
+
+function removeField(element) {
+    let row = element.parentElement.parentElement;
+    let container = row.parentElement;
+
+    // Remove the row
+    row.remove();
+
+    // Ensure "+" button remains in the last row
+    let rows = container.getElementsByClassName(container.id === "arabicInstructionsContainer" ? "arabic-row" : "english-row");
+    if (rows.length > 0) {
+        let lastRow = rows[rows.length - 1];
+        let addButtonExists = lastRow.querySelector(".arabic-add-btn, .english-add-btn");
+        if (!addButtonExists) {
+            let addButton = document.createElement("button");
+            addButton.type = "button";
+            addButton.className = `btn btn-success ${container.id === "arabicInstructionsContainer" ? "arabic-add-btn" : "english-add-btn"}`;
+            addButton.innerText = container.id === "arabicInstructionsContainer" ? "+ Arabic" : "+ English";
+            addButton.onclick = container.id === "arabicInstructionsContainer" ? addArabicField : addEnglishField;
+            lastRow.querySelector(".col-md-2.mt-4").appendChild(addButton);
+        }
+    }
+}
+</script>
+
+</html>

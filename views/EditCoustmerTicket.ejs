@@ -1,0 +1,77 @@
+                <%- include('header') %>
+                <!--/.navbar-->
+                <div class="container mt-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Edit Ticket </h4>
+                        </div>
+                        <div class="card-body">
+                            <form action="/coustmer/ticket/<%=ticket.id%>" method="POST">
+                                <div class="mb-3">
+                                    <label for="status" class="form-label">Select Status</label>
+                                    <select class="form-control" id="status" name="status" required onchange="handleStatusChange()">
+                                        <option value="Booked" <%= ticket.status === 'Booked' ? 'selected' : '' %>>Booked</option>
+                                        <% if(CancelPermetion) { %>
+                                        <option value="Cancelled" <%= ticket.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+                                        <% } %>
+                                        <option value="Pending" <%= ticket.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                                        <option value="Partial Paid" <%= ticket.status === 'Partial Paid' ? 'selected' : '' %>>Partial Paid</option>
+                                        <% if(CancelPermetion) { %>
+                                        <option value="Absent" <%= ticket.status === 'Absent' ? 'selected' : '' %>>Absent</option>
+                                        <option value="Refunded" <%= ticket.status === 'Refunded' ? 'selected' : '' %>>Refunded</option>  
+                                        <% } %>              
+                                        </select>
+                                        </div>
+
+                                        <div class="mb-3" id="refundAmountDiv" style="display: none;">
+                                            <label for="refundAmount" class="form-label">Refund Amount</label>
+                                            <input type="number" class="form-control" id="refundAmount" name="refundAmount" value="<%= ticket.refundAmount%>">
+                                        </div>
+
+                                        <div class="mb-3" id="settledAmountDiv" style="display: none;">
+                                            <label for="settledAmount" class="form-label">Settled Amount</label>
+                                            <input type="number" class="form-control" id="settledAmount" name="settledAmount" value="<%= ticket.settledprice%>">
+                                        </div>
+
+                                        <div class="mb-3" id="cancellationReasonDiv" style="display: none;">
+                                            <label for="cancellationReason" class="form-label">Cancellation Reason</label>
+                                            <input type="text" class="form-control" id="cancellationReason" name="cancellationReason" value="<%= ticket.cancelReason%>">
+                                        </div>                <button type="submit" class="btn btn-primary">Save Settings</button>
+                            </form>
+                        </div>
+                    </div>
+                    <!--/.body content-->
+                </div>
+                <!--/.main content-->
+                <div class="overlay"></div>
+
+                <script src="js/metisMenu/metisMenu.min.js"></script>
+                <script src="js/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+                <!-- message hide -->
+                <script src="js/sidebar.js"></script>
+                <script src="js/common.js"></script>
+                <script src="js/dynamicinput.js"></script>
+
+                <script>
+                    function handleStatusChange() {
+                        var status = document.getElementById('status').value;
+                        var refundAmountDiv = document.getElementById('refundAmountDiv');
+                        var settledAmountDiv = document.getElementById('settledAmountDiv');
+                        var cancellationReasonDiv = document.getElementById('cancellationReasonDiv');
+
+                        refundAmountDiv.style.display = (status === 'Refunded') ? 'block' : 'none';
+                        settledAmountDiv.style.display = (status === 'Partial Paid') ? 'block' : 'none';
+                        cancellationReasonDiv.style.display = (status === 'Cancelled') ? 'block' : 'none';
+
+                        document.getElementById('refundAmount').required = (status === 'Refunded');
+                        document.getElementById('settledAmount').required = (status === 'Partial Paid');
+                        document.getElementById('cancellationReason').required = (status === 'Cancelled');
+                    }
+
+                    // Call the function on page load to set the initial visibility
+                    document.addEventListener('DOMContentLoaded', function() {
+                        handleStatusChange();
+                    });
+                </script>
+
+                </html>

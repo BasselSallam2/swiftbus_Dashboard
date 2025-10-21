@@ -1,0 +1,235 @@
+<%- include('header') %>
+    <!--/.navbar-->
+    <div class="body-content">
+        <div class="card-header">
+            <h6 class="fs-17 fw-semi-bold mb-0">Coustmers List</h6>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="text-end">
+                     <!-- Search Bar -->
+                <input type="number" id="searchInput" class="form-control mb-3" placeholder="Search by Phone Number..." onkeyup="searchCustomer()">
+            </div>
+                
+
+                <div class="table-responsive">
+                    <table class="table display table-bordered table-striped table-hover basic" id="agentlist">
+                        <thead>
+                            <tr>
+                                
+                                <th scope="col">Coustmer Name</th>
+                                <th scope="col">Coustmer Phone</th>
+                                <th scope="col">Number of Booked Tickets</th>
+                                <th scope="col">Coustmer Reserved Seats</th>
+                                <th scope="col">Coustmer Income Money</th>
+                                <th scope="col">Number of Cancelled Tickets</th>
+                                <th scope="col">Action</th>
+
+                                <% for(let i = 0 ; i < coustmer.length ; i++) { %>
+                                  
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                
+                                <td>
+                                    <a><%=coustmer[i].name%></a>
+                                </td>
+                                <td class="phone">
+                                    <a><%=coustmer[i].phone%></a>
+                                </td>
+                                <td>
+                                    <a><%=coustmer[i].tickets%></a>
+                                </td>
+
+                                <td>
+                                    <a><%=coustmer[i].seats%></a>
+                                </td>
+
+                                <td>
+                                    <a><%=coustmer[i].price%> EGP</a>
+                                </td>
+
+                                <td>
+                                    <a><%=coustmer[i].cancel%> </a>
+                                </td>
+
+                               
+                               
+
+                                <td>
+
+
+                                    <a href="/coustmer/<%=coustmer[i].id%>" class="btn btn-sm btn-warning text-white mt-2">
+                                        <i class="fas fa-money-bill-wave"></i> 
+                                        Show Tickets
+                                    </a>
+                                     <a href="/coustmer/edit/<%=coustmer[i].id%>" class="btn btn-sm btn-secondary text-white mt-2">
+                                        <i class="fas fa-pen"></i>
+                                        Edit Customer
+                                    </a>
+
+                                   
+                                </td>
+                            </tr>
+
+                            <% } %>
+
+
+                            
+
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">The Following Data Will Be Deleted</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="confirmationMessage">
+                        <form action="#" method="post">
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                Agent
+                            </h5>
+                            <ul>
+                                <li style="list-style-type: none;">Agent 02 (2)</li>
+                            </ul>
+                            <br>
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                Ticket
+                            </h5>
+                            <ul>
+                                <li style="list-style-type: none;">TBLHZ9RKPI (21)</li>
+                                <li style="list-style-type: none;">TBX0SUT37F (22)</li>
+                            </ul>
+                            <br>
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                ticket ratings
+                            </h5>
+                            <ul>
+                                <li style="list-style-type: none;">4 good service (4)</li>
+                            </ul>
+                            <br>
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                PartialPaid
+                            </h5>
+                            <ul>
+                                <li style="list-style-type: none;">TBLHZ9RKPI- Paid amount: 2266 (21)</li>
+                                <li style="list-style-type: none;">TBX0SUT37F- Paid amount: 2266 (22)</li>
+                            </ul>
+                            <br>
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                TicketJourney List
+                            </h5>
+                            <ul>
+                                <li style="list-style-type: none;">John task on booking TBLHZ9RKPI (22)</li>
+                                <li style="list-style-type: none;"> on booking TBLHZ9RKPI (23)</li>
+                                <li style="list-style-type: none;">John task on booking TBX0SUT37F (24)</li>
+                                <li style="list-style-type: none;"> on booking TBX0SUT37F (25)</li>
+                            </ul>
+                            <br>
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                Payment MethodTotalAmount
+                            </h5>
+
+                            <ul>
+                                <li style="list-style-type: none;"> - Amount: 2266 (11)</li>
+                                <li style="list-style-type: none;"> - Amount: 2266 (12)</li>
+                            </ul>
+                            <br>
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                agent payments
+                            </h5>
+
+                            <ul>
+                                <li style="list-style-type: none;">Amount: 113.3 (4)</li>
+                                <li style="list-style-type: none;">Amount: 113.3 (5)</li>
+                            </ul>
+                            <br>
+
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                AgentTotal
+                            </h5>
+
+                            <ul>
+                                <li style="list-style-type: none;">Income: 2266 Expense: 0 (5)</li>
+                                <li style="list-style-type: none;">Income: 2266 Expense: 0 (6)</li>
+                            </ul>
+                            <br>
+
+
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                AgentCommission
+                            </h5>
+
+                            <ul>
+                                <li style="list-style-type: none;">113.3% on ticket TBLHZ9RKPI (4)</li>
+                                <li style="list-style-type: none;">113.3% on ticket TBX0SUT37F (5)</li>
+                            </ul>
+                            <br>
+                            <div class="text-end">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger">Confirm</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/.body content-->
+    </div>
+    <!--/.main content-->
+    </div>
+    <!--/.wrapper-->
+    <div class="overlay"></div>
+    </div>
+    </div>
+
+    </body>
+
+    <script>
+        function searchCustomer() {
+            let input = document.getElementById("searchInput").value.toLowerCase();
+            let rows = document.querySelectorAll("#agentlist tbody tr");
+    
+            rows.forEach(row => {
+                let phone = row.querySelector(".phone").innerText.toLowerCase();
+                if (phone.includes(input)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+    </script>
+
+    <script src="js/metisMenu/metisMenu.min.js"></script>
+    <script src="js/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+    <!-- message hide -->
+    <script src="js/sidebar.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/dynamicinput.js"></script>
+
+    </html>

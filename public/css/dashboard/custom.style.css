@@ -1,0 +1,1306 @@
+@import url(../fontawesomeH/all.css);
+
+.SumoSelect {
+  width: 100%;
+}
+
+/* 
+* Login screen
+*/
+.login-section {
+  position: relative;
+  z-index: 2;
+}
+
+.watermark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-repeat: repeat;
+  filter: brightness(0.191) invert(0.85) opacity(0.25);
+}
+
+.login-splash {
+  margin-bottom: 2rem;
+}
+
+.login-splash h2,
+.login-splash h4 {
+  margin-top: 0;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #333;
+}
+
+.login-splash h4 {
+  font-size: 18px;
+}
+
+
+/* 
+* Element loader
+*/
+.page-loader-wrapper.elem-loader {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 8;
+}
+
+.inline-loader-wrapper .page-loader-wrapper {
+  background-color: transparent;
+  width: auto;
+  left: auto;
+  right: 10px;
+}
+
+/* 
+* Ticket booking custom styles
+*/
+.book-title {
+  display: inline-block;
+  font-size: 20px;
+  padding: 5px 10px;
+  font-weight: bolder;
+  border-bottom: 1px dashed #333;
+}
+
+.search-trip-single .col {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  border-right: 1px solid #eaeaea;
+}
+
+.search-trip-single .col h6 {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.search-trip-single .booking-area {
+  background-color: #cedddf;
+}
+
+.booking-area .loader {
+  padding: 50px 0;
+  text-align: center;
+}
+
+div.dt-buttonsdiv.dt-buttons {
+  display: none !important;
+}
+
+
+.trip-route-component .trip-route-con .list-component {
+  position: relative;
+  padding: 20px;
+  border-right: 1px solid #ecedf0;
+  border-left: 1px solid #ecedf0;
+  padding-bottom: 20px;
+  z-index: 1;
+  background: #fff;
+}
+
+.trip-route-component .trip-route-con .list-component .list-head {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.trip-route-component .trip-route-con .list-component .list-head h4 {
+  color: #252525;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 35px;
+  display: inline-block;
+}
+
+.trip-route-component .trip-route-con .list-component .list-head h4 span {
+  display: block;
+  color: #363636;
+  font-size: 14px;
+  line-height: 26px;
+  font-weight: normal;
+}
+
+.trip-route-component .trip-route-con .list-component .list-head div {
+  display: inline-block;
+  text-align: center;
+  color: #363636;
+  margin: 0 15px;
+  font-size: 0;
+}
+
+.trip-route-component .trip-route-con .list-component .list-head div .fa-bus,
+.trip-route-component .trip-route-con .list-component .list-head div .fa-user {
+
+  display: block;
+  line-height: 1;
+  font-size: 18px;
+  margin-bottom: -5px;
+}
+
+.trip-route-component .trip-route-con .list-component .list-head div .fa-long-arrow-alt-left {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.trip-route-component .trip-route-con .list-component .list {
+  position: relative;
+  border: 1px solid #ececee;
+  padding: 15px 10px;
+  margin: 10px 0;
+  align-items: center;
+  -webkit-align-items: center;
+  /* text-align: center; */
+  border-radius: 10px;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con {
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  display: flex;
+}
+
+.trip-route-component .trip-route-con .list-component .trip-date {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .right-side {
+  display: inline-flex;
+  align-items: flex-end;
+  position: relative;
+  gap: 10px;
+  max-width: 60%;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .right-side h4 {
+  color: var(--thr-color);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 23px;
+  display: inline-block;
+  margin: 0;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .right-side h4 p {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 23px;
+  color: var(--sec-color);
+  margin-bottom: 5px;
+  white-space: nowrap;
+  max-width: 105px;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .right-side h4 span {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 12px;
+  margin-right: 0;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .right-side .bus-icon {
+  display: inline-flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 10px;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .right-side .bus-icon i {
+  color: #c1c9d2;
+  font-size: 18px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .right-side .bus-icon span {
+  height: 3px;
+  width: 46px;
+  background-color: #c1c9d2;
+  display: block;
+  position: relative;
+  margin-bottom: 6px;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .right-side .bus-icon span::before {
+  content: "";
+  height: 7px;
+  width: 7px;
+  background-color: #c1c9d2;
+  border-radius: 50%;
+  position: absolute;
+  right: -7px;
+  top: -2px;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .right-side .bus-icon span::after {
+  content: "";
+  height: 7px;
+  width: 7px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  position: absolute;
+  left: -8px;
+  top: -3px;
+  border: 1px solid #c1c9d2;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .right-side h5 {
+  display: inline-block;
+  color: #798694;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 15px;
+  margin: 0;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .right-side h5 p {
+  color: #798694;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 7px;
+  max-width: 105px;
+  line-height: 1.6;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .right-side h5 span {
+  color: #798694;
+  font-size: 13px;
+  line-height: 15px;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .right-side h5 span {
+  color: #798694;
+  font-size: 10px;
+  line-height: 15px;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .left-side {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  justify-content: space-between;
+  width: 40%;
+  padding-inline-start: 10px;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .left-side .btn-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .left-side .btn {
+  height: auto;
+  min-width: 100px;
+  line-height: 34px;
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 5px;
+  min-height: auto;
+  padding: 3px 10px;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .left-side h4 {
+  position: relative;
+  color: #363636;
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 20px;
+  min-width: 60px;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .left-side h4 span {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.8;
+  color: #363636;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .services {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .services ul {
+  display: flex;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .services ul li {
+  width: 20px;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+}
+
+.svc-img {
+  width: 25px;
+  height: 25px;
+  object-fit: scale-down;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .services ul li span {
+  position: absolute;
+  display: none;
+  top: -27px;
+  font-size: 12px;
+  background: #ffffff;
+  font-weight: bold;
+  border: 0.25px solid #bfbfbf;
+  box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.15);
+  padding: 4px 10px;
+  white-space: nowrap;
+  font-weight: 500;
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 17px;
+  text-transform: uppercase;
+  color: #7e7e7e;
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .services ul li~li {
+  margin-inline-start: 5px;
+}
+
+.bus-class-name {
+  vertical-align: top;
+  min-width: 80px;
+  border-radius: 5px 0 5px 0;
+  background-color: #000;
+  font-size: 11px;
+  line-height: 17px;
+  display: inline-block;
+  color: #fff;
+  text-align: right;
+  padding: 0 5px;
+  font-weight: 700;
+}
+
+.bus-class-name-deluxe {
+  background-color: var(--sec-color);
+}
+
+.trip-route-component .trip-route-con .list-component .list .list-con .right-side strong {
+  min-width: 90px;
+  display: inline-block;
+  margin-inline-start: 5px;
+  white-space: nowrap;
+  cursor: pointer;
+  text-align: center;
+  display: none;
+}
+
+.sidebar-search {
+  position: static;
+}
+
+.sidebar-search.fixed {
+  position: fixed;
+  /* top: 20px;  */
+  /* right: 20px;  */
+}
+
+.trip-route-component .btn {
+  outline: none;
+  position: relative;
+  border: none !important;
+  padding: 18px 27px;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  -webkit-align-items: center;
+  justify-content: center;
+  min-width: 165.48px;
+  min-height: 53.34px;
+  border-radius: 2px;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 13.94px;
+  box-shadow: none !important;
+  z-index: 1;
+  background: #198754;
+}
+
+
+/* Start Booking-page */
+
+.bookig-inner {
+  margin: 0;
+  position: relative;
+  width: 100%;
+  /* border: 1px solid #dbdde0; */
+  border-radius: 11px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 20px 0 rgb(0 0 0 / 10%);
+  margin-bottom: 16px;
+  padding: 30px 20px;
+}
+
+.booking-details h4 {
+  color: #212121;
+  font-size: 14px;
+  line-height: 26px;
+  display: block;
+  margin: 0;
+}
+
+.booking-details h5 {
+  color: #212121;
+  font-size: 14px;
+  line-height: 26px;
+  display: block;
+}
+
+.booking-details h5 strong {
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 29px;
+  color: var(--sec-color);
+}
+
+.alert-h {
+  vertical-align: top;
+  min-width: 80px;
+  border-radius: 5px 0 5px 0;
+  background-color: var(--sec-color);
+  font-size: 11px;
+  line-height: 17px;
+  display: inline-block;
+  color: #fff;
+  text-align: center;
+  padding: 0 5px;
+  font-weight: 700;
+}
+
+.booking-bus .all-chairs {
+  direction: ltr;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 195px;
+  margin-inline-end: auto;
+  justify-content: space-between;
+  margin: 0;
+  transform: rotate(270deg) translateY(-51%);
+  margin-top: -25px;
+  height: 240px;
+  margin-bottom: 20px;
+}
+
+.booking-bus .all-chairs .driver {
+  width: 100%;
+}
+
+.booking-bus .all-chairs .driver,
+.booking-bus .all-chairs .items {
+  display: flex;
+  justify-content: space-between;
+  flex: 0 auto;
+  line-height: 28px;
+}
+
+.booking-bus .all-chairs .items {
+  justify-content: start;
+  width: 50%;
+  margin: 0;
+}
+
+.booking-bus .all-chairs .items:nth-child(odd) {
+  justify-content: end;
+}
+
+.booking-bus .all-chairs .driver .driver-h {
+  font-size: 25px;
+  color: #777;
+}
+
+.chair-h {
+  position: relative;
+  /* width: 100%; */
+  /* height: 100%; */
+  text-align: center;
+}
+
+.chair-h input {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.chair-h span {
+  font-size: 27px;
+  color: #666;
+}
+
+.chair-h span .num {
+  position: absolute;
+  inset: 0;
+  text-align: center;
+  font-size: 11px;
+  text-decoration: none;
+  padding-top: 0;
+  margin-top: -4px;
+}
+
+.booking-bus .all-chairs .items {
+  gap: 12px;
+}
+
+.chair-h span i {
+  font-weight: 100;
+  transition: all .3s;
+}
+
+.chair-h input:checked~span,
+.chair-h.selected span {
+  color: #fff;
+}
+
+.chair-h input:checked~span i,
+.chair-h.yourChair span i,
+.chair-h.selected span i {
+  font-weight: 700;
+  color: #15a415;
+}
+
+.chair-h.spcial-chair span {
+  color: yellow;
+}
+
+.chair-h.spcial-chair span i {
+  font-weight: 800;
+  color: #f3f30a;
+}
+
+.chair-h.spcial-chair span {
+  color: #333;
+}
+
+.chair-h.booking-chair span i {
+  font-weight: 800;
+  color: #e82323;
+}
+
+.chair-h.booking-chair span {
+  color: #fff;
+}
+
+.booking-bus .all-chairs .items:last-child {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.booking-bus .chairs-deatils {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+  gap: 5px;
+  max-width: 195px;
+  margin-inline-start: auto;
+  text-align: center;
+  justify-content: center;
+}
+
+.booking-bus .chairs-deatils span {
+  width: 25%;
+  font-size: 30px;
+  line-height: 20px;
+}
+
+.booking-bus .chairs-deatils span i {
+  font-weight: 100;
+}
+
+.booking-bus .chairs-deatils span span {
+  font-size: 12px;
+}
+
+.booking-bus .chairs-deatils span .available-chair {}
+
+.booking-bus .chairs-deatils span.booking-chair {
+  color: #e82323;
+}
+
+.booking-bus .chairs-deatils span.booking-chair i,
+.booking-bus .chairs-deatils span.spcial-chair i,
+.booking-bus .chairs-deatils span.my-chair i {
+  font-weight: bold;
+}
+
+.booking-bus .chairs-deatils span.spcial-chair {
+  color: #f3f30a;
+}
+
+.booking-bus .chairs-deatils span.my-chair {
+  color: #15a415;
+}
+
+.sidebar-booking {
+  margin: 0;
+  position: relative;
+  width: 100%;
+  /* border: 1px solid #dbdde0; */
+  border-radius: 11px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 20px 0 rgb(0 0 0 / 10%);
+  margin-bottom: 16px;
+  padding: 30px 20px;
+  max-width: 360px;
+  margin-inline-start: auto;
+}
+
+.sidebar-booking .sidebar-title {
+  padding: 0 0 10px;
+  margin: 0 0 10px;
+  border-bottom: 1px #ebebeb solid;
+}
+
+.sidebar-booking .sidebar-title h3 {
+  margin: 0;
+  color: #121212;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.sidebar-booking .sidebar-content ul {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.sidebar-booking .sidebar-content ul li {
+  width: 50%;
+  padding: 3px 0;
+  font-size: 12px;
+  color: #222222;
+  line-height: 1.6;
+}
+
+.sidebar-booking .sidebar-content ul li:nth-child(even) {
+  text-align: end;
+}
+
+.sidebar-booking .sidebar-content .sidebar-total {
+  padding: 10px 0;
+  margin: 10px 0;
+  border-top: 1px #ebebeb solid;
+  border-bottom: 1px #ebebeb solid;
+}
+
+.sidebar-booking .sidebar-content .sidebar-total h4,
+.sidebar-booking .sidebar-content .sidebar-code h4 {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 23px;
+  color: #222222;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 6px;
+  margin: 0;
+}
+
+.sidebar-booking .sidebar-content .sidebar-total h3 {
+  color: #363636;
+  font-family: "Montserrat", sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 24px;
+  display: flex;
+  width: 100%;
+  padding-bottom: 6px;
+  margin: 0;
+}
+
+.sidebar-booking .sidebar-content .sidebar-total span {
+  font-size: 10px;
+  color: #222222;
+  line-height: 1.4;
+}
+
+.sidebar-booking .sidebar-content .sidebar-code input {
+  width: 100%;
+  height: 40px;
+  max-width: 250px;
+  padding: 0 15px;
+  display: table;
+  margin: 0 0 10px;
+  border-radius: 5px;
+  border: 1px #eee solid;
+}
+
+.sidebar-booking .sidebar-content .sidebar-code button {
+  min-width: 100px;
+  min-height: 40px;
+  border: none !important;
+  box-shadow: none !important;
+  /* background: var(--thr-color); */
+  /* color: #fff; */
+  border-radius: 5px;
+}
+
+.sidebar-booking .sidebar-content .sidebar-code button:hover {
+  /* background: var(--sec-color); */
+}
+
+.booking-payment {
+  padding: 20px 0;
+  margin: 20px 0;
+  border-top: 1px #ebebeb solid;
+}
+
+.booking-payment .title-payment h3 {
+  height: 23px;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 0px;
+  color: #4cb749;
+}
+
+.booking-payment .title-payment .btn {
+  background: #4cb749;
+}
+
+.payment-title {
+  padding: 0 0 10px;
+  margin: 0 0 10px;
+  /* border-bottom: 1px #ebebeb solid; */
+}
+
+.payment-title h2 {
+  color: #121212;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 33px;
+  margin: 0;
+}
+
+.payment-faq .payment-content ul {
+  padding-inline-start: 20px;
+}
+
+.payment-faq .payment-content ul li {
+  display: list-item;
+  margin: 10px 0;
+  position: relative;
+  color: #212121;
+  line-height: 22px;
+  font-size: 14px;
+  list-style: disc;
+}
+
+.payment-faq .payment-content ul li::marker {
+  font-size: 17px;
+  color: var(--main-color);
+  position: relative;
+  top: 4px;
+}
+
+.payment-foot {
+  padding: 10px 0 0;
+  margin: 19px 0 0;
+  border-top: 1px #ebebeb solid;
+}
+
+.input-flex {
+  display: flex;
+  align-items: center;
+  -webkit-align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.input-flex p {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 0;
+  cursor: pointer;
+  margin: 0;
+}
+
+.input-flex p a {
+  color: var(--sec-color) !important;
+  text-decoration: underline !important;
+  margin: 0 2px;
+}
+
+.checkH {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.checkH label {
+  position: relative;
+}
+
+.checkH .action {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  z-index: 3;
+  opacity: 0;
+}
+
+.checkH span {
+  width: 60px;
+  display: block;
+  border: 2px #efefef solid;
+  height: 30px;
+  padding: 4px;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  -webkit-align-items: center;
+  justify-content: center;
+}
+
+.checkH span img {
+  max-width: 40px;
+}
+
+.checkH .action:checked~span {
+  border-color: var(--main-color);
+}
+
+.show-hide {
+  display: none;
+}
+
+.modal-header .btn-close {
+  margin: 0;
+}
+
+.faq-text h3 {
+  margin: 15px 0;
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--thr-color);
+}
+
+.faq-text p {
+  font-size: 14px;
+  line-height: 24px;
+  color: #333;
+}
+
+.bookig-inner2 {
+  margin: 0;
+  padding: 0;
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top: 1px #dddddd solid;
+}
+
+.checkH .radio {
+  padding: 0;
+}
+
+.checkH .radio label::before ,
+.checkH .radio label::after {
+  display: none !important;
+}
+
+.show-hide .form-group {
+  margin: 10px 0;
+}
+
+.bookig-inner .bookig-inner {
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+  border-top: 1px #eee solid;
+  padding-top: 27px;
+}
+
+.booking-bus .all-chairs.all-chairs24 {
+  transform: rotate(270deg) translateY(0);
+}
+
+/* End Booking-page */
+
+
+.info-box {
+  padding: 15px;
+  background-color: #fff;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.125), 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.info-box,
+.info-box>a {
+  color: #fff !important;
+}
+
+.info-box .info-box-icon {
+  font-size: 32px;
+  width: 64px;
+}
+
+.info-box .info-box-content {
+  /* line-height: 1.8; */
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding-left: 15px;
+}
+
+.info-box .info-box-number {
+  font-size: 30px;
+  line-height: 42px;
+}
+
+.info-box .progress {
+  height: 3px;
+  margin: 5px 0;
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.125);
+}
+
+.info-box .progress .progress-bar {
+  box-shadow: none;
+  background-color: #fff;
+}
+
+.gradient-one {
+  background: #43cea2;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #185a9d, #43cea2);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #185a9d, #43cea2);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.gradient-two {
+  background: #9D50BB;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #6E48AA, #9D50BB);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #6E48AA, #9D50BB);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.gradient-three {
+  background: #ADD100;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #7B920A, #ADD100);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #7B920A, #ADD100);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.gradient-four {
+  background: #00d2ff;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #3a7bd5, #00d2ff);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #3a7bd5, #00d2ff);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.gradient-five {
+  background: #FC354C;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #0ABFBC, #FC354C);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #0ABFBC, #FC354C);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.gradient-six {
+  background: #C04848;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #480048, #C04848);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #480048, #C04848);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.gradient-seven {
+  background: #7474BF;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #348AC7, #7474BF);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #348AC7, #7474BF);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.gradient-eight {
+  background: #3D7EAA;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #FFE47A, #3D7EAA);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #FFE47A, #3D7EAA);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.gradient-nine {
+  background: #4776E6;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #8E54E9, #4776E6);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #8E54E9, #4776E6);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.gradient-ten {
+  background: #FF8008;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #FFC837, #FF8008);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #FFC837, #FF8008);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.gradient-eleven {
+  background: #4CB8C4;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #3CD3AD, #4CB8C4);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #3CD3AD, #4CB8C4);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.gradient-twelve {
+  background: #1D2B64;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #F8CDDA, #1D2B64);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #F8CDDA, #1D2B64);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.gradient-thirteen {
+  background: #FF512F;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #DD2476, #FF512F);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #DD2476, #FF512F);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.gradient-fourteen {
+  background: #348F50;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #56B4D3, #348F50);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #56B4D3, #348F50);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.gradient-fifteen {
+  background: #16A085;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #F4D03F, #16A085);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #F4D03F, #16A085);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.gradient-sixteen {
+  background: #314755;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #26a0da, #314755);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #26a0da, #314755);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.position-b,
+.position-bc,
+.position-bl,
+.position-br,
+.position-center,
+.position-l,
+.position-lc,
+.position-r,
+.position-rc,
+.position-t,
+.position-tc,
+.position-tl,
+.position-tr {
+  position: absolute !important;
+  display: block;
+}
+
+.position-br {
+  right: 0;
+  top: 0;
+}
+
+.popover.limonPopover {
+  box-shadow: 2px 4px 15px -5px #666;
+}
+
+.apexcharts-tooltip {
+  /* background: #f3f3f3;
+  color: orange; */
+}
+
+.apexcharts-legend-series {
+  margin-bottom: 15px !important;
+}
+
+.apexcharts-tooltip.apexcharts-theme-light .apexcharts-tooltip-title {
+  background: #ffffff !important;
+  border-bottom: 1px solid #efefef !important;
+  ;
+}
+
+.apexcharts-tooltip-series-group.apexcharts-active,
+.apexcharts-tooltip-series-group:last-child {
+  padding-bottom: 0px !important;
+  ;
+}
+
+.apexcharts-tooltip-y-group {
+  padding: 2px 0 2px !important;
+  ;
+}
+
+.apexcharts-legend-marker {
+  top: 1px !important;
+}
+
+/* Customize Select2 Plugin  */
+.form-select~.select2-container {
+  display: inline-block;
+}
+
+.form-select~.select2-container--default .select2-selection--single {
+  height: auto;
+  padding: .375rem .75rem;
+  border: 1px solid #ced4da;
+}
+
+.form-select~.select2-container--default .select2-selection--single .select2-selection__rendered {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5em;
+}
+
+.form-select~.select2-container--default .select2-selection--single .select2-selection__arrow {
+  height: 100%;
+}
+
+/* Customize Sumo Select */
+.SumoSelect {
+  width: 100%
+}
+
+.SumoSelect>.CaptionCont {
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  padding: .375rem .75rem;
+  color: #212529;
+}
+
+.SumoSelect.open>.CaptionCont,
+.SumoSelect:focus>.CaptionCont,
+.SumoSelect:hover>.CaptionCont {
+  box-shadow: none;
+  border-color: #ced4da;
+}
+
+.SumoSelect>.CaptionCont>span.placeholder {
+  font-style: normal;
+  color: #888;
+}
+
+.SumoSelect>.CaptionCont>label>i {
+  background-image: none;
+  font-family: themify;
+  speak: none;
+  font-style: normal;
+  font-weight: 400;
+  font-variant: normal;
+  font-size: 12px
+}
+
+.SumoSelect>.CaptionCont>label>i {
+  width: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-width: 5px 4px 0 4px;
+  border-style: solid;
+  border-color: #888 transparent transparent transparent;
+  margin-left: -4px;
+  margin-top: -2px;
+  height: 0;
+}
+
+/* Customize clock picker plugin */
+.popover.clockpicker-popover.bottom.clockpicker-align-left {
+  border: 1px solid #ced4da;
+  box-shadow: 2px 3px 3px rgba(0,0,0,.11);
+}
+
+/* Customize date picker plugin */
+.date.datepicker {
+  padding: 0;
+}
+
+.date.datepicker .form-control {
+  background-color: transparent;
+}
+
+.datepicker-dropdown.datepicker-orient-bottom {
+  margin-top: 15px;
+}
+
+div.dt-buttons {
+    display: none !important;
+}
+
+.table-responsive .input-group {
+  margin-bottom: 30px;
+  justify-content: end;
+}
+
+.table-responsive .input-group input {
+  padding: 10px;
+  border: 1px #eee solid;
+}
+
+abbr[title] {
+  font-weight: 400;
+  text-decoration: none;
+  border: 0;
+  color: maroon
+}
+
+.field-icon {
+  float: right;
+  margin-left: -25px;
+  margin-top: -25px;
+  position: relative;
+  z-index: 2;
+}
+
+/** select all checkbox */
+.select-all-chck {
+  display: block;
+  font-size: 13px;
+  color: #666;
+  font-weight: normal;
+  margin-top: .375rem;
+  padding-top: .25rem;
+  border-top: 1px solid #ddd;
+  user-select: none;
+}

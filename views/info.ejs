@@ -1,0 +1,79 @@
+                <%- include('header') %>
+                <!--/.navbar-->
+                <
+ <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h4>Front - Info </h4>
+            </div>
+            <div class="card-body">
+                <img src="https://i.imgur.com/hPDeaOi.png" alt="Image" class="img-fluid mb-3">
+                <form action="/info" method="POST">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter email"  value="<%=info.email %>" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="facebook" class="form-label">Facebook</label>
+                        <input type="text" class="form-control" id="facebook" name="facebook"  placeholder="Facebook URL" value="<%= info.facebook%>" >
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="instagram" class="form-label">Instagram</label>
+                        <input type="text" class="form-control" id="instagram" name="instagram" placeholder="Instagram URL" value="<%=info.instegram%>">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="twitter" class="form-label">Twitter</label>
+                        <input type="text" class="form-control" id="twitter" name="twitter" placeholder="Twitter URL" value="<%=info.twiter%>">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="youtube" class="form-label">YouTube</label>
+                        <input type="text" class="form-control" id="youtube" name="youtube" placeholder="YouTube URL" value="<%=info.youtube%>">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="ArabicFooter" class="form-label">Arabic Footer</label>
+                        <input type="text" class="form-control" id="ArabicFooter" name="ArabicFooter" placeholder="Arabic Footer Text" value="<%=Arabicinfo.FooterTitle%>">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="EnglishFooter" class="form-label">English Footer</label>
+                        <input type="text" class="form-control" id="EnglishFooter" name="EnglishFooter" placeholder="English Footer Text" value="<%=Englsihinfo.FooterTitle%>">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="ArabicAddress" class="form-label">Arabic Address</label>
+                        <input type="text" class="form-control" id="ArabicAddress" name="ArabicAddress" placeholder="Arabic Address" value="<%=Arabicinfo.address%>">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="EnglishAddress" class="form-label">English Address</label>
+                        <input type="text" class="form-control" id="EnglishAddress" name="EnglishAddress" placeholder="English Address" value="<%=Englsihinfo.address%>">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Save Settings</button>
+                </form>                        </div>
+                    </div>
+                
+                    <!--/.body content-->
+                </div>
+                <!--/.main content-->
+            </div>
+            <!--/.wrapper-->
+            <div class="overlay"></div>
+        </div>
+    </div>
+
+</body>
+
+<script src="js/metisMenu/metisMenu.min.js"></script>
+<script src="js/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+<!-- message hide -->
+<script src="js/sidebar.js"></script>
+<script src="js/common.js"></script>
+<script src="js/dynamicinput.js"></script>
+
+</html>

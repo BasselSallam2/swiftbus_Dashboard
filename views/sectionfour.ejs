@@ -1,0 +1,111 @@
+<%- include('header') %>
+<!--/.navbar-->
+<
+<div class="container mt-4">
+<div class="card">
+<div class="card-header">
+<h4>Section Four </h4>
+</div>
+<div class="card-body">
+<form action="/section4" method="POST">
+    <img src="https://i.imgur.com/ABVpxc4.png" alt="Image" class="img-fluid mb-3">
+
+    <div class="mb-3">
+        <label for="arabicwhyustitle" class="form-label">Arabic Why Us Title</label>
+        <input type="text" class="form-control" id="arabicwhyustitle" name="ArabicWhyusTitle" placeholder="Enter Arabic Why Us Title" value="<%= Arabicfour.WhyusTitle %>" required>
+    </div>
+    <div class="mb-3">
+        <label for="arabicrighttoptitle" class="form-label">Arabic Right Top Title</label>
+        <input type="text" class="form-control" id="arabicrighttoptitle" name="ArabicRightTopTitle" placeholder="Enter Arabic Right Top Title" value="<%= Arabicfour.RightTopTitle %>" required>
+    </div>
+    <div class="mb-3">
+        <label for="arabicrighttopsubtitle" class="form-label">Arabic Right Top SubTitle</label>
+        <input type="text" class="form-control" id="arabicrighttopsubtitle" name="ArabicRightTopSubTitle" placeholder="Enter Arabic Right Top SubTitle" value="<%= Arabicfour.RightTopSubTitle %>" required>
+    </div>
+    <div class="mb-3">
+        <label for="arabiclefttoptitle" class="form-label">Arabic Left Top Title</label>
+        <input type="text" class="form-control" id="arabiclefttoptitle" name="ArabicLeftTopTitle" placeholder="Enter Arabic Left Top Title" value="<%= Arabicfour.LeftTopTitle %>" required>
+    </div>
+    <div class="mb-3">
+        <label for="arabiclefttopsubtitle" class="form-label">Arabic Left Top SubTitle</label>
+        <input type="text" class="form-control" id="arabiclefttopsubtitle" name="ArabicLeftTopSubTitle" placeholder="Enter Arabic Left Top SubTitle" value="<%= Arabicfour.LeftTopSubTitle %>" required>
+    </div>
+    <div class="mb-3">
+        <label for="arabicrightdowntitle" class="form-label">Arabic Right Down Title</label>
+        <input type="text" class="form-control" id="arabicrightdowntitle" name="ArabicRightDownTitle" placeholder="Enter Arabic Right Down Title" value="<%= Arabicfour.RightDownTitle %>" required>
+    </div>
+    <div class="mb-3">
+        <label for="arabicrightdownsubtitle" class="form-label">Arabic Right Down SubTitle</label>
+        <input type="text" class="form-control" id="arabicrightdownsubtitle" name="ArabicRightDownSubTitle" placeholder="Enter Arabic Right Down SubTitle" value="<%= Arabicfour.RightDownSubTitle %>" required>
+    </div>
+    <div class="mb-3">
+        <label for="arabicleftdowntitle" class="form-label">Arabic Left Down Title</label>
+        <input type="text" class="form-control" id="arabicleftdowntitle" name="ArabicLeftDownTitle" placeholder="Enter Arabic Left Down Title" value="<%= Arabicfour.LeftDownTitle %>" required>
+    </div>
+    <div class="mb-3">
+        <label for="arabicleftdownsubtitle" class="form-label">Arabic Left Down SubTitle</label>
+        <input type="text" class="form-control" id="arabicleftdownsubtitle" name="ArabicLeftDownSubTitle" placeholder="Enter Arabic Left Down SubTitle" value="<%= Arabicfour.LeftDownSubTitle %>" required>
+    </div>
+    <div class="mb-3">
+        <label for="englishwhyustitle" class="form-label">English Why Us Title</label>
+        <input type="text" class="form-control" id="englishwhyustitle" name="EnglishWhyusTitle" placeholder="Enter English Why Us Title" value="<%= Englishfour.WhyusTitle %>" required>
+    </div>
+    <div class="mb-3">
+        <label for="englishrighttoptitle" class="form-label">English Right Top Title</label>
+        <input type="text" class="form-control" id="englishrighttoptitle" name="EnglishRightTopTitle" placeholder="Enter English Right Top Title" value="<%= Englishfour.RightTopTitle %>" required>
+    </div>
+    <div class="mb-3">
+        <label for="englishrighttopsubtitle" class="form-label">English Right Top SubTitle</label>
+        <input type="text" class="form-control" id="englishrighttopsubtitle" name="EnglishRightTopSubTitle" placeholder="Enter English Right Top SubTitle" value="<%= Englishfour.RightTopSubTitle %>" required>
+    </div>
+    <div class="mb-3">
+        <label for="englishlefttoptitle" class="form-label">English Left Top Title</label>
+        <input type="text" class="form-control" id="englishlefttoptitle" name="EnglishLeftTopTitle" placeholder="Enter English Left Top Title" value="<%= Englishfour.LeftTopTitle %>" required>
+    </div>
+    <div class="mb-3">
+        <label for="englishlefttopsubtitle" class="form-label">English Left Top SubTitle</label>
+        <input type="text" class="form-control" id="englishlefttopsubtitle" name="EnglishLeftTopSubTitle" placeholder="Enter English Left Top SubTitle" value="<%= Englishfour.LeftTopSubTitle %>" required>
+    </div>
+    <div class="mb-3">
+        <label for="englishrightdowntitle" class="form-label">English Right Down Title</label>
+        <input type="text" class="form-control" id="englishrightdowntitle" name="EnglishRightDownTitle" placeholder="Enter English Right Down Title" value="<%= Englishfour.RightDownTitle %>" required>
+    </div>
+    <div class="mb-3">
+        <label for="englishrightdownsubtitle" class="form-label">English Right Down SubTitle</label>
+        <input type="text" class="form-control" id="englishrightdownsubtitle" name="EnglishRightDownSubTitle" placeholder="Enter English Right Down SubTitle" value="<%= Englishfour.RightDownSubTitle %>" required>
+    </div>
+    <div class="mb-3">
+        <label for="englishleftdowntitle" class="form-label">English Left Down Title</label>
+        <input type="text" class="form-control" id="englishleftdowntitle" name="EnglishLeftDownTitle" placeholder="Enter English Left Down Title" value="<%= Englishfour.LeftDownTitle %>" required>
+    </div>
+    <div class="mb-3">
+        <label for="englishleftdownsubtitle" class="form-label">English Left Down SubTitle</label>
+        <input type="text" class="form-control" id="englishleftdownsubtitle" name="EnglishLeftDownSubTitle" placeholder="Enter English Left Down SubTitle" value="<%= Englishfour.LeftDownSubTitle %>" required>
+    </div>
+
+
+    
+
+    <button type="submit" class="btn btn-primary">Save Settings</button>
+</form>                        </div>
+    </div>
+
+    <!--/.body content-->
+</div>
+<!--/.main content-->
+</div>
+<!--/.wrapper-->
+<div class="overlay"></div>
+</div>
+</div>
+
+</body>
+
+<script src="js/metisMenu/metisMenu.min.js"></script>
+<script src="js/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+<!-- message hide -->
+<script src="js/sidebar.js"></script>
+<script src="js/common.js"></script>
+<script src="js/dynamicinput.js"></script>
+
+</html>

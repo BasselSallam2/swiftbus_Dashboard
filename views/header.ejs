@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>BUS365</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="https://bus365demo.bdtask-demo.com/backend/public/image/websetting/1731406908_628a4419ee94e12320d3.png" sizes="10X10">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/metisMenu/metisMenu.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <link href="css/typicons/src/typicons.min.css" rel="stylesheet">
+    <link href="css/css/style.css" rel="stylesheet">    
+    <!-- Dashboard -->
+    <link rel="stylesheet" href="css/dashboard/custom.style.css" type="text/css">
+    <!-- Dashboard -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins" type="text/css">
+    <script src="js/jquery3.6.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+      {pageLanguage: 'en', includedLanguages: 'ar,en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE},
+      'google_translate_element'
+    );
+  }
+</script>
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+
+</head>
+
+<body class="fixed sidebar-mini">
+
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper" id="main-loader">
+        <div class="loader" id="page-loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-green">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <%- include('sidebar') %>
+        <!-- Page Content  -->
+
+        <div class="content-wrapper">
+            <div class="main-content">
+                <!--Navbar-->
+                <nav class="navbar-custom-menu navbar navbar-expand-xl m-0">
+                    <!-- DEBUG-VIEW START 7 APPPATH/Views/template/admin/navbar.php -->
+                    <div class="sidebar-toggle-icon" id="sidebarCollapse">
+                        <span></span>
+                    </div>
+                    <div class="navbar-icon d-flex">
+                        <li class="nav">
+                                <div id="google_translate_element"></div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" id="btnFullscreen"><i
+                                        class="full-screen_icon typcn typcn-arrow-move-outline"></i></a>
+                            </li>
+                            <li class="nav-item dropdown user-menu">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <i class="typcn typcn-user-outline"></i>
+                                </a>
+                                <div class="dropdown-menu">
+                                    <div class="dropdown-header d-sm-none">
+                                        <a href="" class="header-arrow"><i class="icon ion-md-arrow-back"></i></a>
+                                    </div>
+                                    <div class="user-header">
+                                       <h6>Super Admin</h6>
+                                       
+                                    </div>
+                                                                       <a href="/signout" class="dropdown-item">
+                                        <i class="typcn typcn-key-outline"></i>
+                                        Sign Out </a>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="nav-clock">
+                            <div class="time">
+                                <span class="time-hours"></span>
+                                <span class="time-min"></span>
+                                <span class="time-sec"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="baseurl" id="baseurl"
+                        value="#">
+                    <!-- DEBUG-VIEW ENDED 7 APPPATH/Views/template/admin/navbar.php -->
+                </nav>
+                <!--/.navbar-->

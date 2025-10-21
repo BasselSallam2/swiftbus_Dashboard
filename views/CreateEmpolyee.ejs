@@ -1,0 +1,220 @@
+<%- include('header') %>
+
+<div class="body-content">
+    <div class="card-header">
+        <h6 class="fs-17 fw-semi-bold mb-0">Add Employee</h6>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+
+            <% if(employee.name) { %>
+                <form action="/employee/<%=employee.id%>" method="POST">
+            <% } else { %>
+                <form action="/employee" method="POST">
+            <% } %>
+
+            <div class="bg-light p-3 my-2">
+
+                <div class="mb-3">
+                    <label for="name" class="form-label">Employee Name</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter Employee Name" value="<%=employee.name%>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Employee Phone</label>
+                    <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter Employee Phone" value="<%=employee.phone%>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="employeeType" class="form-label">Employee Type</label>
+                    <select class="form-control" id="employeeType" name="type" required onchange="togglePercentageField()">
+                        <option value="Agent" <%= employee.type === 'Agent' ? 'selected' : '' %>>Agent</option>
+                        <option value="CallCenter" <%= employee.type === 'Callcenter' ? 'selected' : '' %>>CallCenter</option>
+                    </select>
+                </div>
+
+                <!-- Percentage Input (Hidden by Default) -->
+                <div class="mb-3" id="percentageField" style="display: none;">
+                    <label for="percentage" class="form-label">Commission Percentage (%)</label>
+                    <input type="number" class="form-control" id="percentage" name="percentage" placeholder="Enter Commission Percentage" min="0" max="100" step="0.1" value="<%=employee.percentage || '' %>">
+                </div>
+
+                <div class="mb-3">
+                    <label for="ID" class="form-label">Employee National ID</label>
+                    <input type="text" class="form-control" id="ID" name="nationalID" placeholder="Enter Employee ID" value="<%=employee.nationalid%>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="address" class="form-label">Employee Address</label>
+                    <input type="text" class="form-control" id="address" name="address" placeholder="Enter Employee Address" value="<%=employee.address%>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Employee Email</label>
+                    <input type="text" class="form-control" id="email" name="email" placeholder="Enter Employee Email" value="<%=employee.User.email%>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Employee Password</label>
+                    <input type="text" class="form-control" id="password" name="password" placeholder="Enter Employee Password" value="<%=employee.User.password%>" required>
+                </div>
+
+                <!-- Multi-Select Employee Role -->
+                <div class="mb-3">
+                    <label for="role" class="form-label">Employee Role</label>
+                    <div class="multi-select" id="multiSelect">
+                        <div class="select-box form-control" onclick="toggleDropdown()">
+                            <span id="selectedRoles">Select Employee Roles</span>
+                            <span class="arrow">&#9660;</span>
+                        </div>
+                        <div class="dropdown">
+                            <label><input type="checkbox" id="selectAll" onchange="selectAllRoles()"> Select All</label>
+                            <label><input type="checkbox" class="role" value="Book" onchange="updateSelected()"> Book</label>
+                            <label><input type="checkbox" class="role" value="Cancel" onchange="updateSelected()"> Cancel</label>
+                            <label><input type="checkbox" class="role" value="Admin" onchange="updateSelected()"> Admin</label>
+                        </div>
+                    </div>
+                    <input type="hidden" id="roleInput" name="role">
+                </div>
+
+                <!-- Submit Button -->
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Multi-Select Styles -->
+<style>
+    .multi-select {
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+        font-family: Arial, sans-serif;
+    }
+
+    .multi-select .select-box {
+        padding: 10px;
+        border: 1px solid #ccc;
+        cursor: pointer;
+        background: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .multi-select .dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: white;
+        border: 1px solid #ccc;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        display: none;
+        z-index: 1000;
+    }
+
+    .multi-select .dropdown label {
+        display: block;
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    .multi-select .dropdown label:hover {
+        background: #f0f0f0;
+    }
+
+    .multi-select input[type="checkbox"] {
+        margin-right: 8px;
+    }
+
+    .multi-select .arrow {
+        transition: transform 0.3s ease;
+    }
+
+    .multi-select.open .arrow {
+        transform: rotate(180deg);
+    }
+
+    .multi-select.open .dropdown {
+        display: block;
+    }
+</style>
+
+<!-- JavaScript for Multi-Select Dropdown -->
+<script>
+    function toggleDropdown() {
+        document.getElementById("multiSelect").classList.toggle("open");
+    }
+
+    function updateSelected() {
+        let selected = [];
+        let checkboxes = document.querySelectorAll(".role:checked");
+
+        checkboxes.forEach((checkbox) => {
+            selected.push(checkbox.value);
+        });
+
+        document.getElementById("selectedRoles").textContent = selected.length ? selected.join(", ") : "Select Employee Roles";
+        document.getElementById("roleInput").value = selected.join(",");
+
+        let selectAll = document.getElementById("selectAll");
+        selectAll.checked = checkboxes.length === document.querySelectorAll(".role").length;
+    }
+
+    function selectAllRoles() {
+        let checkboxes = document.querySelectorAll(".role");
+        let selectAll = document.getElementById("selectAll");
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = selectAll.checked;
+        });
+
+        updateSelected();
+    }
+
+    function togglePercentageField() {
+        let employeeType = document.getElementById("employeeType").value;
+        let percentageField = document.getElementById("percentageField");
+
+        if (employeeType === "Agent") {
+            percentageField.style.display = "block";
+        } else {
+            percentageField.style.display = "none";
+        }
+    }
+
+    document.addEventListener("click", function (event) {
+        let multiSelect = document.getElementById("multiSelect");
+        if (!multiSelect.contains(event.target)) {
+            multiSelect.classList.remove("open");
+        }
+    });
+
+    // Preload selected roles
+    document.addEventListener("DOMContentLoaded", function () {
+        let storedRoles = "<%= employee.User.role %>".split(",");
+        let checkboxes = document.querySelectorAll(".role");
+        
+        checkboxes.forEach((checkbox) => {
+            if (storedRoles.includes(checkbox.value)) {
+                checkbox.checked = true;
+            }
+        });
+
+        updateSelected();
+        togglePercentageField();
+    });
+</script>
+
+<!-- Scripts -->
+<script src="js/metisMenu/metisMenu.min.js"></script>
+<script src="js/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+<script src="js/sidebar.js"></script>
+<script src="js/common.js"></script>
+
+</html>

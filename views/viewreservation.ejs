@@ -1,0 +1,272 @@
+<%- include('header') %>
+    <!--/.navbar-->
+    <div class="body-content">
+        <div class="card-header">
+            <h6 class="fs-17 fw-semi-bold mb-0">Reservations List</h6>
+            <div class="row g-2">
+    <div class="col-md-2">
+      <input type="text" id="filterTripID" class="form-control" placeholder="Trip ID">
+    </div>
+    <div class="col-md-2">
+      <input type="date" id="filterDate" class="form-control">
+    </div>
+    <div class="col-md-2">
+      <input type="text" id="filterRoute" class="form-control" placeholder="Route">
+    </div>
+    <div class="col-md-2">
+      <button type="button" class="btn btn-secondary w-100" id="resetFilters">Reset</button>
+    </div>
+  </div>
+</div>
+
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="text-end">
+                    
+                </div>
+
+                <div class="table-responsive" style="overflow-x: auto; max-height: 70vh;">
+                    <table class="table display table-bordered table-striped table-hover basic" id="agentlist">
+                        <thead>
+                            <tr>
+                                
+                                <th scope="col">Trip ID</th>
+                                <th scope="col">Trip Takeoff Date</th>
+                                <th scope="col">Trip Time</th>
+                                <th scope="col">Reserved Seats Counter</th>
+                                <th scope="col">Reserved Seats</th>
+                                <th scope="col">Available Seats</th>
+                                <th scope="col">Bus Type</th>
+                                <th scope="col">Trip Route</th>
+                                <th scope="col">Action</th>
+
+                            
+                                <% for(let i = 0 ; i < reservations.length ; i++) { %>
+                            
+                                       
+
+                            </tr>
+<script>
+  const filterTripIDInput = document.getElementById("filterTripID");
+  const filterDateInput = document.getElementById("filterDate");
+  const filterRouteInput = document.getElementById("filterRoute");
+  const resetBtn = document.getElementById("resetFilters");
+
+  const table = document.getElementById("agentlist");
+  const rows = table.getElementsByTagName("tr");
+
+  function filterTable() {
+    const tripID = filterTripIDInput.value.toLowerCase();
+    const date = filterDateInput.value;
+    const route = filterRouteInput.value.toLowerCase();
+
+    for (let i = 1; i < rows.length; i++) { // نبدأ من 1 عشان نتجنب الـ <thead>
+      let cells = rows[i].getElementsByTagName("td");
+      if (!cells.length) continue;
+
+      let id = cells[0].textContent.toLowerCase();
+      let tripDate = new Date(Date.parse(cells[1].textContent) + 1000 * 60 * 60 * 24).toISOString(); // assuming format ISO "2025-09-10T12:00"
+      let routeName = cells[6].textContent.toLowerCase();
+
+      let match = true;
+
+      if (tripID && !id.includes(tripID)) match = false;
+      if (date) {
+        console.log(tripDate);
+        let rowDate = tripDate.split("T")[0]; // assuming format ISO "2025-09-10T12:00"
+        if (rowDate !== date) {
+          match = false;
+        }
+      }
+
+      if (route && !routeName.includes(route)) match = false;
+
+      rows[i].style.display = match ? "" : "none";
+    }
+  }
+
+  filterTripIDInput.addEventListener("input", filterTable);
+  filterDateInput.addEventListener("change", filterTable);
+  filterRouteInput.addEventListener("input", filterTable);
+
+  resetBtn.addEventListener("click", () => {
+    filterTripIDInput.value = "";
+    filterDateInput.value = "";
+    filterRouteInput.value = "";
+    filterTable();
+  });
+</script>
+
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                
+                                <td>
+                                    <a><%=reservations[i].trip_id%></a>
+                                </td>
+                                <td>
+                                    <a><%=reservations[i].trip_date%></a>
+                                </td>
+                                <td>
+                                    <a><%=reservations[i].trip_time%></a>
+                                </td>
+                                <td><a><%=reservations[i].reservedSeats_counter%></a></td>
+                                <td><a><%=reservations[i].reservedSeats%></a></td>
+                                <td><a><%=reservations[i].available_seats%></a></td>
+                                <td><a><%=reservations[i].bus%></a></td>
+                                <td><a><%=reservations[i].route_names%></a></td>
+
+                                <td>
+
+
+
+                                    <a href="/reservation/print/<%=reservations[i].id%>" class="btn btn-dark btn-sm" title="print">
+                                        <i class="fas fa-print"></i>
+                                    </a>
+                                </td>
+                            </tr>
+
+                            <% } %>
+
+
+                            
+
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">The Following Data Will Be Deleted</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="confirmationMessage">
+                        <form action="#" method="post">
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                Agent
+                            </h5>
+                            <ul>
+                                <li style="list-style-type: none;">Agent 02 (2)</li>
+                            </ul>
+                            <br>
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                Ticket
+                            </h5>
+                            <ul>
+                                <li style="list-style-type: none;">TBLHZ9RKPI (21)</li>
+                                <li style="list-style-type: none;">TBX0SUT37F (22)</li>
+                            </ul>
+                            <br>
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                ticket ratings
+                            </h5>
+                            <ul>
+                                <li style="list-style-type: none;">4 good service (4)</li>
+                            </ul>
+                            <br>
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                PartialPaid
+                            </h5>
+                            <ul>
+                                <li style="list-style-type: none;">TBLHZ9RKPI- Paid amount: 2266 (21)</li>
+                                <li style="list-style-type: none;">TBX0SUT37F- Paid amount: 2266 (22)</li>
+                            </ul>
+                            <br>
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                TicketJourney List
+                            </h5>
+                            <ul>
+                                <li style="list-style-type: none;">John task on booking TBLHZ9RKPI (22)</li>
+                                <li style="list-style-type: none;"> on booking TBLHZ9RKPI (23)</li>
+                                <li style="list-style-type: none;">John task on booking TBX0SUT37F (24)</li>
+                                <li style="list-style-type: none;"> on booking TBX0SUT37F (25)</li>
+                            </ul>
+                            <br>
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                Payment MethodTotalAmount
+                            </h5>
+
+                            <ul>
+                                <li style="list-style-type: none;"> - Amount: 2266 (11)</li>
+                                <li style="list-style-type: none;"> - Amount: 2266 (12)</li>
+                            </ul>
+                            <br>
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                agent payments
+                            </h5>
+
+                            <ul>
+                                <li style="list-style-type: none;">Amount: 113.3 (4)</li>
+                                <li style="list-style-type: none;">Amount: 113.3 (5)</li>
+                            </ul>
+                            <br>
+
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                AgentTotal
+                            </h5>
+
+                            <ul>
+                                <li style="list-style-type: none;">Income: 2266 Expense: 0 (5)</li>
+                                <li style="list-style-type: none;">Income: 2266 Expense: 0 (6)</li>
+                            </ul>
+                            <br>
+
+
+                            <h5
+                                style="text-transform: capitalize; font-size: 16px; font-weight: bold; background-color: #e8e8e8; padding: 5px 15px;">
+                                AgentCommission
+                            </h5>
+
+                            <ul>
+                                <li style="list-style-type: none;">113.3% on ticket TBLHZ9RKPI (4)</li>
+                                <li style="list-style-type: none;">113.3% on ticket TBX0SUT37F (5)</li>
+                            </ul>
+                            <br>
+                            <div class="text-end">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger">Confirm</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/.body content-->
+    </div>
+    <!--/.main content-->
+    </div>
+    <!--/.wrapper-->
+    <div class="overlay"></div>
+    </div>
+    </div>
+
+    </body>
+
+    <script src="js/metisMenu/metisMenu.min.js"></script>
+    <script src="js/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+    <!-- message hide -->
+    <script src="js/sidebar.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/dynamicinput.js"></script>
+
+    </html>

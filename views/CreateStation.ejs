@@ -1,0 +1,73 @@
+<%- include('header') %>
+
+<div class="body-content">
+    <div class="card-header">
+        <h6 class="fs-17 fw-semi-bold mb-0">Add Station</h6>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+
+            <% if(station.Arabicname) { %>
+                <form action="/station/<%=station.id%>" method="POST">
+            <% } else { %>
+            <form action="/station" method="POST">
+                <% } %>
+                <!-- Arabic Questions Section -->
+                <div class="bg-light p-3 my-2">
+
+                    <div class="mb-3">
+                        <label for="stationType" class="form-label">Select The City</label>
+                        <select class="form-control" id="stationType" name="city" required>
+                            <% for(let city of cities) { %>
+                            <option value="<%=city.id%>" <%= station.cityId == city.id ? 'selected' : '' %>><%=city.name%></option> 
+                            <% } %>
+                        </select>
+                    </div>
+                   
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Arabic Station Name</label>
+                        <input type="text" class="form-control" id="email" name="ArabicStation" placeholder="Enter Arabic Station Name"  value="<%=station.Arabicname%>" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="facebook" class="form-label">Englsih Station Name</label>
+                        <input type="text" class="form-control" id="facebook" name="EnglishStation"  placeholder="Enter Englsih Station Name" value="<%=station.name%>" >
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="facebook" class="form-label">Arabic Station Address</label>
+                        <input type="text" class="form-control" id="facebook" name="Address"  placeholder="Enter Arabic Address" value="<%=station.address%>" >
+                    </div>
+
+                    
+                    <div class="mb-3">
+                        <label for="facebook" class="form-label">Station Location</label>
+                        <input type="text" class="form-control" id="facebook" name="Location"  placeholder="Enter Location" value="<%=station.location%>" >
+                    </div>
+
+                            </div>
+                   
+                    </div>
+                </div>
+
+             
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="js/metisMenu/metisMenu.min.js"></script>
+<script src="js/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+<!-- message hide -->
+<script src="js/sidebar.js"></script>
+<script src="js/common.js"></script>
+
+    
+
+</html>

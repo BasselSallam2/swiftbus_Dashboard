@@ -1,0 +1,58 @@
+<%- include('header') %>
+<!--/.navbar-->
+<
+<div class="container mt-4">
+<div class="card">
+<div class="card-header">
+<h4>Section Two </h4>
+</div>
+<div class="card-body">
+<form action="/section2" method="POST">
+
+    <div class="mb-3">
+        <img src="https://i.imgur.com/nRcczkh.png" alt="Image" class="img-fluid mb-3">
+        <label for="arabictitle1" class="form-label">Arabic Title 1</label>
+        <input type="text" class="form-control" id="arabictitle1" name="ArabicTitle1" placeholder="Enter Arabic Title 1" value="<%= Arabictwo.Title1 %>" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="englishtitle1" class="form-label">English Title 1</label>
+        <input type="text" class="form-control" id="englishtitle1" name="EnglishTitle1" placeholder="Enter English Title 1" value="<%= Englishtwo.Title1 %>" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="arabicsubtitle1" class="form-label">Arabic Subtitle 1</label>
+        <input type="text" class="form-control" id="arabicsubtitle1" name="ArabicSubtitle1" placeholder="Enter Arabic Subtitle 1" value="<%= Arabictwo.Subtitle1 %>" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="englishsubtitle1" class="form-label">English Subtitle 1</label>
+        <input type="text" class="form-control" id="englishsubtitle1" name="EnglishSubtitle1" placeholder="Enter English Subtitle 1" value="<%= Englishtwo.Subtitle1 %>" required>
+    </div>
+   
+
+    
+
+    <button type="submit" class="btn btn-primary">Save Settings</button>
+</form>                        </div>
+    </div>
+
+    <!--/.body content-->
+</div>
+<!--/.main content-->
+</div>
+<!--/.wrapper-->
+<div class="overlay"></div>
+</div>
+</div>
+
+</body>
+
+<script src="js/metisMenu/metisMenu.min.js"></script>
+<script src="js/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+<!-- message hide -->
+<script src="js/sidebar.js"></script>
+<script src="js/common.js"></script>
+<script src="js/dynamicinput.js"></script>
+
+</html>
