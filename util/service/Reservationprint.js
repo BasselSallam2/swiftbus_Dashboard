@@ -1,6 +1,21 @@
 import ExcelJS from "exceljs";
+import puppeteer from 'puppeteer';
+import fs from 'fs';
+import path from "path";
+const root = process.cwd();
 
-export const generateTicketTablePDF = async (GoTickets, BackTickets, bustype, TripDate, TripRoute, tripTime ,res) => {
+const getFontBase64 = (fontPath) => {
+    try {
+        const absolutePath = path.join(root, fontPath);
+        const fontFile = fs.readFileSync(absolutePath);
+        return Buffer.from(fontFile).toString('base64');
+    } catch (error) {
+        console.error(`Error reading font file at: ${fontPath}`, error);
+        throw new Error('Font file not found or could not be read.');
+    }
+};
+
+export const generateTicketTableEXCEl = async (GoTickets, BackTickets, bustype, TripDate, TripRoute, tripTime ,res) => {
     try {
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet("Tickets");
@@ -26,7 +41,7 @@ export const generateTicketTablePDF = async (GoTickets, BackTickets, bustype, Tr
 
     
         const headerRow = worksheet.addRow([
-            "رقم الكراسي", "اسم العميل", "رقم هاتف العميل", "محطة الركوب", "موعد الركوب" , "محطة النزول", "طريقة الدفع", "التحصيل"
+             "رقم الكراسي", "اسم العميل", "رقم هاتف العميل", "محطة الركوب", "موعد الركوب" , "محطة النزول", "طريقة الدفع","مكتب الحجز","سعر التذكرة","التحصيل"
         ]);
 
  
@@ -54,6 +69,13 @@ export const generateTicketTablePDF = async (GoTickets, BackTickets, bustype, Tr
             if(ticket?.price && ticket?.price !== ticket?.settledprice && ticket.status !== "Booked"){
                 total  = total + (ticket?.price - ticket?.settledprice) ;
             }
+
+            let agentName ;
+            if(ticket?.agent_name){
+                ticket?.agent_name === "none" ? agentName = "حجز مستقل" : agentName = ticket?.agent_name ;
+            }else if(ticket2?.agent_name){
+                ticket2?.agent_name === "none" ? agentName = "حجز مستقل" : agentName = ticket2?.agent_name ;
+            }
           
 
             const rowData = [
@@ -64,6 +86,8 @@ export const generateTicketTablePDF = async (GoTickets, BackTickets, bustype, Tr
                 ticket?.takeoff || ticket2?.takeoff || "",
                 ticket?.arrivestation || ticket2?.arrivestation || "",
                 ticket?.paymentmethod || ticket2?.paymentmethod || "",
+                agentName || "",
+                ticket?.price || ticket2?.price || "",
                 ticket?.status === "Booked" ? "مدفوع" : ticket?.price - ticket?.settledprice ||  status ||"",
             ];
 
@@ -125,4 +149,145 @@ export const generateTicketTablePDF = async (GoTickets, BackTickets, bustype, Tr
     }
 };
 
+export const generateTicketTablePDF = async (GoTickets, BackTickets, bustype, TripDate, TripRoute, tripTime, res) => {
+    try {
 
+        const amiriFont = getFontBase64('/fonts/Amiri-Regular.ttf');
+
+        let total = 0;
+
+        // --- بناء صفوف الجدول مع فلترة البيانات ---
+        let tableRows = '';
+        const totalSeats = bustype === "super-jet" ? 49 : 13;
+
+        for (let i = 1; i <= totalSeats; i++) {
+            const ticket = GoTickets.find(t => t.seatnumber === i);
+            const ticket2 = BackTickets.find(t => t.seatnumber === i);
+
+            // -->> الشرط الأساسي: لا تقم بإنشاء الصف إلا إذا كان هناك حجز <<--
+            if (ticket || ticket2) {
+                let status = undefined;
+
+                if (ticket?.price && ticket?.price === ticket?.settledprice) {
+                    status = "مدفوع";
+                }
+                if (ticket2?.price) {
+                    status = "مدفوع";
+                }
+                if (ticket?.price && ticket?.price !== ticket?.settledprice && ticket.status !== "Booked") {
+                    total += (ticket?.price - ticket?.settledprice);
+                }
+
+                const collection = ticket?.status === "Booked" ? "مدفوع" : (ticket?.price - ticket?.settledprice) || status || "";
+               
+                let agentName ;
+            if(ticket?.agent_name){
+                ticket?.agent_name === "none" ? agentName = "حجز مستقل" : agentName = ticket?.agent_name ;
+            }else if(ticket2?.agent_name){
+                ticket2?.agent_name === "none" ? agentName = "حجز مستقل" : agentName = ticket2?.agent_name ;
+            }
+
+                
+                tableRows += `
+                    <tr>
+                        <td>${i}</td>
+                        <td>${ticket?.coustmername || ticket2?.coustmername}</td>
+                        <td>${ticket?.coustmerphone || ticket2?.coustmerphone || ""}</td>
+                        <td>${ticket?.takeoffstation || ticket2?.takeoffstation || ""}</td>
+                        <td>${ticket?.takeoff || ticket2?.takeoff || ""}</td>
+                        <td>${ticket?.arrivestation || ticket2?.arrivestation || ""}</td>
+                        <td>${ticket?.paymentmethod || ticket2?.paymentmethod || ""}</td>
+                        <td>${agentName}</td>
+                        <td>${ticket?.price || ticket2?.price || ""}</td>
+                        <td>${collection}</td>
+                    </tr>
+                `;
+            }
+        }
+
+        // --- بناء محتوى الـ HTML الكامل ---
+        const htmlContent = `
+            <!DOCTYPE html>
+            <html lang="ar">
+            <head>
+                <meta charset="UTF-8">
+                <style>
+                    @font-face {
+                        font-family: 'Amiri';
+                        src: url(data:font/truetype;charset=utf-8;base64,${amiriFont}) format('truetype');
+                        font-weight: normal;
+                        font-style: normal;
+                    }
+                    body {
+                        font-family: 'Amiri', sans-serif;
+                        direction: rtl;
+                        text-align: right;
+                        margin: 20px;
+                        -webkit-print-color-adjust: exact;
+                    }
+                    .header { text-align: center; border: 2px solid #4F81BD; padding: 10px; margin-bottom: 20px; }
+                    h1, h2 { margin: 5px 0; }
+                    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+                    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+                    thead tr { background-color: #4F81BD; color: white; font-size: 16px; }
+                    tbody tr:nth-child(even) { background-color: #D9E1F2; }
+                    .total-row { font-weight: bold; font-size: 16px; background-color: #FFD966; }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>تاريخ الرحلة: ${TripDate} || ${tripTime[0]} - ${tripTime[1]}</h1>
+                    <h2>مسار الرحلة: ${TripRoute.join(" - ")}</h2>
+                    <h2>نوع الباص: ${bustype}</h2>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>رقم الكرسي</th><th>اسم العميل</th><th>رقم الهاتف</th><th>محطة الركوب</th>
+                            <th>موعد الركوب</th><th>محطة النزول</th><th>طريقة الدفع</th>
+                            <th>مكتب الحجز</th><th>سعر التذكرة</th><th>التحصيل</th>
+                        </tr>
+                    </thead>
+                    <tbody>${tableRows}</tbody>
+                </table>
+                <table style="margin-top: 20px;">
+                    <tr class="total-row">
+                        <td colspan="7">مجموع التحصيل</td>
+                        <td>${total}</td>
+                    </tr>
+                </table>
+            </body>
+            </html>
+        `;
+
+        // --- إنشاء الـ PDF باستخدام Puppeteer ---
+        const browser = await puppeteer.launch({ 
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
+        const page = await browser.newPage();
+        
+        await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+        
+        // --- إعدادات PDF النهائية (باستخدام A4) ---
+        const pdfBuffer = await page.pdf({
+            format: 'A4',
+            printBackground: true,
+            margin: { top: '20px', right: '20px', bottom: '20px', left: '20px' }
+        });
+
+        await browser.close();
+
+        // --- إرسال الـ PDF كاستجابة ---
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Length', pdfBuffer.length);
+        res.setHeader('Content-Disposition', 'attachment; filename="tickets.pdf"');
+        res.end(pdfBuffer);
+
+    } catch (err) {
+        console.error("Error generating PDF file:", err);
+        if (!res.headersSent) {
+            res.status(500).send({ message: "An error occurred while generating the PDF file.", error: err.message });
+        }
+    }
+};

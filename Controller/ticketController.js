@@ -1,93 +1,168 @@
+import { notEqual } from "assert";
 import prisma from "../prisma/prisma.js";
 import { ticketMapper } from "../util/MyticketsMapper.js";
 
 export const ViewTickets = async (req, res, next) => {
- 
-  let TicketsType = "Booked Tickets" ;
+  let TicketsType = "Booked Tickets";
   const Tickets = await prisma.ticket.findMany({
     where: {
       status: {
         in: ["Booked"],
       },
     },
-    include: { voucher: true, BookEmployeeID: true, CoustmerID: true , trip:true , back_trip: true , CancelEmployeeID:true},
+    include: {
+      voucher: true,
+      BookEmployeeID: true,
+      CoustmerID: true,
+      trip: true,
+      back_trip: true,
+      CancelEmployeeID: true,
+    },
   });
 
+  const TicketsMapped = await ticketMapper(Tickets);
 
-
-const TicketsMapped = await ticketMapper(Tickets);
-    
-  
-  res.render("viewBookedTickets" , {tickets: TicketsMapped , TicketsType }) ;
+  res.render("viewBookedTickets", { tickets: TicketsMapped, TicketsType });
 };
 
+export const ViewAllTickets = async (req, res, next) => {
+  let TicketsType = "All Tickets";
+  const Tickets = await prisma.ticket.findMany({
+    where: {
+      status: { notIn: ["Cancelled"] },
+    },
+    include: {
+      voucher: true,
+      BookEmployeeID: true,
+      CoustmerID: true,
+      trip: true,
+      back_trip: true,
+      CancelEmployeeID: true,
+    },
+  });
+
+  const TicketsMapped = await ticketMapper(Tickets);
+
+  res.render("viewBookedTickets", { tickets: TicketsMapped, TicketsType });
+};
+
+
+export const myTickets = async (req, res, next) => {
+  const user = req.user;
+  let TicketsType = "All Tickets";
+  const Tickets = await prisma.ticket.findMany({
+    where: {
+      status: { notIn: ["Cancelled"] },
+      OR: [
+        { BookEmployeeID: { id: user.employeeID } },
+      ],
+    },
+    include: {
+      voucher: true,
+      BookEmployeeID: true,
+      CoustmerID: true,
+      trip: true,
+      back_trip: true,
+      CancelEmployeeID: true,
+    },
+  });
+
+  const TicketsMapped = await ticketMapper(Tickets);
+
+  res.render("viewBookedTickets", { tickets: TicketsMapped, TicketsType });
+};
+
+
 export const ViewCancelTickets = async (req, res, next) => {
-  let TicketsType = "Cancelled Tickets" ;
+  let TicketsType = "Cancelled Tickets";
   const Tickets = await prisma.ticket.findMany({
     where: {
       status: {
         in: ["Cancelled"],
       },
     },
-    include: { voucher: true, BookEmployeeID: true, CoustmerID: true , trip:true , back_trip: true , CancelEmployeeID:true},
+    include: {
+      voucher: true,
+      BookEmployeeID: true,
+      CoustmerID: true,
+      trip: true,
+      back_trip: true,
+      CancelEmployeeID: true,
+    },
   });
 
   const TicketsMapped = await ticketMapper(Tickets);
-    
- 
-  res.render("viewBookedTickets" , {tickets: TicketsMapped , TicketsType}) ;
- 
+
+  res.render("viewBookedTickets", { tickets: TicketsMapped, TicketsType });
 };
 
 export const viewRefundedTickets = async (req, res, next) => {
-  let TicketsType = "Refunded Tickets" ;
+  let TicketsType = "Refunded Tickets";
   const Tickets = await prisma.ticket.findMany({
     where: {
       status: {
         in: ["Refunded"],
       },
     },
-    include: { voucher: true, BookEmployeeID: true, CoustmerID: true , trip:true , back_trip: true , CancelEmployeeID:true},
+    include: {
+      voucher: true,
+      BookEmployeeID: true,
+      CoustmerID: true,
+      trip: true,
+      back_trip: true,
+      CancelEmployeeID: true,
+    },
   });
 
   const TicketsMapped = await ticketMapper(Tickets);
-    
- 
-  res.render("viewBookedTickets" , {tickets: TicketsMapped , TicketsType}) ;
+
+  res.render("viewBookedTickets", { tickets: TicketsMapped, TicketsType });
 };
 
 export const viewAbsentTickets = async (req, res, next) => {
-  let TicketsType = "Absent Tickets" ;
+  let TicketsType = "Absent Tickets";
   const Tickets = await prisma.ticket.findMany({
     where: {
       status: {
         in: ["Absent"],
       },
     },
-    include: { voucher: true, BookEmployeeID: true, CoustmerID: true , trip:true , back_trip: true , CancelEmployeeID:true},
+    include: {
+      voucher: true,
+      BookEmployeeID: true,
+      CoustmerID: true,
+      trip: true,
+      back_trip: true,
+      CancelEmployeeID: true,
+    },
   });
 
   const TicketsMapped = await ticketMapper(Tickets);
-    
- 
-  res.render("viewBookedTickets" , {tickets: TicketsMapped , TicketsType}) ;
+
+  res.render("viewBookedTickets", { tickets: TicketsMapped, TicketsType });
 };
 
-export const viewPendingTickets  = async (req, res, next) => {
-  let TicketsType = "Pending Tickets" ;
+export const viewPendingTickets = async (req, res, next) => {
+  let TicketsType = "Pending Tickets";
   const Tickets = await prisma.ticket.findMany({
     where: {
       status: {
         in: ["Pending"],
       },
     },
-    include: { voucher: true, BookEmployeeID: true, CoustmerID: true , trip:true , back_trip: true , CancelEmployeeID:true},
+    include: {
+      voucher: true,
+      BookEmployeeID: true,
+      CoustmerID: true,
+      trip: true,
+      back_trip: true,
+      CancelEmployeeID: true,
+    },
   });
 
   const TicketsMapped = await ticketMapper(Tickets);
-    
- 
-  res.render("viewBookedTickets" , {tickets: TicketsMapped , TicketsType}) ;
+
+  res.render("viewBookedTickets", { tickets: TicketsMapped, TicketsType });
 };
 
 // export const cancellTicket = async (req, res, next) => {
@@ -95,7 +170,7 @@ export const viewPendingTickets  = async (req, res, next) => {
 //     const { ticketID } = req.params;
 //     let { id, role } = req.user;
 //     let { cancelreason } = req.body;
-    
+
 // //   let id = "138c87d0-7270-44f5-91a9-859e9dcad525" ;
 // //   let role = ["Book" , "Cancel"] ;
 // //   let cancelreason = "DODO" ;
@@ -144,7 +219,6 @@ export const viewPendingTickets  = async (req, res, next) => {
 //     });
 
 //     }
-
 
 //   }
 //   res.send("Success") ;

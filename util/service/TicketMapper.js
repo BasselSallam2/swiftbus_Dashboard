@@ -51,7 +51,8 @@ export const ticketMapper = async (tickets) => {
             price: ticket.seatsCounter ? ticket.price / ticket.seatsCounter : ticket.price,
             status: ticket.status,
             takeoff: ticket.takeoff,
-            settledprice: ticket.seatsCounter ? ticket.settledprice / ticket.seatsCounter : ticket.settledprice
+            settledprice: ticket.seatsCounter ? ticket.settledprice / ticket.seatsCounter : ticket.settledprice,
+            agent_name: ticket.BookEmployeeID?.name || "none",
         }));
     });
 
@@ -105,7 +106,8 @@ export const ticketMapperBack = async (tickets) => {
             price: ticket.seatsCounter ? ticket.price / ticket.seatsCounter : ticket.price,
             status: ticket.status,
             takeoff: ticket.takeoff,
-            settledprice: ticket.seatsCounter ? ticket.settledprice / ticket.seatsCounter : ticket.settledprice
+            settledprice: ticket.seatsCounter ? ticket.settledprice / ticket.seatsCounter : ticket.settledprice,
+            agent_name: ticket.BookEmployeeID?.name || "none",
         }));
     });
 

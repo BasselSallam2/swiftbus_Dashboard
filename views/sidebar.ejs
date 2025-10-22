@@ -36,6 +36,19 @@
                         </li>
 
                         <% } %>
+
+                          <% if(!currentUser.role.includes("Admin")) { %>
+                        <li>
+                            <a href="/ticket/my">
+                                My Tickets </a>
+                        </li>
+
+                        <% } %>
+                        <li>
+                            <a href="/ticket/all">
+                                All Tickets </a>
+                        </li>
+
                         <li>
                             <a href="/ticket/booked">
                                 Booked Tickets </a>
