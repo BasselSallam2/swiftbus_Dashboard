@@ -122,10 +122,12 @@
                                 <td>
 
 
-
+                                
+                                    <% if (isAdmin) { %>
                                     <a href="/reservation/print/<%=reservations[i].id%>" class="btn btn-dark btn-sm" title="excel print">
                                         <i class="fas fa-print"></i>
                                     </a>
+                                    <% } %>
                                     <a href="/reservation/print/pdf/<%=reservations[i].id%>" class="btn btn-dark btn-sm" title="pdf print">
                                         <i class="fas fa-file-pdf"></i>
                                     </a>

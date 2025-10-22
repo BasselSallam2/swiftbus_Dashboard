@@ -6,7 +6,10 @@ import { name } from "ejs";
 import path from "path";
 import { fileURLToPath } from "url";
 import PDFDocument from "pdfkit";
-import { generateTicketTableEXCEl , generateTicketTablePDF } from "../util/service/Reservationprint.js";
+import {
+  generateTicketTableEXCEl,
+  generateTicketTablePDF,
+} from "../util/service/Reservationprint.js";
 import {
   ticketMapper,
   ticketMapperBack,
@@ -28,6 +31,8 @@ function parseTime12h(timeStr) {
 
 export const Viewreservations = async (req, res, next) => {
   try {
+    const user = req.user;
+    const isAdmin = user.role.includes("Admin");
     const Reservations = await prisma.reservation.findMany({
       include: {
         Trips: { include: { Bus: true } },
@@ -52,7 +57,6 @@ export const Viewreservations = async (req, res, next) => {
           tripDetails[0].arrivaleTime,
           tripDetails[tripDetails.length - 1].arrivaleTime,
         ];
-        
 
         let Route = await Promise.all(
           routeIds.map(
@@ -76,12 +80,12 @@ export const Viewreservations = async (req, res, next) => {
             reserve.Trips.avaliableseats - reserve.reservedSeats_counter,
           bus: reserve.Trips.Bus.type,
           route_names: Route,
-            trip_time: tripTime,
+          trip_time: tripTime,
         };
       })
     );
 
-    res.render("viewreservation", { reservations: MappedReservations });
+    res.render("viewreservation", { reservations: MappedReservations , isAdmin });
   } catch (error) {
     next(error);
   }
@@ -103,16 +107,14 @@ export const PrintReservation = async (req, res, next) => {
         // استخدام الأسماء الصحيحة كما هي في schema.prisma
         Gotickets: {
           where: { status: { not: "Cancelled" } },
-          include: { CoustmerID: true , BookEmployeeID:true  },
+          include: { CoustmerID: true, BookEmployeeID: true },
         },
         Backtickets: {
           where: { status: { not: "Cancelled" } },
-          include: { CoustmerID: true , BookEmployeeID:true },
+          include: { CoustmerID: true, BookEmployeeID: true },
         },
       },
     });
-
-
 
     // التأكد من وجود الحجز والرحلة قبل المتابعة
     if (!reservation || !reservation.Trips) {
@@ -144,56 +146,80 @@ export const PrintReservation = async (req, res, next) => {
         where: { id: { in: TripRouteArray } },
         select: { id: true, Arabicname: true },
       });
-      const cityMap = Object.fromEntries(cities.map((c) => [c.id, c.Arabicname]));
+      const cityMap = Object.fromEntries(
+        cities.map((c) => [c.id, c.Arabicname])
+      );
       TripRoute = TripRouteArray.map((id) => cityMap[id] || id);
     }
- 
-    
+
     // افترض وجود هذه الدوال لديك
     // Assuming these functions exist and are defined elsewhere in your project
     const ResultGo = await ticketMapper(Gotickets);
     const ResultBack = await ticketMapperBack(Backtickets);
 
-  
-
-
-   
-
     // إنشاء وإرسال ملف PDF
-    generateTicketTableEXCEl(ResultGo, ResultBack, bustype, TripDate, TripRoute, tripTime, res);
-
+    generateTicketTableEXCEl(
+      ResultGo,
+      ResultBack,
+      bustype,
+      TripDate,
+      TripRoute,
+      tripTime,
+      res
+    );
   } catch (error) {
     // إرسال الخطأ إلى معالج الأخطاء في Express
     next(error);
   }
 };
-
-
 
 export const PrintReservationPDF = async (req, res, next) => {
   const { ID } = req.params;
+  const user = req.user;
   try {
-    // --- استعلام واحد شامل ومُحسَّن ---
-    const reservation = await prisma.reservation.findUnique({
-      where: { id: ID },
-      include: {
-        Trips: {
-          include: {
-            Bus: true,
-            StationDetails: true,
+    if (user.role.includes("Admin")) {
+      var reservation = await prisma.reservation.findUnique({
+        where: { id: ID },
+        include: {
+          Trips: {
+            include: {
+              Bus: true,
+              StationDetails: true,
+            },
+          },
+          // استخدام الأسماء الصحيحة كما هي في schema.prisma
+          Gotickets: {
+            where: { status: { not: "Cancelled" } },
+            include: { CoustmerID: true, BookEmployeeID: true },
+          },
+          Backtickets: {
+            where: { status: { not: "Cancelled" } },
+            include: { CoustmerID: true, BookEmployeeID: true },
           },
         },
-        // استخدام الأسماء الصحيحة كما هي في schema.prisma
-        Gotickets: {
-          where: { status: { not: "Cancelled" } },
-          include: { CoustmerID: true , BookEmployeeID:true },
+      });
+    } else {
+      var reservation = await prisma.reservation.findUnique({
+        where: { id: ID },
+        include: {
+          Trips: {
+            include: {
+              Bus: true,
+              StationDetails: true,
+            },
+          },
+          // استخدام الأسماء الصحيحة كما هي في schema.prisma
+          Gotickets: {
+            where: { status: { not: "Cancelled" } , book_id: user.employeeID  },
+            include: { CoustmerID: true, BookEmployeeID: true },
+          },
+          Backtickets: {
+            where: { status: { not: "Cancelled" } , book_id: user.employeeID  },
+            include: { CoustmerID: true, BookEmployeeID: true },
+          },
         },
-        Backtickets: {
-          where: { status: { not: "Cancelled" } },
-          include: { CoustmerID: true , BookEmployeeID:true },
-        },
-      },
-    });
+      });
+    }
 
     // التأكد من وجود الحجز والرحلة قبل المتابعة
     if (!reservation || !reservation.Trips) {
@@ -225,27 +251,29 @@ export const PrintReservationPDF = async (req, res, next) => {
         where: { id: { in: TripRouteArray } },
         select: { id: true, Arabicname: true },
       });
-      const cityMap = Object.fromEntries(cities.map((c) => [c.id, c.Arabicname]));
+      const cityMap = Object.fromEntries(
+        cities.map((c) => [c.id, c.Arabicname])
+      );
       TripRoute = TripRouteArray.map((id) => cityMap[id] || id);
     }
-    
+
     // افترض وجود هذه الدوال لديك
     // Assuming these functions exist and are defined elsewhere in your project
     const ResultGo = await ticketMapper(Gotickets);
     const ResultBack = await ticketMapperBack(Backtickets);
 
-     
     // إنشاء وإرسال ملف PDF
-    await generateTicketTablePDF(ResultGo, ResultBack, bustype, TripDate, TripRoute, tripTime, res);
-
+    await generateTicketTablePDF(
+      ResultGo,
+      ResultBack,
+      bustype,
+      TripDate,
+      TripRoute,
+      tripTime,
+      res
+    );
   } catch (error) {
     // إرسال الخطأ إلى معالج الأخطاء في Express
     next(error);
   }
 };
-
-
-
-
-
-
