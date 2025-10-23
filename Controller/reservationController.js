@@ -9,6 +9,7 @@ import PDFDocument from "pdfkit";
 import {
   generateTicketTableEXCEl,
   generateTicketTablePDF,
+  generateTicketTablePDFAgent
 } from "../util/service/Reservationprint.js";
 import {
   ticketMapper,
@@ -224,6 +225,8 @@ export const PrintReservationPDF = async (req, res, next) => {
       });
     }
 
+    
+
     // التأكد من وجود الحجز والرحلة قبل المتابعة
     if (!reservation || !reservation.Trips) {
       return res.status(404).json({ message: "Reservation not found." });
@@ -265,16 +268,30 @@ export const PrintReservationPDF = async (req, res, next) => {
     const ResultGo = await ticketMapper(Gotickets);
     const ResultBack = await ticketMapperBack(Backtickets);
 
-    // إنشاء وإرسال ملف PDF
-    await generateTicketTablePDF(
-      ResultGo,
-      ResultBack,
-      bustype,
-      TripDate,
-      TripRoute,
-      tripTime,
-      res
-    );
+    if(user.role.includes("Admin")){
+      
+      await generateTicketTablePDF(
+        ResultGo,
+        ResultBack,
+        bustype,
+        TripDate,
+        TripRoute,
+        tripTime,
+        res
+      );
+    }else{
+      const agentPercentage = reservation.Gotickets[0].BookEmployeeID.percentage || reservation.Backtickets[0].BookEmployeeID.percentage ;
+      await generateTicketTablePDFAgent(
+        ResultGo,
+        ResultBack,
+        bustype,
+        TripDate,
+        TripRoute,
+        tripTime,
+        agentPercentage,
+        res
+      );
+    }
   } catch (error) {
     // إرسال الخطأ إلى معالج الأخطاء في Express
     next(error);
