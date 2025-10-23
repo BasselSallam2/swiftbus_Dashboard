@@ -325,8 +325,10 @@ export const sendDriverPhone = async (req, res, next) => {
       let data = {
         client_id: `${whatsapp.client}`,
         mobile: `+2${customersPhone[i]}`,
-        text: `رقم السائق ${driverPhone}
-برجاء التواصل هاتفيا في حالة حدوث اي مشكلة و شكراً لكم`,
+        text: `نشكركم علي الحجز معانا شركة سويفت باص
+ ${driverPhone} رقم السائق
+الاتصال فقط في حالة تأخره عن الميعاد
+رحلة سعيدة وآمنه`
       };
 
       const whatsappMSG = await fetch(
