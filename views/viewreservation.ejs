@@ -131,6 +131,15 @@
                                     <a href="/reservation/print/pdf/<%=reservations[i].id%>" class="btn btn-dark btn-sm" title="pdf print">
                                         <i class="fas fa-file-pdf"></i>
                                     </a>
+                                <% if (isAdmin) { %>
+                                    <button type="button" class="btn btn-success btn-sm ms-1" 
+            title="إرسال واتساب للعملاء"
+            data-bs-toggle="modal" 
+            data-bs-target="#whatsappModal" 
+            data-reservation-id="<%=reservations[i].id%>">
+        <i class="fab fa-whatsapp"></i>
+    </button>
+                                    <% } %>
                                 </td>
                             </tr>
 
@@ -273,5 +282,118 @@
     <script src="js/sidebar.js"></script>
     <script src="js/common.js"></script>
     <script src="js/dynamicinput.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    
+    const whatsappModal = document.getElementById('whatsappModal');
+    
+    // التأكد من وجود الـ modal في الصفحة
+    if (whatsappModal) {
+        const driverPhoneInput = document.getElementById('driverPhoneInput');
+        const modalReservationId = document.getElementById('modalReservationId');
+        const sendWhatsAppBtn = document.getElementById('sendWhatsAppBtn');
+        const messageArea = document.getElementById('whatsappMessageArea');
+
+        // 1. عند فتح الـ Modal:
+        // هذا الكود يلتقط الـ ID من الزر الذي تم الضغط عليه ويخزنه في الـ Modal
+        whatsappModal.addEventListener('show.bs.modal', function (event) {
+            // الزر الذي قام بفتح الـ Modal
+            const button = event.relatedTarget;
+            
+            // استخراج الـ ID من (data-reservation-id)
+            const reservationId = button.getAttribute('data-reservation-id');
+            
+            // تخزين الـ ID في الحقل المخفي داخل الـ Modal
+            modalReservationId.value = reservationId;
+
+            // إعادة تعيين الحقول عند فتح الـ Modal
+            driverPhoneInput.value = '';
+            messageArea.innerHTML = '';
+            sendWhatsAppBtn.disabled = false;
+            sendWhatsAppBtn.innerHTML = 'إرسال'; // إعادة اسم الزر
+        });
+
+        // 2. عند الضغط على زر "إرسال":
+        sendWhatsAppBtn.addEventListener('click', function () {
+            
+            const phone = driverPhoneInput.value;
+            const resId = modalReservationId.value;
+
+            // التحقق من أن الحقل ليس فارغاً
+            if (!phone) {
+                messageArea.innerHTML = '<div class="alert alert-warning" role="alert">برجاء إدخال رقم السائق أولاً.</div>';
+                return;
+            }
+
+            // عرض رسالة "برجاء الانتظار"
+            messageArea.innerHTML = '<div class="alert alert-info" role="alert">برجاء الانتظار... جاري ارسال الرسائل</div>';
+            sendWhatsAppBtn.disabled = true; // تعطيل الزر لمنع الضغط المتكرر
+            sendWhatsAppBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ...جاري الإرسال';
+
+            // استدعاء الـ API
+            fetch(`/reservation/send/${resId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                // إرسال الرقم في جسم الطلب (JSON)
+                body: JSON.stringify({ driverPhone: phone }) 
+            })
+            .then(response => {
+                if (!response.ok) {
+                    // إذا كان الرد غير ناجح (مثل خطأ 400 أو 500)
+                    throw new Error('حدث خطأ أثناء الاتصال بالـ API');
+                }
+                return response.json(); // افتراض أن الـ API يعيد JSON
+            })
+            .then(data => {
+                // عرض رسالة "تم الإرسال بنجاح"
+                messageArea.innerHTML = '<div class="alert alert-success" role="alert">تم الارسال بنجاح!</div>';
+                
+                // إغلاق الـ Modal تلقائياً بعد ثانيتين
+                setTimeout(() => {
+                    const modalInstance = bootstrap.Modal.getInstance(whatsappModal);
+                    modalInstance.hide();
+                }, 2000);
+            })
+            .catch(error => {
+                // في حالة حدوث خطأ
+                messageArea.innerHTML = `<div class="alert alert-danger" role="alert">فشل الإرسال: ${error.message}</div>`;
+                sendWhatsAppBtn.disabled = false; // إعادة تفعيل الزر
+                sendWhatsAppBtn.innerHTML = 'إرسال';
+            });
+        });
+    }
+});
+</script>
+
+
+    <div class="modal fade" id="whatsappModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="whatsappModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="whatsappModalLabel">إرسال رسالة واتساب للعملاء</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>برجاء كتابة رقم السائق لهذه الرحلة لارساله للعملاء عبر الواتس ااب.</p>
+                
+                <div class="mb-3">
+                    <label for="driverPhoneInput" class="form-label"></label>
+                    <input type="tel" class="form-control" id="driverPhoneInput" name="driverPhone" placeholder="e.g., 01001234567" required>
+                </div>
+                
+                <div id="whatsappMessageArea" class="mt-2"></div>
+                
+                <input type="hidden" id="modalReservationId">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                <button type="button" class="btn btn-primary" id="sendWhatsAppBtn">إرسال</button>
+            </div>
+        </div>
+    </div>
+</div>
 
     </html>

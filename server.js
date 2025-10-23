@@ -31,7 +31,8 @@ const app = express() ;
 const __dirname = process.cwd();
 
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use("/city" , express.static(path.join(__dirname, 'public')));
 app.use("/station" , express.static(path.join(__dirname, 'public')));

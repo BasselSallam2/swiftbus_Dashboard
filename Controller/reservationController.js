@@ -85,7 +85,10 @@ export const Viewreservations = async (req, res, next) => {
       })
     );
 
-    res.render("viewreservation", { reservations: MappedReservations , isAdmin });
+    res.render("viewreservation", {
+      reservations: MappedReservations,
+      isAdmin,
+    });
   } catch (error) {
     next(error);
   }
@@ -210,11 +213,11 @@ export const PrintReservationPDF = async (req, res, next) => {
           },
           // استخدام الأسماء الصحيحة كما هي في schema.prisma
           Gotickets: {
-            where: { status: { not: "Cancelled" } , book_id: user.employeeID  },
+            where: { status: { not: "Cancelled" }, book_id: user.employeeID },
             include: { CoustmerID: true, BookEmployeeID: true },
           },
           Backtickets: {
-            where: { status: { not: "Cancelled" } , book_id: user.employeeID  },
+            where: { status: { not: "Cancelled" }, book_id: user.employeeID },
             include: { CoustmerID: true, BookEmployeeID: true },
           },
         },
@@ -274,6 +277,75 @@ export const PrintReservationPDF = async (req, res, next) => {
     );
   } catch (error) {
     // إرسال الخطأ إلى معالج الأخطاء في Express
+    next(error);
+  }
+};
+
+export const sendDriverPhone = async (req, res, next) => {
+  const { ID } = req.params;
+  const { driverPhone } = req.body;
+  const user = req.user;
+  try {
+    console.log(driverPhone);
+    console.log(req.body);
+    var reservation = await prisma.reservation.findUnique({
+      where: { id: ID },
+      include: {
+        Trips: {
+          include: {
+            Bus: true,
+            StationDetails: true,
+          },
+        },
+        // استخدام الأسماء الصحيحة كما هي في schema.prisma
+        Gotickets: {
+          where: { status: { not: "Cancelled" } },
+          include: { CoustmerID: true, BookEmployeeID: true },
+        },
+        Backtickets: {
+          where: { status: { not: "Cancelled" } },
+          include: { CoustmerID: true, BookEmployeeID: true },
+        },
+      },
+    });
+
+    // التأكد من وجود الحجز والرحلة قبل المتابعة
+    if (!reservation || !reservation.Trips) {
+      return res.status(404).json({ message: "Reservation not found." });
+    }
+    let customersPhone = [];
+    for (let i = 0; i < reservation.Gotickets.length; i++) {
+      customersPhone.push(reservation.Gotickets[i].CoustmerID.phone);
+    }
+    for (let i = 0; i < reservation.Backtickets.length; i++) {
+      customersPhone.push(reservation.Backtickets[i].CoustmerID.phone);
+    }
+    const whatsapp = await prisma.whatsapp.findFirst();
+    for (let i = 0; i < customersPhone.length; i++) {
+      let data = {
+        client_id: `${whatsapp.client}`,
+        mobile: `+2${customersPhone[i]}`,
+        text: `رقم السائق ${driverPhone}
+برجاء التواصل هاتفيا في حالة حدوث اي مشكلة و شكراً لكم`,
+      };
+
+      const whatsappMSG = await fetch(
+        "https://v2.whats360.live/api/user/v2/send_message",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${whatsapp.token}`,
+          },
+          body: JSON.stringify(data),
+        }
+      );
+    }
+
+    res.status(200).json({ message: "Driver phone sent successfully." });
+    
+  } catch (error) {
+   res.staus(500).json({ message: "Failed to send driver phone." });
     next(error);
   }
 };
