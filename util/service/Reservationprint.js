@@ -96,9 +96,12 @@ export const generateTicketTableEXCEl = async (
       if (ticket?.price && ticket?.price === ticket?.settledprice) {
         status = "مدفوع";
       }
-      if (ticket2?.price) {
-        status = "مدفوع";
-      }
+      if (ticket2?.price && ticket2.status !== "Partial Paid") {
+          status = "مدفوع";
+        }
+        if(ticket2?.price && ticket2.status === "Partial Paid"){
+          status = ticket2?.price - ticket2?.settledprice
+        }
 
       if (
         ticket?.price &&
@@ -107,6 +110,14 @@ export const generateTicketTableEXCEl = async (
       ) {
         total = total + (ticket?.price - ticket?.settledprice);
       }
+
+       if (
+          ticket2?.price &&
+          ticket2?.price !== ticket2?.settledprice &&
+          ticket2.status !== "Booked"
+        ) {
+          total += ticket2?.price - ticket2?.settledprice;
+        }
 
       let agentName;
       if (ticket?.agent_name) {
@@ -247,12 +258,17 @@ export const generateTicketTablePDF = async (
       // -->> الشرط الأساسي: لا تقم بإنشاء الصف إلا إذا كان هناك حجز <<--
       if (ticket || ticket2) {
         let status = undefined;
+        
+        
 
-        if (ticket?.price && ticket?.price === ticket?.settledprice) {
+        if ((ticket?.price && ticket?.price === ticket?.settledprice)) {
           status = "مدفوع";
         }
-        if (ticket2?.price) {
+        if (ticket2?.price && ticket2.status !== "Partial Paid") {
           status = "مدفوع";
+        }
+        if(ticket2?.price && ticket2.status === "Partial Paid"){
+          status = ticket2?.price - ticket2?.settledprice
         }
         if (
           ticket?.price &&
