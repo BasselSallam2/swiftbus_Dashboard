@@ -116,7 +116,7 @@ export const generateTicketTableEXCEl = async (
           ticket2?.price !== ticket2?.settledprice &&
           ticket2.status !== "Booked"
         ) {
-          total += ticket2?.price - ticket2?.settledprice;
+          // total += ticket2?.price - ticket2?.settledprice;
         }
 
       let agentName;
@@ -245,6 +245,8 @@ export const generateTicketTablePDF = async (
   try {
     const amiriFont = getFontBase64("/fonts/Amiri-Regular.ttf");
 
+  
+
     let total = 0;
 
     // --- بناء صفوف الجدول مع فلترة البيانات ---
@@ -269,12 +271,14 @@ export const generateTicketTablePDF = async (
         }
         if(ticket2?.price && ticket2.status === "Partial Paid"){
           status = ticket2?.price - ticket2?.settledprice
+          total += ticket2?.price - ticket2?.settledprice;
         }
         if (
           ticket?.price &&
           ticket?.price !== ticket?.settledprice &&
           ticket.status !== "Booked"
         ) {
+          console.log("JJJ" ,ticket , "GGG");
           total += ticket?.price - ticket?.settledprice;
         }
 
@@ -283,7 +287,8 @@ export const generateTicketTablePDF = async (
           ticket2?.price !== ticket2?.settledprice &&
           ticket2.status !== "Booked"
         ) {
-          total += ticket2?.price - ticket2?.settledprice;
+          console.log("NNN" ,ticket2 , "KKK");
+          // total += ticket2?.price - ticket2?.settledprice;
         }
 
         const collection =
