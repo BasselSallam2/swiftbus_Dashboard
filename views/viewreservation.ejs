@@ -290,12 +290,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // التأكد من وجود الـ modal في الصفحة
     if (whatsappModal) {
         const driverPhoneInput = document.getElementById('driverPhoneInput');
+        const customMessageInput = document.getElementById('customMessageInput');
         const modalReservationId = document.getElementById('modalReservationId');
         const sendWhatsAppBtn = document.getElementById('sendWhatsAppBtn');
-        const messageArea = document.getElementById('whatsappMessageArea');
+       const driverMessageArea = document.getElementById('driverMessageArea');
+        const customMessageArea = document.getElementById('customMessageArea');
 
-        // 1. عند فتح الـ Modal:
-        // هذا الكود يلتقط الـ ID من الزر الذي تم الضغط عليه ويخزنه في الـ Modal
+        const sendDriverTabBtn = document.getElementById('send-driver-tab');
+        const sendMessageTabBtn = document.getElementById('send-message-tab');
+        const driverTabPane = document.getElementById('sendDriverTab');
+        const messageTabPane = document.getElementById('sendMessageTab');
+
+       // 1. عند فتح الـ Modal:
         whatsappModal.addEventListener('show.bs.modal', function (event) {
             // الزر الذي قام بفتح الـ Modal
             const button = event.relatedTarget;
@@ -306,39 +312,85 @@ document.addEventListener('DOMContentLoaded', () => {
             // تخزين الـ ID في الحقل المخفي داخل الـ Modal
             modalReservationId.value = reservationId;
 
-            // إعادة تعيين الحقول عند فتح الـ Modal
+            // --- إعادة تعيين كل الحقول والرسائل عند الفتح ---
             driverPhoneInput.value = '';
-            messageArea.innerHTML = '';
+            customMessageInput.value = '';
+            driverMessageArea.innerHTML = '';
+            customMessageArea.innerHTML = '';
+            
+            // إعادة تعيين الزر
             sendWhatsAppBtn.disabled = false;
-            sendWhatsAppBtn.innerHTML = 'إرسال'; // إعادة اسم الزر
+            sendWhatsAppBtn.innerHTML = 'إرسال';
+
+            // إعادة الـ Tabs للوضع الافتراضي (الـ Tab الأول هو النشط)
+            sendDriverTabBtn.classList.add('active');
+            sendDriverTabBtn.setAttribute('aria-selected', 'true');
+            driverTabPane.classList.add('show', 'active');
+            
+            sendMessageTabBtn.classList.remove('active');
+            sendMessageTabBtn.setAttribute('aria-selected', 'false');
+            messageTabPane.classList.remove('show', 'active');
         });
 
-        // 2. عند الضغط على زر "إرسال":
+       // 2. عند الضغط على زر "إرسال":
         sendWhatsAppBtn.addEventListener('click', function () {
             
-            const phone = driverPhoneInput.value;
             const resId = modalReservationId.value;
+            // تحديد أي Tab نشط حالياً
+            const activeTab = document.querySelector('#whatsappTab .nav-link.active');
 
-            // التحقق من أن الحقل ليس فارغاً
-            if (!phone) {
-                messageArea.innerHTML = '<div class="alert alert-warning" role="alert">برجاء إدخال رقم السائق أولاً.</div>';
-                return;
-            }
-
-            // عرض رسالة "برجاء الانتظار"
-            messageArea.innerHTML = '<div class="alert alert-info" role="alert">برجاء الانتظار... جاري ارسال الرسائل</div>';
-            sendWhatsAppBtn.disabled = true; // تعطيل الزر لمنع الضغط المتكرر
+            // تفعيل حالة التحميل للزر
+            sendWhatsAppBtn.disabled = true;
             sendWhatsAppBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ...جاري الإرسال';
 
-            // استدعاء الـ API
-            fetch(`/reservation/send/${resId}`, {
+            let fetchUrl = '';
+            let fetchBody = {};
+            let currentMessageArea = null;
+
+            // --- التحقق من الـ Tab النشط ---
+            if (activeTab.id === 'send-driver-tab') {
+                
+                // --- الحالة 1: إرسال رقم السائق ---
+                const phone = driverPhoneInput.value;
+                currentMessageArea = driverMessageArea; // منطقة الرسائل الخاصة بهذا الـ Tab
+
+                // التحقق من أن الحقل ليس فارغاً
+                if (!phone) {
+                    currentMessageArea.innerHTML = '<div class="alert alert-warning" role="alert">برجاء إدخال رقم السائق أولاً.</div>';
+                    resetButton();
+                    return;
+                }
+                
+                fetchUrl = `/reservation/send/${resId}`;
+                fetchBody = { driverPhone: phone };
+                currentMessageArea.innerHTML = '<div class="alert alert-info" role="alert">برجاء الانتظار... جاري ارسال الرسائل</div>';
+
+            } else if (activeTab.id === 'send-message-tab') {
+                
+                // --- الحالة 2: إرسال رسالة مخصصة ---
+                const message = customMessageInput.value;
+                currentMessageArea = customMessageArea; // منطقة الرسائل الخاصة بهذا الـ Tab
+
+                // التحقق من أن الحقل ليس فارغاً
+                if (!message) {
+                    currentMessageArea.innerHTML = '<div class="alert alert-warning" role="alert">برجاء كتابة الرسالة أولاً.</div>';
+                    resetButton();
+                    return;
+                }
+
+                fetchUrl = `/reservation/sendmessage/${resId}`;
+                fetchBody = { message: message };
+                currentMessageArea.innerHTML = '<div class="alert alert-info" role="alert">برجاء الانتظار... جاري ارسال الرسالة</div>';
+            }
+
+            // --- تنفيذ الطلب (Fetch) المشترك ---
+            fetch(fetchUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                // إرسال الرقم في جسم الطلب (JSON)
-                body: JSON.stringify({ driverPhone: phone }) 
+                body: JSON.stringify(fetchBody) 
             })
             .then(response => {
                 if (!response.ok) {
@@ -348,8 +400,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 return response.json(); // افتراض أن الـ API يعيد JSON
             })
             .then(data => {
-                // عرض رسالة "تم الإرسال بنجاح"
-                messageArea.innerHTML = '<div class="alert alert-success" role="alert">تم الارسال بنجاح!</div>';
+                // عرض رسالة "تم الإرسال بنجاح" في منطقة الرسائل الصحيحة
+                currentMessageArea.innerHTML = '<div class="alert alert-success" role="alert">تم الارسال بنجاح!</div>';
                 
                 // إغلاق الـ Modal تلقائياً بعد ثانيتين
                 setTimeout(() => {
@@ -359,11 +411,16 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(error => {
                 // في حالة حدوث خطأ
-                messageArea.innerHTML = `<div class="alert alert-danger" role="alert">فشل الإرسال: ${error.message}</div>`;
-                sendWhatsAppBtn.disabled = false; // إعادة تفعيل الزر
-                sendWhatsAppBtn.innerHTML = 'إرسال';
+                currentMessageArea.innerHTML = `<div class="alert alert-danger" role="alert">فشل الإرسال: ${error.message}</div>`;
+                resetButton(); // إعادة تفعيل الزر
             });
         });
+        
+        // دالة لإعادة تعيين الزر في حالة الخطأ
+        function resetButton() {
+            sendWhatsAppBtn.disabled = false;
+            sendWhatsAppBtn.innerHTML = 'إرسال';
+        }
     }
 });
 </script>
@@ -377,14 +434,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>برجاء كتابة رقم السائق لهذه الرحلة لارساله للعملاء عبر الواتس ااب.</p>
                 
-                <div class="mb-3">
-                    <label for="driverPhoneInput" class="form-label"></label>
-                    <input type="tel" class="form-control" id="driverPhoneInput" name="driverPhone" placeholder="e.g., 01001234567" required>
+                <ul class="nav nav-tabs" id="whatsappTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="send-driver-tab" data-bs-toggle="tab" data-bs-target="#sendDriverTab" type="button" role="tab" aria-controls="sendDriverTab" aria-selected="true">إرسال رقم السائق</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="send-message-tab" data-bs-toggle="tab" data-bs-target="#sendMessageTab" type="button" role="tab" aria-controls="sendMessageTab" aria-selected="false">إرسال رسالة مخصصة</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="whatsappTabContent">
+                    
+                    <div class="tab-pane fade show active" id="sendDriverTab" role="tabpanel" aria-labelledby="send-driver-tab">
+                        <p class="mt-3">برجاء كتابة رقم السائق لهذه الرحلة لارساله للعملاء عبر الواتس ااب.</p>
+                        <div class="mb-3">
+                            <label for="driverPhoneInput" class="form-label"></label>
+                            <input type="tel" class="form-control" id="driverPhoneInput" name="driverPhone" placeholder="e.g., 01001234567">
+                        </div>
+                        <div id="driverMessageArea" class="mt-2"></div>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="sendMessageTab" role="tabpanel" aria-labelledby="send-message-tab">
+                        <p class="mt-3">اكتب الرسالة التي تريد إرسالها لجميع عملاء هذه الرحلة.</p>
+                        <div class="mb-3">
+                            <label for="customMessageInput" class="form-label"></label>
+                            <textarea class="form-control" id="customMessageInput" rows="3" placeholder="...اكتب رسالتك هنا"></textarea>
+                        </div>
+                        <div id="customMessageArea" class="mt-2"></div>
+                    </div>
                 </div>
-                
-                <div id="whatsappMessageArea" class="mt-2"></div>
                 
                 <input type="hidden" id="modalReservationId">
             </div>
@@ -393,6 +472,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button type="button" class="btn btn-primary" id="sendWhatsAppBtn">إرسال</button>
             </div>
         </div>
+      </div>
     </div>
 </div>
 

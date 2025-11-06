@@ -368,3 +368,70 @@ export const sendDriverPhone = async (req, res, next) => {
     next(error);
   }
 };
+
+
+export const sendMessage = async (req, res, next) => {
+  const { ID } = req.params;
+  const { message } = req.body;
+  const user = req.user;
+  try {
+    var reservation = await prisma.reservation.findUnique({
+      where: { id: ID },
+      include: {
+        Trips: {
+          include: {
+            Bus: true,
+            StationDetails: true,
+          },
+        },
+        // استخدام الأسماء الصحيحة كما هي في schema.prisma
+        Gotickets: {
+          where: { status: { not: "Cancelled" } },
+          include: { CoustmerID: true, BookEmployeeID: true },
+        },
+        Backtickets: {
+          where: { status: { not: "Cancelled" } },
+          include: { CoustmerID: true, BookEmployeeID: true },
+        },
+      },
+    });
+
+    // التأكد من وجود الحجز والرحلة قبل المتابعة
+    if (!reservation || !reservation.Trips) {
+      return res.status(404).json({ message: "Reservation not found." });
+    }
+    let customersPhone = [];
+    for (let i = 0; i < reservation.Gotickets.length; i++) {
+      customersPhone.push(reservation.Gotickets[i].CoustmerID.phone);
+    }
+    for (let i = 0; i < reservation.Backtickets.length; i++) {
+      customersPhone.push(reservation.Backtickets[i].CoustmerID.phone);
+    }
+    const whatsapp = await prisma.whatsapp.findFirst();
+    for (let i = 0; i < customersPhone.length; i++) {
+      let data = {
+        client_id: `${whatsapp.client}`,
+        mobile: `+2${customersPhone[i]}`,
+        text: message
+      };
+
+      const whatsappMSG = await fetch(
+        "https://v2.whats360.live/api/user/v2/send_message",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${whatsapp.token}`,
+          },
+          body: JSON.stringify(data),
+        }
+      );
+    }
+
+    res.status(200).json({ message: "Message sent successfully." });
+    
+  } catch (error) {
+   res.staus(500).json({ message: "Failed to send driver phone." });
+    next(error);
+  }
+};
