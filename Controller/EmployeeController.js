@@ -93,6 +93,7 @@ export const EditEmployee = async (req, res, next) => {
     password,
     role,
     percentage,
+    stations
   } = req.body;
   const { ID } = req.params;
   try {
@@ -106,6 +107,7 @@ export const EditEmployee = async (req, res, next) => {
         type: type,
         nationalid: nationalID,
         address: address,
+        allowedRoutes: stations,
         percentage: percentage ? +percentage : null,
         User: {
           update: { email: email.toLowerCase() , password: password, role: formatedRole },
