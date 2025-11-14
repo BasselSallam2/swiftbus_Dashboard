@@ -98,6 +98,7 @@ export const EditEmployee = async (req, res, next) => {
   const { ID } = req.params;
   try {
     let formatedRole = role.split(",");
+    let stationsArray = stations.split(",");
 
     const employee = await prisma.employee.update({
       where: { id: ID },
@@ -107,7 +108,7 @@ export const EditEmployee = async (req, res, next) => {
         type: type,
         nationalid: nationalID,
         address: address,
-        allowedRoutes: stations,
+        allowedRoutes: stationsArray,
         percentage: percentage ? +percentage : null,
         User: {
           update: { email: email.toLowerCase() , password: password, role: formatedRole },
