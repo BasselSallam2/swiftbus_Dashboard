@@ -86,6 +86,74 @@
         </div>
     </div>
 
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const filterTripIDInput = document.getElementById("filterTripID");
+        const filterDateInput = document.getElementById("filterDate");
+        const filterRouteInput = document.getElementById("filterRoute");
+        const resetBtn = document.getElementById("resetFilters");
+        const table = document.getElementById("agentlist");
+
+        if (!filterTripIDInput || !filterDateInput || !filterRouteInput || !table) return;
+
+        const rows = table.getElementsByTagName("tr");
+
+        const today = new Date().toISOString().split("T")[0];
+        filterDateInput.value = today;
+
+        function normalizeRowDate(rawDate) {
+            let d = rawDate.trim();
+
+            if (d.includes("T")) {
+                return d.split("T")[0];
+            }
+
+            if (d.includes(" ")) {
+                return d.split(" ")[0];
+            }
+
+            return d;
+        }
+
+        function filterTable() {
+            const tripID = filterTripIDInput.value.toLowerCase();
+            const date = filterDateInput.value;
+            const route = filterRouteInput.value.toLowerCase();
+
+            for (let i = 1; i < rows.length; i++) { 
+                const cells = rows[i].getElementsByTagName("td");
+                if (!cells.length) continue;
+
+                const id = cells[0].textContent.toLowerCase();
+                const rawDate = cells[1].textContent;
+                const rowDate = normalizeRowDate(rawDate);
+                const routeName = cells[7].textContent.toLowerCase();
+
+                let match = true;
+
+                if (tripID && !id.includes(tripID)) match = false;
+                if (date && rowDate !== date) match = false;
+                if (route && !routeName.includes(route)) match = false;
+
+                rows[i].style.display = match ? "" : "none";
+            }
+        }
+
+        filterTripIDInput.addEventListener("input", filterTable);
+        filterDateInput.addEventListener("change", filterTable);
+        filterRouteInput.addEventListener("input", filterTable);
+
+        resetBtn.addEventListener("click", function () {
+            filterTripIDInput.value = "";
+            filterRouteInput.value = "";
+            filterDateInput.value = today; 
+            filterTable();
+        });
+
+        filterTable();
+    });
+    </script>
+
     <% } else { %>
 
     <!-- ======================================
