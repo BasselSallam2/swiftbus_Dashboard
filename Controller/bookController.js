@@ -2,264 +2,257 @@ import prisma from "../prisma/prisma.js";
 
 import { searchService } from "../util/service/searchService.js";
 import { searchMapper } from "../util/service/searchmapper.js";
-import sgMail from '@sendgrid/mail';
+import sgMail from "@sendgrid/mail";
 import dotenv from "dotenv";
 dotenv.config();
 
-
-
-
 const DoubleCashpayment = async (PaymentData) => {
-	try {
-		const {
-			trip_id1,
-			trip_id2,
-			date1,
-			date2,
-			name,
-			phone,
-			station_from1,
-			station_from2,
-			station_to1,
-			station_to2,
-			city_to1,
-			city_to2,
-			city_from1,
-			city_from2,
-			chairs1,
-			chairs2,
-			chairsQTY,
-			paymentmethod,
-			take_off1,
-			take_off2,
-			arrive1,
-			arrive2,
-			discount,
-			price,
-			oldprice,
-			payid,
-     	 employeeID ,
-		  employeename,
-			partamount
-			
-		} = PaymentData;
+  try {
+    const {
+      trip_id1,
+      trip_id2,
+      date1,
+      date2,
+      name,
+      phone,
+      station_from1,
+      station_from2,
+      station_to1,
+      station_to2,
+      city_to1,
+      city_to2,
+      city_from1,
+      city_from2,
+      chairs1,
+      chairs2,
+      chairsQTY,
+      paymentmethod,
+      take_off1,
+      take_off2,
+      arrive1,
+      arrive2,
+      discount,
+      price,
+      oldprice,
+      payid,
+      employeeID,
+      employeename,
+      partamount,
+    } = PaymentData;
 
+    if (process.env.SENDGRID_API_KEY) {
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    } else {
+      throw new Error("SENDGRID_API_KEY is not defined");
+    }
 
-			
-	if (process.env.SENDGRID_API_KEY) {
-		sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-	} else {
-		throw new Error("SENDGRID_API_KEY is not defined");
-	}
+    const ReservedCounter = parseInt(chairsQTY);
 
-		
-	
-		const ReservedCounter = parseInt(chairsQTY) ;
-		
-	
-		let actucalreservation1;
-			const Reservations1 = await prisma.reservation.findFirst({
-				where: { trip_date: date1, trip_id: trip_id1 },
-			});
+    let actucalreservation1;
+    const Reservations1 = await prisma.reservation.findFirst({
+      where: { trip_date: date1, trip_id: trip_id1 },
+    });
 
-			if (!Reservations1) {
-				const newReservation1 = await prisma.reservation.create({
-					data: {
-						trip_id: trip_id1,
-						trip_date: date1,
-						reservedSeats_counter: ReservedCounter ,
-						reservedSeats: chairs1,
-					},
-				});
-				actucalreservation1 = newReservation1;
-			} else {
-				actucalreservation1 = Reservations1;
+    if (!Reservations1) {
+      const newReservation1 = await prisma.reservation.create({
+        data: {
+          trip_id: trip_id1,
+          trip_date: date1,
+          reservedSeats_counter: ReservedCounter,
+          reservedSeats: chairs1,
+        },
+      });
+      actucalreservation1 = newReservation1;
+    } else {
+      actucalreservation1 = Reservations1;
 
-				let chairsArray = Reservations1.reservedSeats;
+      let chairsArray = Reservations1.reservedSeats;
 
-        const chairsArrayy = Array.isArray(chairsArray)
+      const chairsArrayy = Array.isArray(chairsArray)
         ? chairsArray.map((route) => Number(route))
         : [];
 
-				chairsArrayy.push(...(chairs1 ));
-				const updateReservation1 = await prisma.reservation.update({
-					where: { id: Reservations1.id },
-					data: {
-						reservedSeats_counter: Reservations1.reservedSeats_counter + ReservedCounter ,
-						reservedSeats: chairsArrayy,
-					},
-				});
-			}
+      chairsArrayy.push(...chairs1);
+      const updateReservation1 = await prisma.reservation.update({
+        where: { id: Reservations1.id },
+        data: {
+          reservedSeats_counter:
+            Reservations1.reservedSeats_counter + ReservedCounter,
+          reservedSeats: chairsArrayy,
+        },
+      });
+    }
 
+    let actucalreservation2;
+    const Reservations2 = await prisma.reservation.findFirst({
+      where: { trip_date: date2, trip_id: trip_id2 },
+    });
+    if (!Reservations2) {
+      const newReservation2 = await prisma.reservation.create({
+        data: {
+          trip_id: trip_id2,
+          trip_date: date2,
+          reservedSeats_counter: ReservedCounter,
+          reservedSeats: chairs2,
+        },
+      });
+      actucalreservation2 = newReservation2;
+    } else {
+      actucalreservation2 = Reservations2;
 
-			let actucalreservation2;
-			const Reservations2 = await prisma.reservation.findFirst({
-				where: { trip_date: date2, trip_id: trip_id2 },
-			});
-			if (!Reservations2) {
-				const newReservation2 = await prisma.reservation.create({
-					data: {
-						trip_id: trip_id2,
-						trip_date: date2,
-						reservedSeats_counter: ReservedCounter ,
-						reservedSeats: chairs2,
-					},
-				});
-				actucalreservation2 = newReservation2;
-			} else {
-				actucalreservation2 = Reservations2;
+      let chairsArray = Reservations2.reservedSeats;
 
-				let chairsArray = Reservations2.reservedSeats ;
-
-        const chairsArrayy = Array.isArray(chairsArray)
+      const chairsArrayy = Array.isArray(chairsArray)
         ? chairsArray.map((route) => Number(route))
         : [];
 
-				chairsArrayy.push(...(chairs2 ));
-				const updateReservation2 = await prisma.reservation.update({
-					where: { id: Reservations2.id },
-					data: {
-						reservedSeats_counter: Reservations2.reservedSeats_counter + ReservedCounter ,
-						reservedSeats: chairsArrayy ,
-					},
-				});
-			}
-	
-			let actualCoustmer;
-			const Coustmer = await prisma.coustmer.findUnique({
-				where: { phone: phone },
-			});
-			if (!Coustmer) {
-				const NewCoustmer = await prisma.coustmer.create({
-					data: { name: name, phone: phone },
-				});
-				actualCoustmer = NewCoustmer;
-			} else {
-				actualCoustmer = Coustmer;
-			}
-		
-			let NewTicket;
-			if (paymentmethod === "cash") {
-			   NewTicket = await prisma.ticket.create({
-				data: {
-					trip_id: trip_id1,
-					Back_trip_id:trip_id2,
-					pay_id : payid ,
-					trip_date: date1,
-					Back_trip_date:date2,
-					Coustmer_id: actualCoustmer.id,
-					status: "Booked",
-					paymentMethod: "cash",
-					seatsCounter: ReservedCounter ,
-					seats: chairs1,
-					Backseats: chairs2,
-					reservation_id: actucalreservation1.id,
-					Backreservation_id:actucalreservation2.id,
-					
-			CityRoutes:[city_from1 , city_to1] ,
-			Back_CityRoutes:[city_from2 , city_to2] ,
-			StationRoutes:[station_from1,station_to1],
-			Back_StationRoutes:[station_from2,station_to2],
-			takeoff: take_off1 ,
-			Back_takeoff:take_off2,
-			arrive : arrive1,
-			Back_arrive:arrive2,
-			price : price,
-      book_id : employeeID
-			
-				},
-			});
-		}else if (paymentmethod === "pend") {
-			   NewTicket = await prisma.ticket.create({
-				data: {
-					trip_id: trip_id1,
-					Back_trip_id:trip_id2,
-					pay_id : payid ,
-					trip_date: date1,
-					Back_trip_date:date2,
-					Coustmer_id: actualCoustmer.id,
-					status: "Pending",
-					paymentMethod: "cash",
-					seatsCounter: ReservedCounter ,
-					seats: chairs1,
-					Backseats: chairs2,
-					reservation_id: actucalreservation1.id,
-					Backreservation_id:actucalreservation2.id,
-					
-			CityRoutes:[city_from1 , city_to1] ,
-			Back_CityRoutes:[city_from2 , city_to2] ,
-			StationRoutes:[station_from1,station_to1],
-			Back_StationRoutes:[station_from2,station_to2],
-			takeoff: take_off1 ,
-			Back_takeoff:take_off2,
-			arrive : arrive1,
-			Back_arrive:arrive2,
-			price : price,
-      book_id : employeeID
-			
-				},
-			});
-		}else if (paymentmethod === "part") {
-			   NewTicket = await prisma.ticket.create({
-				data: {
-					trip_id: trip_id1,
-					Back_trip_id:trip_id2,
-					pay_id : payid ,
-					trip_date: date1,
-					Back_trip_date:date2,
-					Coustmer_id: actualCoustmer.id,
-					status: "Partial Paid",
-					settledprice: parseInt(partamount) ,
-					paymentMethod: "cash",
-					seatsCounter: ReservedCounter ,
-					seats: chairs1,
-					Backseats: chairs2,
-					reservation_id: actucalreservation1.id,
-					Backreservation_id:actucalreservation2.id,
-					
-			CityRoutes:[city_from1 , city_to1] ,
-			Back_CityRoutes:[city_from2 , city_to2] ,
-			StationRoutes:[station_from1,station_to1],
-			Back_StationRoutes:[station_from2,station_to2],
-			takeoff: take_off1 ,
-			Back_takeoff:take_off2,
-			arrive : arrive1,
-			Back_arrive:arrive2,
-			price : price,
-      book_id : employeeID
-			
-				},
-			});
-		}
-			
-		const firstStation1 = await prisma.station.findFirst({
-			where: {name: station_from1} , select: {Arabicname: true , location: true , address: true}
-		} );
-		const secondStation1 = await prisma.station.findFirst({
-			where: {name: station_to1} , select: {Arabicname: true}
-		});
-		const TAKEOFFTYPE1 = take_off1.split(" ")[1] === "AM" ? 'صباحاً' : `مساءً` 
-		const TAKEOFF1 = `${take_off1.split(" ")[0]} ${TAKEOFFTYPE1}`
-		const ARRIVETYPE1 = arrive1.split(" ")[1] === "AM" ? 'صباحاً' : `مساءً`
-		const ARRIVE1 = `${arrive1.split(" ")[0]} ${ARRIVETYPE1}`
+      chairsArrayy.push(...chairs2);
+      const updateReservation2 = await prisma.reservation.update({
+        where: { id: Reservations2.id },
+        data: {
+          reservedSeats_counter:
+            Reservations2.reservedSeats_counter + ReservedCounter,
+          reservedSeats: chairsArrayy,
+        },
+      });
+    }
 
-		const firstStation2 = await prisma.station.findFirst({
-			where: {name: station_from2} , select: {Arabicname: true}
-		} );
-		const secondStation2 = await prisma.station.findFirst({
-			where: {name: station_to2} , select: {Arabicname: true}
-		});
-		const TAKEOFFTYPE2 = take_off2.split(" ")[1] === "AM" ? 'صباحاً' : `مساءً` 
-		const TAKEOFF2 = `${take_off2.split(" ")[0]} ${TAKEOFFTYPE2}`
-		const ARRIVETYPE2 = arrive2.split(" ")[1] === "AM" ? 'صباحاً' : `مساءً`
-		const ARRIVE2 = `${arrive2.split(" ")[0]} ${ARRIVETYPE2}`
+    let actualCoustmer;
+    const Coustmer = await prisma.coustmer.findUnique({
+      where: { phone: phone },
+    });
+    if (!Coustmer) {
+      const NewCoustmer = await prisma.coustmer.create({
+        data: { name: name, phone: phone },
+      });
+      actualCoustmer = NewCoustmer;
+    } else {
+      actualCoustmer = Coustmer;
+    }
 
-		const whatsapp = await prisma.whatsapp.findFirst();
+    let NewTicket;
+    if (paymentmethod === "cash") {
+      NewTicket = await prisma.ticket.create({
+        data: {
+          trip_id: trip_id1,
+          Back_trip_id: trip_id2,
+          pay_id: payid,
+          trip_date: date1,
+          Back_trip_date: date2,
+          Coustmer_id: actualCoustmer.id,
+          status: "Booked",
+          paymentMethod: "cash",
+          seatsCounter: ReservedCounter,
+          seats: chairs1,
+          Backseats: chairs2,
+          reservation_id: actucalreservation1.id,
+          Backreservation_id: actucalreservation2.id,
 
-		const data = {
-			client_id: `${whatsapp.client}`,
-			mobile: `+2${actualCoustmer.phone}`,
-			text: `تم حجز تذكرتك بنجاح و رقم التذكرة هو ${NewTicket.ticket_code}
+          CityRoutes: [city_from1, city_to1],
+          Back_CityRoutes: [city_from2, city_to2],
+          StationRoutes: [station_from1, station_to1],
+          Back_StationRoutes: [station_from2, station_to2],
+          takeoff: take_off1,
+          Back_takeoff: take_off2,
+          arrive: arrive1,
+          Back_arrive: arrive2,
+          price: price,
+          book_id: employeeID,
+        },
+      });
+    } else if (paymentmethod === "pend") {
+      NewTicket = await prisma.ticket.create({
+        data: {
+          trip_id: trip_id1,
+          Back_trip_id: trip_id2,
+          pay_id: payid,
+          trip_date: date1,
+          Back_trip_date: date2,
+          Coustmer_id: actualCoustmer.id,
+          status: "Pending",
+          paymentMethod: "cash",
+          seatsCounter: ReservedCounter,
+          seats: chairs1,
+          Backseats: chairs2,
+          reservation_id: actucalreservation1.id,
+          Backreservation_id: actucalreservation2.id,
+
+          CityRoutes: [city_from1, city_to1],
+          Back_CityRoutes: [city_from2, city_to2],
+          StationRoutes: [station_from1, station_to1],
+          Back_StationRoutes: [station_from2, station_to2],
+          takeoff: take_off1,
+          Back_takeoff: take_off2,
+          arrive: arrive1,
+          Back_arrive: arrive2,
+          price: price,
+          book_id: employeeID,
+        },
+      });
+    } else if (paymentmethod === "part") {
+      NewTicket = await prisma.ticket.create({
+        data: {
+          trip_id: trip_id1,
+          Back_trip_id: trip_id2,
+          pay_id: payid,
+          trip_date: date1,
+          Back_trip_date: date2,
+          Coustmer_id: actualCoustmer.id,
+          status: "Partial Paid",
+          settledprice: parseInt(partamount),
+          paymentMethod: "cash",
+          seatsCounter: ReservedCounter,
+          seats: chairs1,
+          Backseats: chairs2,
+          reservation_id: actucalreservation1.id,
+          Backreservation_id: actucalreservation2.id,
+
+          CityRoutes: [city_from1, city_to1],
+          Back_CityRoutes: [city_from2, city_to2],
+          StationRoutes: [station_from1, station_to1],
+          Back_StationRoutes: [station_from2, station_to2],
+          takeoff: take_off1,
+          Back_takeoff: take_off2,
+          arrive: arrive1,
+          Back_arrive: arrive2,
+          price: price,
+          book_id: employeeID,
+        },
+      });
+    }
+
+    const firstStation1 = await prisma.station.findFirst({
+      where: { name: station_from1 },
+      select: { Arabicname: true, location: true, address: true },
+    });
+    const secondStation1 = await prisma.station.findFirst({
+      where: { name: station_to1 },
+      select: { Arabicname: true },
+    });
+    const TAKEOFFTYPE1 = take_off1.split(" ")[1] === "AM" ? "صباحاً" : `مساءً`;
+    const TAKEOFF1 = `${take_off1.split(" ")[0]} ${TAKEOFFTYPE1}`;
+    const ARRIVETYPE1 = arrive1.split(" ")[1] === "AM" ? "صباحاً" : `مساءً`;
+    const ARRIVE1 = `${arrive1.split(" ")[0]} ${ARRIVETYPE1}`;
+
+    const firstStation2 = await prisma.station.findFirst({
+      where: { name: station_from2 },
+      select: { Arabicname: true },
+    });
+    const secondStation2 = await prisma.station.findFirst({
+      where: { name: station_to2 },
+      select: { Arabicname: true },
+    });
+    const TAKEOFFTYPE2 = take_off2.split(" ")[1] === "AM" ? "صباحاً" : `مساءً`;
+    const TAKEOFF2 = `${take_off2.split(" ")[0]} ${TAKEOFFTYPE2}`;
+    const ARRIVETYPE2 = arrive2.split(" ")[1] === "AM" ? "صباحاً" : `مساءً`;
+    const ARRIVE2 = `${arrive2.split(" ")[0]} ${ARRIVETYPE2}`;
+
+    const whatsapp = await prisma.whatsapp.findFirst();
+
+    const data = {
+      client_id: `${whatsapp.client}`,
+      mobile: `+2${actualCoustmer.phone}`,
+      text: `تم حجز تذكرتك بنجاح و رقم التذكرة هو ${NewTicket.ticket_code}
 ب اسم ${actualCoustmer.name}
 تليفون ${actualCoustmer.phone}
 وسيلة الدفع ${NewTicket.paymentMethod}
@@ -286,30 +279,26 @@ const DoubleCashpayment = async (PaymentData) => {
 
 
 برجاء الاحتفاظ بالتذكرة: 
-https://www.swiftbusegypt.com/ticket?id=${NewTicket.pay_id}`
-		};
+https://www.swiftbusegypt.com/ticket?id=${NewTicket.pay_id}`,
+    };
 
+    const whatsappMSG = await fetch(
+      "https://v2.whats360.live/api/user/v2/send_message",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${whatsapp.token}`,
+        },
+        body: JSON.stringify(data),
+      }
+    );
 
-		const whatsappMSG = await fetch(
-			"https://v2.whats360.live/api/user/v2/send_message",
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization:
-						`Bearer ${whatsapp.token}`,
-				},
-				body: JSON.stringify(data),
-			}
-		);
-
-
-
-			const msg = {
-				to: 'dahabawybus@gmail.com',
-				from: 'bassela.sallam@gmail.com',
-				subject: `🚌 New Cash Double Reservation from an agent (#${NewTicket.ticket_code})`,
-				html: `
+    const msg = {
+      to: "dahabawybus@gmail.com",
+      from: "bassela.sallam@gmail.com",
+      subject: `🚌 New Cash Double Reservation from an agent (#${NewTicket.ticket_code})`,
+      html: `
 				<div style="font-family:Arial, sans-serif;max-width:650px;margin:auto;background:#f7f7f7;padding:20px;border-radius:10px;">
 				  <h2 style="color:#333;">🎟️ New Double Reservation Received!</h2>
 				  <p>You've received a new <strong>cash reservation (Round Trip)</strong>. Here are the complete details:</p>
@@ -353,199 +342,190 @@ https://www.swiftbusegypt.com/ticket?id=${NewTicket.pay_id}`
 				  </p>
 				</div>
 				`,
-			  };
-			  
+    };
 
-  await sgMail.send(msg) ;
-  
-	}
-	
-	catch(error){
-		console.log(error) ;
-	 }
-	}
-	
-
-
+    await sgMail.send(msg);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const Cashpayment = async (PaymentData) => {
-    try {
-        const {
-            trip_id,
-            date,
-            name,
-            phone,
-            station_from,
-            station_to,
-            city_to,
-            city_from,
-            chairs,
-            chairsQTY,
-            voucher,
-            paymentmethod,
-            take_off,
-            arrive,
-            price,
-            payid ,
-            employeeID ,
-			employeename,
-			partamount
-        } = PaymentData ;
+  try {
+    const {
+      trip_id,
+      date,
+      name,
+      phone,
+      station_from,
+      station_to,
+      city_to,
+      city_from,
+      chairs,
+      chairsQTY,
+      voucher,
+      paymentmethod,
+      take_off,
+      arrive,
+      price,
+      payid,
+      employeeID,
+      employeename,
+      partamount,
+    } = PaymentData;
 
-        
-    
-        const ReservedCounter = parseInt(chairsQTY) ;
-    
-        if (process.env.SENDGRID_API_KEY) {
-            sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-        } else {
-            throw new Error("SENDGRID_API_KEY is not defined");
-        }
-        
-    
-    
-        let actucalreservation;
-            const Reservations = await prisma.reservation.findFirst({
-                where: { trip_date: date, trip_id: trip_id },
-            });
-            if (!Reservations) {
-                const newReservation = await prisma.reservation.create({
-                    data: {
-                        trip_id: trip_id,
-                        trip_date: date,
-                        reservedSeats_counter: ReservedCounter ,
-                        reservedSeats: chairs,
-                    },
-                });
-                actucalreservation = newReservation;
-            } else {
-                actucalreservation = Reservations;
+    const ReservedCounter = parseInt(chairsQTY);
 
-                let chairsArray = Reservations.reservedSeats ;
+    if (process.env.SENDGRID_API_KEY) {
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    } else {
+      throw new Error("SENDGRID_API_KEY is not defined");
+    }
 
-                const chairsArrayy = Array.isArray(chairsArray)
-                ? chairsArray.map((route) => Number(route))
-                : [];
-              
+    let actucalreservation;
+    const Reservations = await prisma.reservation.findFirst({
+      where: { trip_date: date, trip_id: trip_id },
+    });
+    if (!Reservations) {
+      const newReservation = await prisma.reservation.create({
+        data: {
+          trip_id: trip_id,
+          trip_date: date,
+          reservedSeats_counter: ReservedCounter,
+          reservedSeats: chairs,
+        },
+      });
+      actucalreservation = newReservation;
+    } else {
+      actucalreservation = Reservations;
 
-                chairsArrayy.push(...(chairs));
-               
-                
-                const updateReservation = await prisma.reservation.update({
-                    where: { id: Reservations.id },
-                    data: {
-                        reservedSeats_counter: Reservations.reservedSeats_counter + ReservedCounter ,
-                        reservedSeats: chairsArrayy,
-                    },
-                });
-            }
-    
-            let actualCoustmer;
-            const Coustmer = await prisma.coustmer.findUnique({
-                where: { phone: phone },
-            });
-            if (!Coustmer) {
-                const NewCoustmer = await prisma.coustmer.create({
-                    data: { name: name, phone: phone },
-                });
-                actualCoustmer = NewCoustmer;
-            } else {
-                actualCoustmer = Coustmer;
-            }
-        let actualvoucher;
-        if(voucher.length > 0) {
-          const usedvoucher = await prisma.voucher.findUnique({where:{code:voucher}}) ;
-          actualvoucher = usedvoucher ;
-          await prisma.voucher.update({where:{id:usedvoucher?.id}, data: {consumed: {increment: 1}}});
-        }
-			let NewTicket;
-			if(paymentmethod === "cash") {
-				 NewTicket = await prisma.ticket.create({
-                data: {
-                    trip_id: trip_id,
-                    pay_id : payid ,
-                    trip_date: date,
-                    Coustmer_id: actualCoustmer.id,
-                    status: "Booked",
-                    paymentMethod: "cash",
-                    seatsCounter: ReservedCounter ,
-                    seats: chairs,
-                    reservation_id: actucalreservation.id,
-            CityRoutes:[city_from , city_to] ,
-            StationRoutes:[station_from,station_to],
-            voucher_id: actualvoucher?.id || null, 
-            takeoff: take_off ,
-            arrive : arrive,
-            price : price,
-            book_id : employeeID
-           
-                },
-            });
-			}else if(paymentmethod === "pend") {
-				NewTicket = await prisma.ticket.create({
-                data: {
-                    trip_id: trip_id,
-                    pay_id : payid ,
-                    trip_date: date,
-                    Coustmer_id: actualCoustmer.id,
-                    status: "Pending",
-                    paymentMethod: "cash",
-                    seatsCounter: ReservedCounter ,
-                    seats: chairs,
-                    reservation_id: actucalreservation.id,
-            CityRoutes:[city_from , city_to] ,
-            StationRoutes:[station_from,station_to],
-            voucher_id: actualvoucher?.id || null, 
-            takeoff: take_off ,
-            arrive : arrive,
-            price : price,
-            book_id : employeeID
-           
-                },
-            });
-			}else if(paymentmethod === "part") {
-				NewTicket = await prisma.ticket.create({
-                data: {
-                    trip_id: trip_id,
-                    pay_id : payid ,
-                    trip_date: date,
-                    Coustmer_id: actualCoustmer.id,
-                    status: "Partial Paid",
-					settledprice: parseInt(partamount) ,
-                    paymentMethod: "cash",
-                    seatsCounter: ReservedCounter ,
-                    seats: chairs,
-                    reservation_id: actucalreservation.id,
-            CityRoutes:[city_from , city_to] ,
-            StationRoutes:[station_from,station_to],
-            voucher_id: actualvoucher?.id || null, 
-            takeoff: take_off ,
-            arrive : arrive,
-            price : price,
-            book_id : employeeID
-           
-                },
-            });
-		}
-            
+      let chairsArray = Reservations.reservedSeats;
 
-				const firstStation = await prisma.station.findFirst({
-			where: {name: station_from} , select: {Arabicname: true , location: true , address: true}
-		} );
-		const secondStation = await prisma.station.findFirst({
-			where: {name: station_to} , select: {Arabicname: true}
-		});
-		const TAKEOFFTYPE = take_off.split(" ")[1] === "AM" ? 'صباحاً' : `مساءً` 
-		const TAKEOFF = `${take_off.split(" ")[0]} ${TAKEOFFTYPE}`
-		const ARRIVETYPE = arrive.split(" ")[1] === "AM" ? 'صباحاً' : `مساءً`
-		const ARRIVE = `${arrive.split(" ")[0]} ${ARRIVETYPE}`
+      const chairsArrayy = Array.isArray(chairsArray)
+        ? chairsArray.map((route) => Number(route))
+        : [];
 
-		const whats = await prisma.whatsapp.findFirst();
+      chairsArrayy.push(...chairs);
 
-		const data = {
-			client_id: `${whats.client}` ,
-			mobile: `+2${actualCoustmer.phone}`,
-			text: `تم حجز تذكرتك بنجاح و رقم التذكرة هو ${NewTicket.ticket_code}
+      const updateReservation = await prisma.reservation.update({
+        where: { id: Reservations.id },
+        data: {
+          reservedSeats_counter:
+            Reservations.reservedSeats_counter + ReservedCounter,
+          reservedSeats: chairsArrayy,
+        },
+      });
+    }
+
+    let actualCoustmer;
+    const Coustmer = await prisma.coustmer.findUnique({
+      where: { phone: phone },
+    });
+    if (!Coustmer) {
+      const NewCoustmer = await prisma.coustmer.create({
+        data: { name: name, phone: phone },
+      });
+      actualCoustmer = NewCoustmer;
+    } else {
+      actualCoustmer = Coustmer;
+    }
+    let actualvoucher;
+    if (voucher.length > 0) {
+      const usedvoucher = await prisma.voucher.findUnique({
+        where: { code: voucher },
+      });
+      actualvoucher = usedvoucher;
+      await prisma.voucher.update({
+        where: { id: usedvoucher?.id },
+        data: { consumed: { increment: 1 } },
+      });
+    }
+    let NewTicket;
+    if (paymentmethod === "cash") {
+      NewTicket = await prisma.ticket.create({
+        data: {
+          trip_id: trip_id,
+          pay_id: payid,
+          trip_date: date,
+          Coustmer_id: actualCoustmer.id,
+          status: "Booked",
+          paymentMethod: "cash",
+          seatsCounter: ReservedCounter,
+          seats: chairs,
+          reservation_id: actucalreservation.id,
+          CityRoutes: [city_from, city_to],
+          StationRoutes: [station_from, station_to],
+          voucher_id: actualvoucher?.id || null,
+          takeoff: take_off,
+          arrive: arrive,
+          price: price,
+          book_id: employeeID,
+        },
+      });
+    } else if (paymentmethod === "pend") {
+      NewTicket = await prisma.ticket.create({
+        data: {
+          trip_id: trip_id,
+          pay_id: payid,
+          trip_date: date,
+          Coustmer_id: actualCoustmer.id,
+          status: "Pending",
+          paymentMethod: "cash",
+          seatsCounter: ReservedCounter,
+          seats: chairs,
+          reservation_id: actucalreservation.id,
+          CityRoutes: [city_from, city_to],
+          StationRoutes: [station_from, station_to],
+          voucher_id: actualvoucher?.id || null,
+          takeoff: take_off,
+          arrive: arrive,
+          price: price,
+          book_id: employeeID,
+        },
+      });
+    } else if (paymentmethod === "part") {
+      NewTicket = await prisma.ticket.create({
+        data: {
+          trip_id: trip_id,
+          pay_id: payid,
+          trip_date: date,
+          Coustmer_id: actualCoustmer.id,
+          status: "Partial Paid",
+          settledprice: parseInt(partamount),
+          paymentMethod: "cash",
+          seatsCounter: ReservedCounter,
+          seats: chairs,
+          reservation_id: actucalreservation.id,
+          CityRoutes: [city_from, city_to],
+          StationRoutes: [station_from, station_to],
+          voucher_id: actualvoucher?.id || null,
+          takeoff: take_off,
+          arrive: arrive,
+          price: price,
+          book_id: employeeID,
+        },
+      });
+    }
+
+    const firstStation = await prisma.station.findFirst({
+      where: { name: station_from },
+      select: { Arabicname: true, location: true, address: true },
+    });
+    const secondStation = await prisma.station.findFirst({
+      where: { name: station_to },
+      select: { Arabicname: true },
+    });
+    const TAKEOFFTYPE = take_off.split(" ")[1] === "AM" ? "صباحاً" : `مساءً`;
+    const TAKEOFF = `${take_off.split(" ")[0]} ${TAKEOFFTYPE}`;
+    const ARRIVETYPE = arrive.split(" ")[1] === "AM" ? "صباحاً" : `مساءً`;
+    const ARRIVE = `${arrive.split(" ")[0]} ${ARRIVETYPE}`;
+
+    const whats = await prisma.whatsapp.findFirst();
+
+    const data = {
+      client_id: `${whats.client}`,
+      mobile: `+2${actualCoustmer.phone}`,
+      text: `تم حجز تذكرتك بنجاح و رقم التذكرة هو ${NewTicket.ticket_code}
 ب اسم ${actualCoustmer.name}
 تليفون ${actualCoustmer.phone}
 وسيلة الدفع ${"كاش"}
@@ -563,35 +543,35 @@ const Cashpayment = async (PaymentData) => {
 لوكيشن محطة الركوب: ${firstStation?.location}
 
 برجاء الاحتفاظ بالتذكرة: 
-https://www.swiftbusegypt.com/ticket?id=${NewTicket.pay_id}`
-		};
+https://www.swiftbusegypt.com/ticket?id=${NewTicket.pay_id}`,
+    };
 
-		const whatsappMSG = await fetch(
-			"https://v2.whats360.live/api/user/v2/send_message",
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization:
-						`Bearer ${whats.token}`,
-				},
-				body: JSON.stringify(data),
-			}
-		);
-    
-            
+    const whatsappMSG = await fetch(
+      "https://v2.whats360.live/api/user/v2/send_message",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${whats.token}`,
+        },
+        body: JSON.stringify(data),
+      }
+    );
+
     const msg = {
-        to: 'dahabawybus@gmail.com',
-        from: '	bassela.sallam@gmail.com',
-        subject: `🚌 New Cash Single Reservation from an agent (#${NewTicket.ticket_code})`,
-        html: `
+      to: "dahabawybus@gmail.com",
+      from: "	bassela.sallam@gmail.com",
+      subject: `🚌 New Cash Single Reservation from an agent (#${NewTicket.ticket_code})`,
+      html: `
         <div style="font-family:Arial, sans-serif;max-width:600px;margin:auto;background:#f7f7f7;padding:20px;border-radius:10px;">
           <h2 style="color:#333;">🎟️ New Reservation Received!</h2>
           <p>You've received a new <strong>cash reservation</strong>. Here are the details:</p>
           <table style="width:100%;border-collapse:collapse;">
             <tr>
               <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Ticket Number:</strong></td>
-              <td style="padding:8px;border-bottom:1px solid #ddd;">#${NewTicket.ticket_code}</td>
+              <td style="padding:8px;border-bottom:1px solid #ddd;">#${
+                NewTicket.ticket_code
+              }</td>
             </tr>
             <tr>
               <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Trip ID:</strong></td>
@@ -599,11 +579,15 @@ https://www.swiftbusegypt.com/ticket?id=${NewTicket.pay_id}`
             </tr>
             <tr>
               <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Customer name:</strong></td>
-              <td style="padding:8px;border-bottom:1px solid #ddd;">${actualCoustmer.name}</td>
+              <td style="padding:8px;border-bottom:1px solid #ddd;">${
+                actualCoustmer.name
+              }</td>
             </tr>
             <tr>
               <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Customer phone:</strong></td>
-              <td style="padding:8px;border-bottom:1px solid #ddd;">${actualCoustmer.phone}</td>
+              <td style="padding:8px;border-bottom:1px solid #ddd;">${
+                actualCoustmer.phone
+              }</td>
             </tr>
             <tr>
               <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Trip Date:</strong></td>
@@ -631,7 +615,9 @@ https://www.swiftbusegypt.com/ticket?id=${NewTicket.pay_id}`
             </tr>
             <tr>
               <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Voucher:</strong></td>
-              <td style="padding:8px;border-bottom:1px solid #ddd;">${actualvoucher?.code || 'None'}</td>
+              <td style="padding:8px;border-bottom:1px solid #ddd;">${
+                actualvoucher?.code || "None"
+              }</td>
             </tr>
             <tr>
               <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Total Price:</strong></td>
@@ -654,588 +640,611 @@ https://www.swiftbusegypt.com/ticket?id=${NewTicket.pay_id}`
           </p>
         </div>
         `,
-      };
-    
-      await sgMail.send(msg) ;
-      
-    }
-    
-    catch(error){
-        console.log(error) ;
-     }
-    }
-    
+    };
 
+    await sgMail.send(msg);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-export const ViewBookpage = async (req , res , next) => {
-
-    try {
-        const Markting = await prisma.marktingLines.findMany({
-            select: { Arabiccity: true, Arabicsubtitle: true, image_path: true },
-        });
-        const citywithstations = await prisma.city.findMany({
+export const ViewBookpage = async (req, res, next) => {
+  try {
+    const employee = await prisma.employee.findUnique({
+      where: { id: req.user.employeeID },
+    });
+    let citywithstations;
+    if (!employee.allowedRoutes || employee.allowedRoutes.includes("all")) {
+      citywithstations = await prisma.city.findMany({
+        where: { isDeleted: false },
+        select: {
+          Arabicname: true,
+          stations: {
             where: { isDeleted: false },
             select: {
-            Arabicname: true,
-            stations: {
-                where: { isDeleted: false },
-                select: {
-                Arabicname: true,
-                name: true,
-                },
+              Arabicname: true,
+              name: true,
             },
+          },
+        },
+      });
+    } else if (employee.allowedRoutes) {
+      const stationIds = employee.allowedRoutes;
+      citywithstations = await prisma.city.findMany({
+        where: {
+          isDeleted: false,
+          stations: {
+            some: {
+              id: { in: stationIds },
+              isDeleted: false,
             },
-        });
-        const ArabicFrontpage = await prisma.frontpageArabic.findFirst();
-        const footerinfo = await prisma.info.findFirst();
-        const arabicfreqquestion = await prisma.freqQuestionsArabic.findFirst({
-            select: { Questions: { select: { question: true, answer: true } } },
-        });
-
-        
-        res.render("BookPage", {
-            Markting,
-            ArabicFrontpage,
-            citywithstations,
-            arabicfreqquestion,
-            footerinfo,
-        });
-    } catch (error) {
-        next(error);
+          },
+        },
+        select: {
+          Arabicname: true,
+          stations: {
+            where: {
+              id: { in: stationIds },
+              isDeleted: false,
+            },
+            select: {
+              id: true,
+              Arabicname: true,
+              name: true,
+            },
+          },
+        },
+      });
     }
+
+    const ArabicFrontpage = await prisma.frontpageArabic.findFirst();
+    const footerinfo = await prisma.info.findFirst();
+    const arabicfreqquestion = await prisma.freqQuestionsArabic.findFirst({
+      select: { Questions: { select: { question: true, answer: true } } },
+    });
+
+    res.render("BookPage", {
+      ArabicFrontpage,
+      citywithstations,
+      arabicfreqquestion,
+      footerinfo,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
+export const Searchresult = async (req, res, next) => {
+  try {
+    const { travel_date, back_date, radio, first_choice, second_choice, qty } =
+      req.body;
+    //console.log(travel_date , back_date , radio , first_choice , second_choice , qty);
 
+    if (!travel_date || !first_choice || !second_choice || !qty) {
+      return res.redirect("/");
+    }
 
+    if (travel_date && back_date && radio == "twoWay") {
+      const DATEGO = new Date(travel_date);
+      const DATEBACK = new Date(back_date);
+      if (travel_date > back_date) {
+        return res.redirect("/");
+      }
+    }
 
-export const Searchresult = async (
-	req , res , next
-) => {
-	try {
-		const { travel_date , back_date , radio , first_choice, second_choice , qty } = req.body;
-		//console.log(travel_date , back_date , radio , first_choice , second_choice , qty);
-		
-		
+    const searchresultGo = await searchService(
+      travel_date,
+      first_choice,
+      second_choice,
+      qty
+    );
 
-		if (!travel_date || !first_choice || !second_choice || !qty) {
-			return res.redirect('/') ;
-		}
+    const GoResult = await searchMapper(
+      searchresultGo,
+      first_choice,
+      second_choice,
+      travel_date,
+      qty
+    );
 
-		if (travel_date && back_date && radio == 'twoWay') {
-			const DATEGO = new Date(travel_date);
-			const DATEBACK = new Date(back_date);
-			if (travel_date > back_date) {
-				return res.redirect('/') ;
-			}
-		}
+    let BackResult = [];
 
-		const searchresultGo = await searchService(
-			travel_date,
-			first_choice ,
-			second_choice,
-			qty 
-		);
+    if (radio === "twoWay" && !back_date) {
+      return res.redirect("/");
+    }
 
+    if (radio === "twoWay" && back_date) {
+      const searchresultBack = await searchService(
+        back_date,
+        second_choice,
+        first_choice,
+        qty
+      );
 
-		const GoResult = await searchMapper(
-			searchresultGo,
-			first_choice ,
-			second_choice ,
-			travel_date ,
-			qty 
-		);
-		
-	
+      if (radio === "twoWay" && back_date) {
+        BackResult = await searchMapper(
+          searchresultBack,
+          second_choice,
+          first_choice,
+          back_date,
+          qty
+        );
+      }
+    }
 
+    const ArabicFrontpage = await prisma.frontpageArabic.findFirst();
+    const footerinfo = await prisma.info.findFirst();
 
-	
+    if (radio === "oneWay") {
+      return res.render("book_trips", {
+        GoResult,
+        radio,
+        qty,
+        ArabicFrontpage,
+        footerinfo,
+      });
+    }
 
-		let BackResult = [];
-
-		if (radio === "twoWay" && !back_date) {
-			return res.redirect('/') ;
-		}
-
-		if (radio === "twoWay" && back_date) {
-			const searchresultBack = await searchService(
-				back_date ,
-				second_choice ,
-				first_choice ,
-				qty 
-			)
-
-			if (radio === "twoWay" && back_date) {	
-			BackResult = await searchMapper(
-				searchresultBack,
-				second_choice ,
-				first_choice ,
-				back_date ,
-				qty 
-			);
-		 }
-		}	
-
-		const ArabicFrontpage = await prisma.frontpageArabic.findFirst();
-		const footerinfo = await prisma.info.findFirst();
-	
-		
-		if(radio === "oneWay") {
-			return res.render("book_trips" , {GoResult , radio , qty , ArabicFrontpage , footerinfo}) ;
-		}
-
-		return res.render("book_trips" , {GoResult , BackResult , radio , qty , ArabicFrontpage , footerinfo}) ;
-		
-		
-	
-	} catch (error) {
-		console.error(error);
-	}
+    return res.render("book_trips", {
+      GoResult,
+      BackResult,
+      radio,
+      qty,
+      ArabicFrontpage,
+      footerinfo,
+    });
+  } catch (error) {
+    console.error(error);
+  }
 };
 
-
-    
-
-
-
-export const SelectSingleTrip = async (req , res , next) => {
-    try {
-
+export const SelectSingleTrip = async (req, res, next) => {
+  try {
     //const { trip_id, trip_date, bus_type, trip_day, trip_takeoff, trip_from, trip_to, trip_fare, trip_specialfare , city_from, city_to, payment , chairsNumber , trip_arrive } = req.body;
-    const Data = req.body ;
-    
-   
-   
+    const Data = req.body;
 
-    const [month, day, year] = Data.trip_date.split('/');
-    const formattedDate = new Date(`${year}-${month}-${day}`).toISOString().split('T')[0];
+    const [month, day, year] = Data.trip_date.split("/");
+    const formattedDate = new Date(`${year}-${month}-${day}`)
+      .toISOString()
+      .split("T")[0];
 
-    const paymentMethods = Data.payment.split(',');
+    const paymentMethods = Data.payment.split(",");
 
-
-    const Reservations = await prisma.reservation.findFirst({where : {trip_date : formattedDate , trip_id : Data.trip_id}});
-    const tempReservation = await prisma.tempReservation.findFirst({where : {trip_date : formattedDate , trip_id : Data.trip_id}});
-    const vouchers = await prisma.voucher.findMany({ where: { consumed: { lt: prisma.voucher.fields.avaliable } , isActive: true }});
+    const Reservations = await prisma.reservation.findFirst({
+      where: { trip_date: formattedDate, trip_id: Data.trip_id },
+    });
+    const tempReservation = await prisma.tempReservation.findFirst({
+      where: { trip_date: formattedDate, trip_id: Data.trip_id },
+    });
+    const vouchers = await prisma.voucher.findMany({
+      where: {
+        consumed: { lt: prisma.voucher.fields.avaliable },
+        isActive: true,
+      },
+    });
     const footerinfo = await prisma.info.findFirst();
     const ArabicFrontpage = await prisma.frontpageArabic.findFirst();
-   
-        res.render("signlechair" , {Data , Reservations , vouchers , paymentMethods , tempReservation , footerinfo , ArabicFrontpage} ) ;
-    }
-    catch(error){
-        console.log(error) ;
-        res.redirect('/') ;
-    }
-}
 
+    res.render("signlechair", {
+      Data,
+      Reservations,
+      vouchers,
+      paymentMethods,
+      tempReservation,
+      footerinfo,
+      ArabicFrontpage,
+    });
+  } catch (error) {
+    console.log(error);
+    res.redirect("/");
+  }
+};
 
-
-
-
-export const SelectdoubleTrip = async (req , res , next) => {
-    try {
-
+export const SelectdoubleTrip = async (req, res, next) => {
+  try {
     //const { trip_id, trip_date, bus_type, trip_day, trip_takeoff, trip_from, trip_to, trip_fare, trip_specialfare , city_from, city_to, payment , chairsNumber , trip_arrive , twowaydiscount } = req.body;
-    const Data = req.body ;
- 
- 
-  
-   
-   
+    const Data = req.body;
 
-    const [month, day, year] = Data.trip_date1.split('/');
-    const formattedDate = new Date(`${year}-${month}-${day}`).toISOString().split('T')[0];
+    const [month, day, year] = Data.trip_date1.split("/");
+    const formattedDate = new Date(`${year}-${month}-${day}`)
+      .toISOString()
+      .split("T")[0];
 
-    const [month2, day2, year2] = Data.trip_date2.split('/');
-    const formattedDate2 = new Date(`${year2}-${month2}-${day2}`).toISOString().split('T')[0];
+    const [month2, day2, year2] = Data.trip_date2.split("/");
+    const formattedDate2 = new Date(`${year2}-${month2}-${day2}`)
+      .toISOString()
+      .split("T")[0];
 
-    const paymentMethods = Data.payment1.split(',');
+    const paymentMethods = Data.payment1.split(",");
 
+    const Reservations = await prisma.reservation.findFirst({
+      where: { trip_date: formattedDate, trip_id: Data.trip_id1 },
+    });
+    const Reservations2 = await prisma.reservation.findFirst({
+      where: { trip_date: formattedDate2, trip_id: Data.trip_id2 },
+    });
+    const tempReservation = await prisma.tempReservation.findFirst({
+      where: { trip_date: formattedDate, trip_id: Data.trip_id1 },
+    });
+    const tempReservation2 = await prisma.tempReservation.findFirst({
+      where: { trip_date: formattedDate2, trip_id: Data.trip_id2 },
+    });
+    const vouchers = await prisma.voucher.findMany({
+      where: {
+        consumed: { lt: prisma.voucher.fields.avaliable },
+        isActive: true,
+      },
+    });
+    const ArabicFrontpage = await prisma.frontpageArabic.findFirst();
+    const footerinfo = await prisma.info.findFirst();
 
-    const Reservations = await prisma.reservation.findFirst({where : {trip_date : formattedDate , trip_id : Data.trip_id1}});
-    const Reservations2 = await prisma.reservation.findFirst({where : {trip_date : formattedDate2 , trip_id : Data.trip_id2}});
-    const tempReservation = await prisma.tempReservation.findFirst({where : {trip_date : formattedDate , trip_id : Data.trip_id1}});
-    const tempReservation2 = await prisma.tempReservation.findFirst({where : {trip_date : formattedDate2 , trip_id : Data.trip_id2}});
-    const vouchers = await prisma.voucher.findMany({ where: { consumed: { lt: prisma.voucher.fields.avaliable } , isActive: true }});
-    const ArabicFrontpage = await prisma.frontpageArabic.findFirst() ;
-    const footerinfo = await prisma.info.findFirst() ;
-   
-        res.render("doublechair" , {Data , Reservations , Reservations2, vouchers , paymentMethods , tempReservation , tempReservation2 , ArabicFrontpage , footerinfo} ) ;
-    }
-    catch(error){
-        console.log(error) ;
-        res.redirect('/') ;
-    }
-}
-
-
-
-
-
-export const paymobPay = async (
-	req,
-	res,
-	next
-) => {
-	try {
-		const {
-			action,
-			name,
-			phone,
-			trip_id,
-			date,
-			station_from,
-			station_to,
-			voucher,
-			chairs,
-			chairsQTY,
-			city_from,
-			city_to,
-			take_off,
-			arrive,
-			partamount
-		} = req.body;
-
-
-        const {employeeID } = req.user ;
-		
-		const loweraction = action.toLowerCase();
-		const pk_key = process.env.pk_key;
-		const ReservedChairs = JSON.parse(chairs);
-
-	// Convert godate from MM/DD/YYYY to YYYY-MM-DD
-	const [month, day, year] = date.split("/");
-	const formattedDate = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-	
-		const Trip = await prisma.trip.findUnique({where: {id:trip_id},include:{Bus:true}});
-
-		const cityfrom = await prisma.city.findUnique({
-			where: { name: city_from },
-		});
-		const cityto = await prisma.city.findUnique({ where: { name: city_to } });
-
-		//go back if there is reservation with the same seat
-		const OldReservations = await prisma.reservation.findFirst({
-			where: { trip_id: trip_id, trip_date: formattedDate },
-		});
-		if (OldReservations) {
-			const reservedSeatsArray = OldReservations.reservedSeats;
-			const isReserved = ReservedChairs.some((chair) =>
-				reservedSeatsArray.includes(chair)
-			);
-			if (isReserved) {
-				return res.redirect("/");
-			}
-		}
-
-		//go back if there is reservation with the same seat
-		const OldtempReservations = await prisma.tempReservation.findFirst({
-			where: { trip_id: trip_id, trip_date: formattedDate },
-		});
-		if (OldtempReservations) {
-			const reservedSeatsArray = OldtempReservations.reservedSeats;
-			const isReserved = ReservedChairs.some((chair) =>
-				reservedSeatsArray.includes(chair)
-			);
-			if (isReserved) {
-				return res.redirect("/");
-			}
-		}
-
-
-		// const isFingerprint = await prisma.fingerprint.findUnique({where : {fingerprint : req.fingerprint?.hash}});
-		// if(isFingerprint) {
-		// 	 return res.render("wait") ;
-		// }
-
-		
-
-		const cost = await prisma.cost.findFirst({
-			where: {
-				trip_id: trip_id,
-				fromCityId: cityfrom?.id,
-				toCityId: cityto?.id,
-			},
-		});
-		let totalprice;
-		if(ReservedChairs.includes(1) && Trip?.Bus.type == "HI-ACE") {
-			const Diffrence = (cost?.specialfare || 1) - (cost?.fare || 1) ;
-			totalprice = cost.fare * chairsQTY + Diffrence;
-		}else {
-			totalprice = cost.fare * chairsQTY;
-		}
-		let finalprice = totalprice;
-		if (voucher.length > 0) {
-			const DBvoucher = await prisma.voucher.findUnique({
-				where: { code: voucher, isActive: true },
-			});
-			if (DBvoucher) {
-				const discount = totalprice * (DBvoucher.percentage / 100);
-				finalprice =
-					discount > DBvoucher.maximum
-						? totalprice - DBvoucher.maximum
-						: totalprice - discount;
-			}
-		}
-
-	
-		
-			let payid = Date.now() * 1000 + Math.floor(Math.random() * 1000) ;
-			const paymentData = {
-					trip_type:"single",
-					trip_id: trip_id,
-					date: formattedDate,
-					name: name,
-					phone: phone,
-					station_from: station_from,
-					station_to: station_to,
-					city_to: city_to,
-					city_from: city_from,
-					chairs: ReservedChairs,
-					chairsQTY: chairsQTY,
-					voucher: voucher,
-					paymentmethod: action,
-					take_off: take_off,
-					arrive: arrive,
-					price:finalprice,
-					payid: payid ,
-                    employeeID : employeeID ,
-					employeename: req.user.name ,
-					partamount: partamount
-			}
-			await Cashpayment(paymentData) ;
-			return res.redirect(`https://www.swiftbusegypt.com/ticket?id=${payid}`) ;
-		
-
-	} catch (error) {
-		console.log(error);
-		next(error);
-	}
+    res.render("doublechair", {
+      Data,
+      Reservations,
+      Reservations2,
+      vouchers,
+      paymentMethods,
+      tempReservation,
+      tempReservation2,
+      ArabicFrontpage,
+      footerinfo,
+    });
+  } catch (error) {
+    console.log(error);
+    res.redirect("/");
+  }
 };
 
+export const paymobPay = async (req, res, next) => {
+  try {
+    const {
+      action,
+      name,
+      phone,
+      trip_id,
+      date,
+      station_from,
+      station_to,
+      voucher,
+      chairs,
+      chairsQTY,
+      city_from,
+      city_to,
+      take_off,
+      arrive,
+      partamount,
+    } = req.body;
 
+    const { employeeID } = req.user;
 
+    const loweraction = action.toLowerCase();
+    const pk_key = process.env.pk_key;
+    const ReservedChairs = JSON.parse(chairs);
 
-export const doublepaymobPay = async (
-	req,
-	res,
-	next
-) => {
-	try {
-		const {
-			action,
-			name,
-			phone,
-			trip_id1,
-			trip_id2,
-			date1,
-			date2,
-			station_from1,
-			station_from2,
-			station_to1,
-			station_to2,
-			chairs1,
-			chairs2,
-			chairsQTY,
-			city_from1,
-			city_from2,
-			city_to1,
-			city_to2,
-			take_off1,
-			take_off2,
-			arrive1,
-			arrive2,
-			partamount
-		} = req.body;
+    // Convert godate from MM/DD/YYYY to YYYY-MM-DD
+    const [month, day, year] = date.split("/");
+    const formattedDate = `${year}-${month.padStart(2, "0")}-${day.padStart(
+      2,
+      "0"
+    )}`;
 
-    const {employeeID} = req.user ;
+    const Trip = await prisma.trip.findUnique({
+      where: { id: trip_id },
+      include: { Bus: true },
+    });
 
-	
-		
-		const loweraction = action.toLowerCase();
-		const pk_key = process.env.pk_key;
-		const ReservedChairs1 = JSON.parse(chairs1);
-		const ReservedChairs2 = JSON.parse(chairs2);
+    const cityfrom = await prisma.city.findUnique({
+      where: { name: city_from },
+    });
+    const cityto = await prisma.city.findUnique({ where: { name: city_to } });
 
-	// Convert godate from MM/DD/YYYY to YYYY-MM-DD
-	const [month1, day1, year1] = date1.split("/");
-	const formattedDate1 = `${year1}-${month1.padStart(2, "0")}-${day1.padStart(2, "0")}`;
+    //go back if there is reservation with the same seat
+    const OldReservations = await prisma.reservation.findFirst({
+      where: { trip_id: trip_id, trip_date: formattedDate },
+    });
+    if (OldReservations) {
+      const reservedSeatsArray = OldReservations.reservedSeats;
+      const isReserved = ReservedChairs.some((chair) =>
+        reservedSeatsArray.includes(chair)
+      );
+      if (isReserved) {
+        return res.redirect("/");
+      }
+    }
 
-	const [month2, day2, year2] = date2.split("/");
-	const formattedDate2 = `${year2}-${month2.padStart(2, "0")}-${day2.padStart(2, "0")}`;
-	
-		const Trip1 = await prisma.trip.findUnique({where: {id:trip_id1},include:{Bus:true}});
+    //go back if there is reservation with the same seat
+    const OldtempReservations = await prisma.tempReservation.findFirst({
+      where: { trip_id: trip_id, trip_date: formattedDate },
+    });
+    if (OldtempReservations) {
+      const reservedSeatsArray = OldtempReservations.reservedSeats;
+      const isReserved = ReservedChairs.some((chair) =>
+        reservedSeatsArray.includes(chair)
+      );
+      if (isReserved) {
+        return res.redirect("/");
+      }
+    }
 
-		const Trip2 = await prisma.trip.findUnique({where: {id:trip_id2},include:{Bus:true}});
+    // const isFingerprint = await prisma.fingerprint.findUnique({where : {fingerprint : req.fingerprint?.hash}});
+    // if(isFingerprint) {
+    // 	 return res.render("wait") ;
+    // }
 
-		const cityfrom1 = await prisma.city.findUnique({
-			where: { name: city_from1 },
-		});
+    const cost = await prisma.cost.findFirst({
+      where: {
+        trip_id: trip_id,
+        fromCityId: cityfrom?.id,
+        toCityId: cityto?.id,
+      },
+    });
+    let totalprice;
+    if (ReservedChairs.includes(1) && Trip?.Bus.type == "HI-ACE") {
+      const Diffrence = (cost?.specialfare || 1) - (cost?.fare || 1);
+      totalprice = cost.fare * chairsQTY + Diffrence;
+    } else {
+      totalprice = cost.fare * chairsQTY;
+    }
+    let finalprice = totalprice;
+    if (voucher.length > 0) {
+      const DBvoucher = await prisma.voucher.findUnique({
+        where: { code: voucher, isActive: true },
+      });
+      if (DBvoucher) {
+        const discount = totalprice * (DBvoucher.percentage / 100);
+        finalprice =
+          discount > DBvoucher.maximum
+            ? totalprice - DBvoucher.maximum
+            : totalprice - discount;
+      }
+    }
 
-		
-		const cityfrom2 = await prisma.city.findUnique({
-			where: { name: city_from2 },
-		});
-		
-		const cityto1 = await prisma.city.findUnique({ where: { name: city_to1 } });
-
-		const cityto2 = await prisma.city.findUnique({ where: { name: city_to2 } });
-
-		
-		//go back if there is reservation with the same seat
-		const OldReservations1 = await prisma.reservation.findFirst({
-			where: { trip_id: trip_id1, trip_date: formattedDate1 },
-		});
-
-		if (OldReservations1) {
-			const reservedSeatsArray = OldReservations1.reservedSeats;
-			const isReserved = ReservedChairs1.some((chair) =>
-				reservedSeatsArray.includes(chair)
-			);
-			if (isReserved) {
-				return res.redirect("/");
-			}
-		}
-
-		//go back if there is reservation with the same seat
-		const OldReservations2 = await prisma.reservation.findFirst({
-			where: { trip_id: trip_id2, trip_date: formattedDate2 },
-		});
-
-		if (OldReservations2) {
-			const reservedSeatsArray = OldReservations2.reservedSeats;
-			const isReserved = ReservedChairs2.some((chair) =>
-				reservedSeatsArray.includes(chair)
-			);
-			if (isReserved) {
-				return res.redirect("/");
-			}
-		}
-
-		//go back if there is reservation with the same seat
-		const OldtempReservations1 = await prisma.tempReservation.findFirst({
-			where: { trip_id: trip_id1, trip_date: formattedDate1 },
-		});
-		if (OldtempReservations1) {
-			const reservedSeatsArray = OldtempReservations1.reservedSeats;
-			const isReserved = ReservedChairs1.some((chair) =>
-				reservedSeatsArray.includes(chair)
-			);
-
-			if (isReserved) {
-				return res.redirect("/");
-			}
-		}
-
-		//go back if there is reservation with the same seat
-		const OldtempReservations2 = await prisma.tempReservation.findFirst({
-			where: { trip_id: trip_id2, trip_date: formattedDate2 },
-		});
-		if (OldtempReservations2) {
-			const reservedSeatsArray = OldtempReservations2.reservedSeats;
-			const isReserved = ReservedChairs2.some((chair) =>
-				reservedSeatsArray.includes(chair)
-			);
-
-			if (isReserved) {
-				return res.redirect("/");
-			}
-		}
-
-		
-		// const isFingerprint = await prisma.fingerprint.findUnique({where : {fingerprint : req.fingerprint?.hash}});
-		// if(isFingerprint) {
-		// 	 return res.render("wait") ;
-		// }
-
-
-		const cost1 = await prisma.cost.findFirst({
-			where: {
-				trip_id: trip_id1,
-				fromCityId: cityfrom1?.id,
-				toCityId: cityto1?.id,
-			},
-		});
-
-		const cost2 = await prisma.cost.findFirst({
-			where: {
-				trip_id: trip_id2,
-				fromCityId: cityfrom2?.id,
-				toCityId: cityto2?.id,
-			},
-		});
-
-		let totalprice;
-
-		if(ReservedChairs1.includes(1) && Trip1?.Bus.type == "HI-ACE") {
-			const Diffrence = (cost1?.specialfare || 1) - (cost1?.fare || 1) ;
-			totalprice = cost1.fare * chairsQTY + Diffrence;
-		}else {
-			totalprice = cost1.fare * chairsQTY;
-		}
-
-		if(ReservedChairs2.includes(1) && Trip2?.Bus.type == "HI-ACE") {
-			const Diffrence = (cost2?.specialfare || 1) - (cost2?.fare || 1) ;
-			totalprice = totalprice +  cost2.fare * chairsQTY + Diffrence;
-		}else {
-			totalprice =  totalprice + cost2.fare * chairsQTY;
-		}
-
-		let finalprice = totalprice;
-
-		let actualdiscount = (cost1?.twowaydiscount || 0 ) < (cost2?.twowaydiscount || 0) ? cost1?.twowaydiscount : cost2?.twowaydiscount;
-
-		if ((actualdiscount ?? 0) > 0) {
-			finalprice = totalprice * (100 - (actualdiscount ?? 0)) / 100;
-		}
-
-	
-		
-			let payid = Date.now() * 1000 + Math.floor(Math.random() * 1000) ;
-			const paymentData = {
-					trip_type:"double",
-					trip_id1: trip_id1,
-					trip_id2: trip_id2,
-					date1: formattedDate1,
-					date2: formattedDate2,
-					name: name,
-					phone: phone,
-					station_from1: station_from1,
-					station_from2: station_from2,
-					station_to1: station_to1,
-					station_to2: station_to2,
-					city_to1: city_to1,
-					city_to2: city_to2,
-					city_from1: city_from1,
-					city_from2: city_from2,
-					chairs1: ReservedChairs1,
-					chairs2: ReservedChairs2,
-					chairsQTY: chairsQTY,
-					paymentmethod: action,
-					take_off1: take_off1,
-					take_off2: take_off2,
-					arrive1: arrive1,
-					arrive2: arrive2,
-					oldprice:totalprice,
-					discount:actualdiscount,
-					price:finalprice,
-					payid: payid,
-          employeeID : employeeID,
-		  employeename: req.user.name,
-		  partamount
-			}
-
-			await DoubleCashpayment(paymentData) ;
-			return res.redirect(`https://www.swiftbusegypt.com/ticket?id=${payid}`) ;
-		
-	} catch (error) {
-		next(error);
-	}
+    let payid = Date.now() * 1000 + Math.floor(Math.random() * 1000);
+    const paymentData = {
+      trip_type: "single",
+      trip_id: trip_id,
+      date: formattedDate,
+      name: name,
+      phone: phone,
+      station_from: station_from,
+      station_to: station_to,
+      city_to: city_to,
+      city_from: city_from,
+      chairs: ReservedChairs,
+      chairsQTY: chairsQTY,
+      voucher: voucher,
+      paymentmethod: action,
+      take_off: take_off,
+      arrive: arrive,
+      price: finalprice,
+      payid: payid,
+      employeeID: employeeID,
+      employeename: req.user.name,
+      partamount: partamount,
+    };
+    await Cashpayment(paymentData);
+    return res.redirect(`https://www.swiftbusegypt.com/ticket?id=${payid}`);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
 };
 
+export const doublepaymobPay = async (req, res, next) => {
+  try {
+    const {
+      action,
+      name,
+      phone,
+      trip_id1,
+      trip_id2,
+      date1,
+      date2,
+      station_from1,
+      station_from2,
+      station_to1,
+      station_to2,
+      chairs1,
+      chairs2,
+      chairsQTY,
+      city_from1,
+      city_from2,
+      city_to1,
+      city_to2,
+      take_off1,
+      take_off2,
+      arrive1,
+      arrive2,
+      partamount,
+    } = req.body;
 
+    const { employeeID } = req.user;
 
+    const loweraction = action.toLowerCase();
+    const pk_key = process.env.pk_key;
+    const ReservedChairs1 = JSON.parse(chairs1);
+    const ReservedChairs2 = JSON.parse(chairs2);
 
+    // Convert godate from MM/DD/YYYY to YYYY-MM-DD
+    const [month1, day1, year1] = date1.split("/");
+    const formattedDate1 = `${year1}-${month1.padStart(2, "0")}-${day1.padStart(
+      2,
+      "0"
+    )}`;
 
+    const [month2, day2, year2] = date2.split("/");
+    const formattedDate2 = `${year2}-${month2.padStart(2, "0")}-${day2.padStart(
+      2,
+      "0"
+    )}`;
 
+    const Trip1 = await prisma.trip.findUnique({
+      where: { id: trip_id1 },
+      include: { Bus: true },
+    });
 
+    const Trip2 = await prisma.trip.findUnique({
+      where: { id: trip_id2 },
+      include: { Bus: true },
+    });
 
+    const cityfrom1 = await prisma.city.findUnique({
+      where: { name: city_from1 },
+    });
 
+    const cityfrom2 = await prisma.city.findUnique({
+      where: { name: city_from2 },
+    });
+
+    const cityto1 = await prisma.city.findUnique({ where: { name: city_to1 } });
+
+    const cityto2 = await prisma.city.findUnique({ where: { name: city_to2 } });
+
+    //go back if there is reservation with the same seat
+    const OldReservations1 = await prisma.reservation.findFirst({
+      where: { trip_id: trip_id1, trip_date: formattedDate1 },
+    });
+
+    if (OldReservations1) {
+      const reservedSeatsArray = OldReservations1.reservedSeats;
+      const isReserved = ReservedChairs1.some((chair) =>
+        reservedSeatsArray.includes(chair)
+      );
+      if (isReserved) {
+        return res.redirect("/");
+      }
+    }
+
+    //go back if there is reservation with the same seat
+    const OldReservations2 = await prisma.reservation.findFirst({
+      where: { trip_id: trip_id2, trip_date: formattedDate2 },
+    });
+
+    if (OldReservations2) {
+      const reservedSeatsArray = OldReservations2.reservedSeats;
+      const isReserved = ReservedChairs2.some((chair) =>
+        reservedSeatsArray.includes(chair)
+      );
+      if (isReserved) {
+        return res.redirect("/");
+      }
+    }
+
+    //go back if there is reservation with the same seat
+    const OldtempReservations1 = await prisma.tempReservation.findFirst({
+      where: { trip_id: trip_id1, trip_date: formattedDate1 },
+    });
+    if (OldtempReservations1) {
+      const reservedSeatsArray = OldtempReservations1.reservedSeats;
+      const isReserved = ReservedChairs1.some((chair) =>
+        reservedSeatsArray.includes(chair)
+      );
+
+      if (isReserved) {
+        return res.redirect("/");
+      }
+    }
+
+    //go back if there is reservation with the same seat
+    const OldtempReservations2 = await prisma.tempReservation.findFirst({
+      where: { trip_id: trip_id2, trip_date: formattedDate2 },
+    });
+    if (OldtempReservations2) {
+      const reservedSeatsArray = OldtempReservations2.reservedSeats;
+      const isReserved = ReservedChairs2.some((chair) =>
+        reservedSeatsArray.includes(chair)
+      );
+
+      if (isReserved) {
+        return res.redirect("/");
+      }
+    }
+
+    // const isFingerprint = await prisma.fingerprint.findUnique({where : {fingerprint : req.fingerprint?.hash}});
+    // if(isFingerprint) {
+    // 	 return res.render("wait") ;
+    // }
+
+    const cost1 = await prisma.cost.findFirst({
+      where: {
+        trip_id: trip_id1,
+        fromCityId: cityfrom1?.id,
+        toCityId: cityto1?.id,
+      },
+    });
+
+    const cost2 = await prisma.cost.findFirst({
+      where: {
+        trip_id: trip_id2,
+        fromCityId: cityfrom2?.id,
+        toCityId: cityto2?.id,
+      },
+    });
+
+    let totalprice;
+
+    if (ReservedChairs1.includes(1) && Trip1?.Bus.type == "HI-ACE") {
+      const Diffrence = (cost1?.specialfare || 1) - (cost1?.fare || 1);
+      totalprice = cost1.fare * chairsQTY + Diffrence;
+    } else {
+      totalprice = cost1.fare * chairsQTY;
+    }
+
+    if (ReservedChairs2.includes(1) && Trip2?.Bus.type == "HI-ACE") {
+      const Diffrence = (cost2?.specialfare || 1) - (cost2?.fare || 1);
+      totalprice = totalprice + cost2.fare * chairsQTY + Diffrence;
+    } else {
+      totalprice = totalprice + cost2.fare * chairsQTY;
+    }
+
+    let finalprice = totalprice;
+
+    let actualdiscount =
+      (cost1?.twowaydiscount || 0) < (cost2?.twowaydiscount || 0)
+        ? cost1?.twowaydiscount
+        : cost2?.twowaydiscount;
+
+    if ((actualdiscount ?? 0) > 0) {
+      finalprice = (totalprice * (100 - (actualdiscount ?? 0))) / 100;
+    }
+
+    let payid = Date.now() * 1000 + Math.floor(Math.random() * 1000);
+    const paymentData = {
+      trip_type: "double",
+      trip_id1: trip_id1,
+      trip_id2: trip_id2,
+      date1: formattedDate1,
+      date2: formattedDate2,
+      name: name,
+      phone: phone,
+      station_from1: station_from1,
+      station_from2: station_from2,
+      station_to1: station_to1,
+      station_to2: station_to2,
+      city_to1: city_to1,
+      city_to2: city_to2,
+      city_from1: city_from1,
+      city_from2: city_from2,
+      chairs1: ReservedChairs1,
+      chairs2: ReservedChairs2,
+      chairsQTY: chairsQTY,
+      paymentmethod: action,
+      take_off1: take_off1,
+      take_off2: take_off2,
+      arrive1: arrive1,
+      arrive2: arrive2,
+      oldprice: totalprice,
+      discount: actualdiscount,
+      price: finalprice,
+      payid: payid,
+      employeeID: employeeID,
+      employeename: req.user.name,
+      partamount,
+    };
+
+    await DoubleCashpayment(paymentData);
+    return res.redirect(`https://www.swiftbusegypt.com/ticket?id=${payid}`);
+  } catch (error) {
+    next(error);
+  }
+};

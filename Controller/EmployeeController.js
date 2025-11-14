@@ -18,7 +18,8 @@ export const ViewEmployee = async (req, res, next) => {
 export const ViewEmployeeCreate = async (req, res, next) => {
   try {
     let employee = { User: { role: [] } };
-    res.render("CreateEmpolyee", { employee });
+    const stations = await prisma.station.findMany({where : {isDeleted : false}});
+    res.render("CreateEmpolyee", { employee , stations });
   } catch (error) {
     console.log(error);
     next(error);
@@ -36,9 +37,12 @@ export const CreateEmployee = async (req, res, next) => {
     password,
     role,
     percentage,
+    stations
   } = req.body;
+  console.log(req.body);
   try {
     let formatedRole = role.split(",");
+    let stationsArray = stations.split(",");
 
     const employee = await prisma.employee.create({
       data: {
@@ -48,6 +52,7 @@ export const CreateEmployee = async (req, res, next) => {
       nationalid: nationalID,
       address: address,
       percentage: percentage ? +percentage : null,
+      allowedRoutes: stationsArray,
       User: {
         create: { email: email.toLowerCase(), password: password, role: formatedRole },
       },
@@ -63,13 +68,14 @@ export const CreateEmployee = async (req, res, next) => {
 
 export const EditEmployeeForm = async (req, res, next) => {
   const { ID } = req.params;
+   const stations = await prisma.station.findMany({where : {isDeleted : false}});
   try {
     const employee = await prisma.employee.findUnique({
       where: { id: ID },
       include: { User: true },
     });
 
-    res.render("CreateEmpolyee", { employee });
+    res.render("CreateEmpolyee", { employee , stations });
   } catch (error) {
     console.log(error);
     next(error);

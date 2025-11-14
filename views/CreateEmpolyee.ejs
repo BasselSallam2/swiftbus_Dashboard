@@ -79,6 +79,29 @@
                     <input type="hidden" id="roleInput" name="role">
                 </div>
 
+                <div class="mb-3">
+    <label for="allowedStations" class="form-label">Allowed Stations</label>
+    <div class="multi-select" id="stationsSelect">
+        <div class="select-box form-control" onclick="toggleStationsDropdown()">
+            <span id="selectedStations">Select Allowed Stations</span>
+            <span class="arrow">&#9660;</span>
+        </div>
+
+        <div class="dropdown">
+            <label><input type="checkbox" value="all" class="station" onchange="updateStations()"> All</label>
+
+            <% stations.forEach(st => { %>
+                <label>
+                    <input type="checkbox" class="station" value="<%= st.id %>" onchange="updateStations()">
+                    <%= st.name %>
+                </label>
+            <% }) %>
+        </div>
+    </div>
+
+    <input type="hidden" id="stationsInput" name="stations">
+</div>
+
                 <!-- Submit Button -->
                 <div class="mt-3">
                     <button type="submit" class="btn btn-success">Submit</button>
@@ -211,6 +234,64 @@
         togglePercentageField();
     });
 </script>
+<script>
+    function toggleStationsDropdown() {
+        document.getElementById("stationsSelect").classList.toggle("open");
+    }
+
+    function updateStations() {
+        let checkboxes = document.querySelectorAll(".station:checked");
+        let selectedValues = [];
+        let selectedNames = [];
+
+        checkboxes.forEach((cb) => {
+            selectedValues.push(cb.value);
+
+            // لو اختار All → نرجّع بس All ونلغي أي اختيار تاني
+            if (cb.value === "all") {
+                selectedValues = ["all"];
+                selectedNames = ["All"];
+
+                document
+                    .querySelectorAll(".station")
+                    .forEach(c => { if (c.value !== "all") c.checked = false; });
+
+            } else {
+                // لو اختار محطة عادية → اتأكد إن All مش متعلم
+                document.querySelector('.station[value="all"]').checked = false;
+                selectedNames.push(cb.parentElement.textContent.trim());
+            }
+        });
+
+        document.getElementById("selectedStations").textContent =
+            selectedNames.length ? selectedNames.join(", ") : "Select Allowed Stations";
+
+        document.getElementById("stationsInput").value = selectedValues.join(",");
+    }
+
+    // أغلاق القائمة لما يضغط برا
+    document.addEventListener("click", function (event) {
+        let multiSelect = document.getElementById("stationsSelect");
+        if (!multiSelect.contains(event.target)) {
+            multiSelect.classList.remove("open");
+        }
+    });
+
+    // تحميل البيانات لو بيعمل Edit
+    document.addEventListener("DOMContentLoaded", function () {
+        let storedStations = "<%= employee.allowedRoutes || '' %>".split(",");
+        let checkboxes = document.querySelectorAll(".station");
+
+        checkboxes.forEach((checkbox) => {
+            if (storedStations.includes(checkbox.value)) {
+                checkbox.checked = true;
+            }
+        });
+
+        updateStations();
+    });
+</script>
+
 
 <!-- Scripts -->
 <script src="js/metisMenu/metisMenu.min.js"></script>
