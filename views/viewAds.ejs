@@ -1,0 +1,187 @@
+<%- include('header') %>
+
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+<div class="body-content">
+    <div class="card-header">
+        <h6 class="fs-17 fw-semi-bold mb-0">إرسال رسالة جماعية</h6>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            
+            <form id="broadcastForm" action="/whats/ads/send" method="POST">
+                
+                <div class="mb-3">
+                    <label class="form-label fw-semi-bold">نص الرسالة</label>
+                    <div id="editor-container" style="height: 250px;"></div>
+                    <input type="hidden" id="messageContent" name="message">
+                </div>
+                
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="fas fa-paper-plane me-2"></i> إرسال لكل العملاء
+                </button>
+            
+            </form>
+            
+        </div>
+    </div>
+
+</div>
+</div>
+</div>
+<div class="overlay"></div>
+</div>
+</div>
+
+
+<div class="modal fade" id="loadingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loadingModalLabel">جاري إرسال الرسائل...</h5>
+            </div>
+            <div class="modal-body">
+                
+                <div id="modal-loading-state">
+                    <p>يتم الآن إرسال رسالتك لجميع العملاء. قد يستغرق هذا بعض الوقت...</p>
+                    <div class="progress" style="height: 25px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 100%">
+                            <strong>جاري الإرسال...</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="modal-result-state" class="d-none">
+                    </div>
+
+            </div>
+            <div class="modal-footer d-none" id="modal-footer-close">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script src="/js/metisMenu/metisMenu.min.js"></script>
+<script src="/js/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+<script src="/js/sidebar.js"></script>
+<script src="/js/common.js"></script>
+<script src="/js/dynamicinput.js"></script>
+
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+
+<script>
+    // 1. تشغيل محرر النصوص
+    var quill = new Quill('#editor-container', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                [{ 'align': [] }],
+                ['link'],
+                ['clean']
+            ]
+        },
+        placeholder: 'اكتب رسالتك الإعلانية هنا...'
+    });
+
+    // 2. إعداد عناصر الفورم والمودال
+    var form = document.getElementById('broadcastForm');
+    var messageInput = document.getElementById('messageContent');
+    var submitButton = form.querySelector('button[type="submit"]');
+
+    var loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+    var modalLabel = document.getElementById('loadingModalLabel');
+    var modalLoadingState = document.getElementById('modal-loading-state');
+    var modalResultState = document.getElementById('modal-result-state');
+    var modalFooterClose = document.getElementById('modal-footer-close');
+
+    // 4. التعامل مع إرسال الفورم (Submit)
+    form.addEventListener('submit', async function(event) {
+        
+        // (مهم) منع الإرسال التقليدي (اللي بيعمل Reload)
+        event.preventDefault(); 
+
+        // --- التحقق من المدخلات ---
+        var messageHtml = quill.root.innerHTML;
+        messageInput.value = messageHtml;
+        
+        if (quill.getLength() <= 1) {
+            alert('لا يمكنك إرسال رسالة فارغة!');
+            return;
+        }
+
+        // --- عرض شاشة التحميل ---
+        modalLabel.innerText = 'جاري إرسال الرسائل...';
+        modalLoadingState.classList.remove('d-none'); // إظهار شريط التحميل
+        modalResultState.classList.add('d-none');     // إخفاء شاشة النتيجة
+        modalFooterClose.classList.add('d-none');     // إخفاء زر الإغلاق
+        
+        loadingModal.show();
+        
+        // تعطيل الزر مؤقتاً
+        const originalButtonHtml = submitButton.innerHTML;
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> جاري الإرسال...';
+
+        try {
+            // --- إرسال البيانات للباك إند (Fetch) ---
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: messageHtml }) // إرسالها كـ JSON
+            });
+
+            // لو السيرفر رجع خطأ (زي 500)
+            if (!response.ok) {
+                const errorText = await response.text(); // حاول قراءة الخطأ من السيرفر
+                throw new Error(`فشل الإرسال. استجابة الخادم: ${response.status} ${errorText}`);
+            }
+
+            // (اختياري) لو السيرفر بيرجع بيانات
+            const result = await response.json(); 
+
+            // --- عرض رسالة النجاح ---
+            modalLabel.innerText = 'تم الإرسال بنجاح!';
+            modalLoadingState.classList.add('d-none'); // إخفاء التحميل
+            modalResultState.innerHTML = `
+                <div class="text-center text-success">
+                    <i class="fas fa-check-circle fa-3x mb-3"></i>
+                    <p class="fs-5">اكتملت عملية الإرسال بنجاح.</p>
+                </div>
+            `;
+            modalResultState.classList.remove('d-none'); // إظهار النجاح
+            modalFooterClose.classList.remove('d-none'); // إظهار زر الإغلاق
+            
+            quill.setText(''); // تفريغ المحرر بعد النجاح
+
+        } catch (error) {
+            // --- عرض رسالة الخطأ ---
+            console.error('Error during fetch:', error);
+            modalLabel.innerText = 'حدث خطأ!';
+            modalLoadingState.classList.add('d-none'); // إخفاء التحميل
+            modalResultState.innerHTML = `
+                <div class="text-center text-danger">
+                    <i class="fas fa-times-circle fa-3x mb-3"></i>
+                    <p class="fs-5">فشل إرسال الرسالة.</p>
+                    <small>${error.message}</small>
+                </div>
+            `;
+            modalResultState.classList.remove('d-none'); // إظهار الخطأ
+            modalFooterClose.classList.remove('d-none'); // إظهار زر الإغلاق
+
+        } finally {
+            // --- إعادة تفعيل الزر في كل الأحوال ---
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalButtonHtml;
+        }
+    });
+</script>
+</html>

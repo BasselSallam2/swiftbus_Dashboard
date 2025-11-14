@@ -181,7 +181,7 @@ export const PrintReservationPDF = async (req, res, next) => {
   const { ID } = req.params;
   const user = req.user;
   try {
-    if (user.role.includes("Admin")) {
+    if (user.role.includes("Admin") || user.role.includes("Print-ALL")) {
       var reservation = await prisma.reservation.findUnique({
         where: { id: ID },
         include: {
@@ -280,7 +280,7 @@ export const PrintReservationPDF = async (req, res, next) => {
         res
       );
     }else{
-      const agentPercentage = reservation.Gotickets[0].BookEmployeeID.percentage || reservation.Backtickets[0].BookEmployeeID.percentage ;
+      const agentPercentage = reservation.Gotickets[0]?.BookEmployeeID?.percentage || reservation?.Backtickets[0]?.BookEmployeeID.percentage ;
       await generateTicketTablePDFAgent(
         ResultGo,
         ResultBack,
@@ -293,7 +293,7 @@ export const PrintReservationPDF = async (req, res, next) => {
       );
     }
   } catch (error) {
-    // إرسال الخطأ إلى معالج الأخطاء في Express
+
     next(error);
   }
 };

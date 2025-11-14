@@ -39,7 +39,8 @@ const DoubleCashpayment = async (PaymentData) => {
 			oldprice,
 			payid,
      	 employeeID ,
-		  employeename
+		  employeename,
+			partamount
 			
 		} = PaymentData;
 
@@ -137,8 +138,9 @@ const DoubleCashpayment = async (PaymentData) => {
 				actualCoustmer = Coustmer;
 			}
 		
-	
-			const NewTicket = await prisma.ticket.create({
+			let NewTicket;
+			if (paymentmethod === "cash") {
+			   NewTicket = await prisma.ticket.create({
 				data: {
 					trip_id: trip_id1,
 					Back_trip_id:trip_id2,
@@ -147,7 +149,7 @@ const DoubleCashpayment = async (PaymentData) => {
 					Back_trip_date:date2,
 					Coustmer_id: actualCoustmer.id,
 					status: "Booked",
-					paymentMethod: paymentmethod,
+					paymentMethod: "cash",
 					seatsCounter: ReservedCounter ,
 					seats: chairs1,
 					Backseats: chairs2,
@@ -167,10 +169,71 @@ const DoubleCashpayment = async (PaymentData) => {
 			
 				},
 			});
-
+		}else if (paymentmethod === "pend") {
+			   NewTicket = await prisma.ticket.create({
+				data: {
+					trip_id: trip_id1,
+					Back_trip_id:trip_id2,
+					pay_id : payid ,
+					trip_date: date1,
+					Back_trip_date:date2,
+					Coustmer_id: actualCoustmer.id,
+					status: "Pending",
+					paymentMethod: "cash",
+					seatsCounter: ReservedCounter ,
+					seats: chairs1,
+					Backseats: chairs2,
+					reservation_id: actucalreservation1.id,
+					Backreservation_id:actucalreservation2.id,
+					
+			CityRoutes:[city_from1 , city_to1] ,
+			Back_CityRoutes:[city_from2 , city_to2] ,
+			StationRoutes:[station_from1,station_to1],
+			Back_StationRoutes:[station_from2,station_to2],
+			takeoff: take_off1 ,
+			Back_takeoff:take_off2,
+			arrive : arrive1,
+			Back_arrive:arrive2,
+			price : price,
+      book_id : employeeID
+			
+				},
+			});
+		}else if (paymentmethod === "part") {
+			   NewTicket = await prisma.ticket.create({
+				data: {
+					trip_id: trip_id1,
+					Back_trip_id:trip_id2,
+					pay_id : payid ,
+					trip_date: date1,
+					Back_trip_date:date2,
+					Coustmer_id: actualCoustmer.id,
+					status: "Partial Paid",
+					settledprice: parseInt(partamount) ,
+					paymentMethod: "cash",
+					seatsCounter: ReservedCounter ,
+					seats: chairs1,
+					Backseats: chairs2,
+					reservation_id: actucalreservation1.id,
+					Backreservation_id:actucalreservation2.id,
+					
+			CityRoutes:[city_from1 , city_to1] ,
+			Back_CityRoutes:[city_from2 , city_to2] ,
+			StationRoutes:[station_from1,station_to1],
+			Back_StationRoutes:[station_from2,station_to2],
+			takeoff: take_off1 ,
+			Back_takeoff:take_off2,
+			arrive : arrive1,
+			Back_arrive:arrive2,
+			price : price,
+      book_id : employeeID
+			
+				},
+			});
+		}
 			
 		const firstStation1 = await prisma.station.findFirst({
-			where: {name: station_from1} , select: {Arabicname: true}
+			where: {name: station_from1} , select: {Arabicname: true , location: true , address: true}
 		} );
 		const secondStation1 = await prisma.station.findFirst({
 			where: {name: station_to1} , select: {Arabicname: true}
@@ -213,9 +276,14 @@ const DoubleCashpayment = async (PaymentData) => {
 محطة الركوب ${firstStation1?.Arabicname} الساعه${TAKEOFF1} بتاريخ ${date1}
 محطة الوصول ${secondStation1?.Arabicname}  الساعه ${ARRIVE1} 
 
+عنوان محطة الركوب: ${firstStation1?.address}
+لوكيشن محطة الركوب: ${firstStation1?.location}
+
 تفاصيل رحلة العودة:
 محطة الركوب ${firstStation2?.Arabicname} الساعه${TAKEOFF2} بتاريخ ${date2}
 محطة الوصول ${secondStation2?.Arabicname}  الساعه ${ARRIVE2}
+
+
 
 برجاء الاحتفاظ بالتذكرة: 
 https://www.swiftbusegypt.com/ticket?id=${NewTicket.pay_id}`
@@ -320,7 +388,8 @@ const Cashpayment = async (PaymentData) => {
             price,
             payid ,
             employeeID ,
-			employeename
+			employeename,
+			partamount
         } = PaymentData ;
 
         
@@ -389,15 +458,16 @@ const Cashpayment = async (PaymentData) => {
           actualvoucher = usedvoucher ;
           await prisma.voucher.update({where:{id:usedvoucher?.id}, data: {consumed: {increment: 1}}});
         }
-    
-            const NewTicket = await prisma.ticket.create({
+			let NewTicket;
+			if(paymentmethod === "cash") {
+				 NewTicket = await prisma.ticket.create({
                 data: {
                     trip_id: trip_id,
                     pay_id : payid ,
                     trip_date: date,
                     Coustmer_id: actualCoustmer.id,
                     status: "Booked",
-                    paymentMethod: paymentmethod,
+                    paymentMethod: "cash",
                     seatsCounter: ReservedCounter ,
                     seats: chairs,
                     reservation_id: actucalreservation.id,
@@ -409,12 +479,58 @@ const Cashpayment = async (PaymentData) => {
             price : price,
             book_id : employeeID
            
-            
                 },
             });
+			}else if(paymentmethod === "pend") {
+				NewTicket = await prisma.ticket.create({
+                data: {
+                    trip_id: trip_id,
+                    pay_id : payid ,
+                    trip_date: date,
+                    Coustmer_id: actualCoustmer.id,
+                    status: "Pending",
+                    paymentMethod: "cash",
+                    seatsCounter: ReservedCounter ,
+                    seats: chairs,
+                    reservation_id: actucalreservation.id,
+            CityRoutes:[city_from , city_to] ,
+            StationRoutes:[station_from,station_to],
+            voucher_id: actualvoucher?.id || null, 
+            takeoff: take_off ,
+            arrive : arrive,
+            price : price,
+            book_id : employeeID
+           
+                },
+            });
+			}else if(paymentmethod === "part") {
+				NewTicket = await prisma.ticket.create({
+                data: {
+                    trip_id: trip_id,
+                    pay_id : payid ,
+                    trip_date: date,
+                    Coustmer_id: actualCoustmer.id,
+                    status: "Partial Paid",
+					settledprice: parseInt(partamount) ,
+                    paymentMethod: "cash",
+                    seatsCounter: ReservedCounter ,
+                    seats: chairs,
+                    reservation_id: actucalreservation.id,
+            CityRoutes:[city_from , city_to] ,
+            StationRoutes:[station_from,station_to],
+            voucher_id: actualvoucher?.id || null, 
+            takeoff: take_off ,
+            arrive : arrive,
+            price : price,
+            book_id : employeeID
+           
+                },
+            });
+		}
+            
 
 				const firstStation = await prisma.station.findFirst({
-			where: {name: station_from} , select: {Arabicname: true}
+			where: {name: station_from} , select: {Arabicname: true , location: true , address: true}
 		} );
 		const secondStation = await prisma.station.findFirst({
 			where: {name: station_to} , select: {Arabicname: true}
@@ -432,7 +548,7 @@ const Cashpayment = async (PaymentData) => {
 			text: `تم حجز تذكرتك بنجاح و رقم التذكرة هو ${NewTicket.ticket_code}
 ب اسم ${actualCoustmer.name}
 تليفون ${actualCoustmer.phone}
-وسيلة الدفع ${NewTicket.paymentMethod}
+وسيلة الدفع ${"كاش"}
 سعر التذكرة ${NewTicket.price} جنيه
 عدد المسافرين : ${NewTicket.seatsCounter} 
 نوع التذكرة: ذهاب فقط 
@@ -442,6 +558,9 @@ const Cashpayment = async (PaymentData) => {
 تفاصيل الرحلة:
 محطة الركوب ${firstStation?.Arabicname} الساعه${TAKEOFF} بتاريخ ${date}
 محطة الوصول ${secondStation?.Arabicname}  الساعه ${ARRIVE} 
+
+عنوان محطة الركوب: ${firstStation?.address} 
+لوكيشن محطة الركوب: ${firstStation?.location}
 
 برجاء الاحتفاظ بالتذكرة: 
 https://www.swiftbusegypt.com/ticket?id=${NewTicket.pay_id}`
@@ -772,7 +891,9 @@ export const paymobPay = async (
 			city_to,
 			take_off,
 			arrive,
+			partamount
 		} = req.body;
+
 
         const {employeeID } = req.user ;
 		
@@ -878,6 +999,7 @@ export const paymobPay = async (
 					payid: payid ,
                     employeeID : employeeID ,
 					employeename: req.user.name ,
+					partamount: partamount
 			}
 			await Cashpayment(paymentData) ;
 			return res.redirect(`https://www.swiftbusegypt.com/ticket?id=${payid}`) ;
@@ -921,6 +1043,7 @@ export const doublepaymobPay = async (
 			take_off2,
 			arrive1,
 			arrive2,
+			partamount
 		} = req.body;
 
     const {employeeID} = req.user ;
@@ -1096,7 +1219,8 @@ export const doublepaymobPay = async (
 					price:finalprice,
 					payid: payid,
           employeeID : employeeID,
-		  employeename: req.user.name 
+		  employeename: req.user.name,
+		  partamount
 			}
 
 			await DoubleCashpayment(paymentData) ;

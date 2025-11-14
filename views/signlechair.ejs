@@ -384,22 +384,22 @@
                                                             <div class="checkH">
                                                                 <div class="radio">
                                                                 
-                                                                    <!-- <label>
+                                                                    <label>
                                                                         <input type="radio" class="action" name="action"
-                                                                            value="visa" />
-                                                                        <span><img src="assets/images/visa.svg"
+                                                                            value="pend" />
+                                                                        <span><img src="assets/images/pend.svg"
                                                                                 alt="#" /></span>
-                                                                    </label> -->
+                                                                    </label>
                                                                     
                                                                 </div>
                                                                 <div class="radio">
                                                                    
-                                                                    <!-- <label>
+                                                                    <label>
                                                                         <input type="radio" class="action" name="action"
-                                                                            value="VFcash" />
-                                                                        <span><img src="assets/images/mobile.png"
+                                                                            value="part" />
+                                                                        <span><img src="assets/images/part.svg"
                                                                                 alt="#" /></span>
-                                                                    </label> -->
+                                                                    </label>
                                                                   
                                                                 </div>
                                                                 <div class="radio">
@@ -417,7 +417,7 @@
                                                         <!-- /Form-group -->
     
                                                         <!-- Form-group -->
-                                                        <div id="visa" class="show-hide">
+                                                        <div id="pend" class="show-hide">
                                                             <div class="form-group">
                                                                 <label>
                                                                     الاسم
@@ -436,7 +436,7 @@
                                                         <!-- /Form-group -->
     
                                                         <!-- Form-group -->
-                                                        <div id="VFcash" class="show-hide">
+                                                        <div id="part" class="show-hide">
                                                             <div class="form-group">
                                                                 <label>
                                                                     الاسم
@@ -450,6 +450,13 @@
                                                                 </label>
                                                                 <input type="tel" class="form-control"
                                                                 placeholder="رقم الجوال يجب ان يكون 11 رقم"  id="visiblePhoneInput2" />
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>
+                                                                   المبلغ المدفوع حاليا
+                                                                </label>
+                                                                <input type="number" class="form-control"
+                                                                placeholder="المبلغ المدفوع حاليا"  id="visiblePartInput" />
                                                             </div>
                                                         </div>
                                                         <!-- /Form-group -->
@@ -476,6 +483,7 @@
                                                             <!-- Hidden Inputs to Store Data -->
                                                             <input type="hidden" name="name" id="nameInput">
                                                             <input type="hidden" name="phone" id="phoneInput">
+                                                            <input type="hidden" name="partamount" id="partInput">
                                                             <input type="hidden" name="trip_id" value="<%= Data.trip_id%>">
                                                             <input type="hidden" name="date" value="<%=Data.trip_date%>">
                                                             <input type="hidden" name="station_from" value="<%=Data.trip_from%>">
@@ -701,7 +709,9 @@
     
         //hidden inputs
         const visibleNameInput = document.getElementById("visibleNameInput");
+        const visiblePartInput = document.getElementById("visiblePartInput");
         const hiddenNameInput = document.getElementById("nameInput");
+        const hiddenPartInput = document.getElementById("partInput");
         const visiblePhoneInput = document.getElementById("visiblePhoneInput") ;
         const hiddenphoneInput = document.getElementById("phoneInput") ;
         const hiddenvoucherInput = document.getElementById("voucherInput") ;
@@ -767,7 +777,7 @@
      //name
     visibleNameInput.addEventListener("input", () => {
         let method = getSelectedPaymentMethod() ;
-        if(method == 'visa') {
+        if(method == 'pend') {
             hiddenNameInput.value = visibleNameInput.value;
             validateInputs() ;
         }
@@ -777,9 +787,17 @@
     
      visibleNameInput2.addEventListener("input", () => {
         let method = getSelectedPaymentMethod() ;
-        if(method == 'VFcash') {
+        if(method == 'part') {
           hiddenNameInput.value = visibleNameInput2.value;
           validateInputs() ;
+        }
+         
+     });
+
+      visiblePartInput.addEventListener("input", () => {
+        let method = getSelectedPaymentMethod() ;
+        if(method == 'part') {
+          hiddenPartInput.value = visiblePartInput.value;
         }
          
      });
@@ -796,7 +814,7 @@
       //phone
       visiblePhoneInput.addEventListener("input", () => {
         let method = getSelectedPaymentMethod() ;
-        if(method == 'visa') {
+        if(method == 'pend') {
           hiddenphoneInput.value = visiblePhoneInput.value;
           validateInputs() ;
         }
@@ -804,7 +822,7 @@
     
      visiblePhoneInput2.addEventListener("input", () => {
         let method = getSelectedPaymentMethod() ;
-        if(method == 'VFcash') {
+        if(method == 'part') {
           hiddenphoneInput.value = visiblePhoneInput2.value;
           validateInputs() ;
         }
@@ -821,12 +839,13 @@
      // On page load, set hidden inputs based on selected payment method
      window.addEventListener('load', () => {
         let method = getSelectedPaymentMethod();
-        if (method == 'visa') {
+        if (method == 'pend') {
             hiddenNameInput.value = visibleNameInput.value;
             hiddenphoneInput.value = visiblePhoneInput.value;
-        } else if (method == 'VFcash') {
+        } else if (method == 'part') {
             hiddenNameInput.value = visibleNameInput2.value;
             hiddenphoneInput.value = visiblePhoneInput2.value;
+            hiddenPartInput.value = visiblePartInput.value;
         } else if (method == 'cash') {
             hiddenNameInput.value = visibleNameInput3.value;
             hiddenphoneInput.value = visiblePhoneInput3.value;
@@ -1350,22 +1369,22 @@
                                                                 <div class="checkH">
                                                                     <div class="radio">
                                                                    
-                                                                        <!-- <label>
+                                                                        <label>
                                                                             <input type="radio" class="action" name="action"
-                                                                                value="visa" />
-                                                                            <span><img src="assets/images/visa.svg"
+                                                                                value="pend" />
+                                                                            <span><img src="assets/images/pend.svg"
                                                                                     alt="#" /></span>
-                                                                        </label> -->
+                                                                        </label>
                                                                         
                                                                     </div>
-                                                                    <!-- <div class="radio">
+                                                                    <div class="radio">
                                                                       
                                                                         <label>
                                                                             <input type="radio" class="action" name="action"
-                                                                                value="VFcash" />
-                                                                            <span><img src="assets/images/mobile.png"
+                                                                                value="part" />
+                                                                            <span><img src="assets/images/part.svg"
                                                                                     alt="#" /></span>
-                                                                        </label> -->
+                                                                        </label>
                                                                       
                                                                     </div>
                                                                     <div class="radio">
@@ -1383,7 +1402,7 @@
                                                             <!-- /Form-group -->
         
                                                             <!-- Form-group -->
-                                                            <div id="visa" class="show-hide">
+                                                            <div id="pend" class="show-hide">
                                                                 <div class="form-group">
                                                                     <label>
                                                                         الاسم
@@ -1402,7 +1421,7 @@
                                                             <!-- /Form-group -->
         
                                                             <!-- Form-group -->
-                                                            <div id="VFcash" class="show-hide">
+                                                            <div id="part" class="show-hide">
                                                                 <div class="form-group">
                                                                     <label>
                                                                         الاسم
@@ -1416,6 +1435,13 @@
                                                                     </label>
                                                                     <input type="tel" class="form-control"
                                                                     placeholder="رقم الجوال يجب ان يكون 11 رقم"  id="visiblePhoneInput2" />
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>
+                                                                       المبلغ المدفوع حاليا
+                                                                    </label>
+                                                                    <input type="number" class="form-control"
+                                                                    placeholder="ادخل المبلغ المدفوع حاليا"  id="visiblePartInput" />
                                                                 </div>
                                                             </div>
                                                             <!-- /Form-group -->
@@ -1442,6 +1468,7 @@
                                                                 <!-- Hidden Inputs to Store Data -->
                                                                 <input type="hidden" name="name" id="nameInput">
                                                                 <input type="hidden" name="phone" id="phoneInput">
+                                                                <input type="hidden" name="partamount" id="partInput">
                                                                 <input type="hidden" name="trip_id" value="<%= Data.trip_id%>">
                                                                 <input type="hidden" name="date" value="<%=Data.trip_date%>">
                                                                 <input type="hidden" name="station_from" value="<%=Data.trip_from%>">
@@ -1452,9 +1479,9 @@
                                                                 <input type="hidden" name="arrive" value="<%=Data.trip_arrive%>">
                                                                 <input type="hidden" name="voucher" id="voucherInput">
                                                                 <input type="hidden" name="chairs" id="chairsInput">
-                                                                <input type="hidden" name="chairsQTY" value="<%=Data.chairsNumber%>"
+                                                                <input type="hidden" name="chairsQTY" value="<%=Data.chairsNumber%>">
                                                             
-                                                                <!-- Form-group -->
+                                                               
                                                                 <div class="form-group">
                                                                     <button type="submit" class="btn" id="payButton" disabled>
                                                                         <span>دفع</span>
@@ -1679,7 +1706,9 @@
             
             //hidden inputs
             const visibleNameInput = document.getElementById("visibleNameInput");
+            const visiblePartInput = document.getElementById("visiblePartInput");
             const hiddenNameInput = document.getElementById("nameInput");
+             const hiddenPartInput = document.getElementById("partInput");
             const visiblePhoneInput = document.getElementById("visiblePhoneInput") ;
             const hiddenphoneInput = document.getElementById("phoneInput") ;
             const hiddenvoucherInput = document.getElementById("voucherInput") ;
@@ -1741,7 +1770,7 @@
          //name
         visibleNameInput.addEventListener("input", () => {
             let method = getSelectedPaymentMethod() ;
-            if(method == 'visa') {
+            if(method == 'pend') {
                 hiddenNameInput.value = visibleNameInput.value;
                 validateInputs() ;
             }
@@ -1751,9 +1780,17 @@
         
          visibleNameInput2.addEventListener("input", () => {
             let method = getSelectedPaymentMethod() ;
-            if(method == 'VFcash') {
+            if(method == 'part') {
               hiddenNameInput.value = visibleNameInput2.value;
               validateInputs() ;
+            }
+             
+         });
+
+         visiblePartInput.addEventListener("input", () => {
+            let method = getSelectedPaymentMethod() ;
+            if(method == 'part') {
+              hiddenPartInput.value = visiblePartInput.value;
             }
              
          });
@@ -1770,7 +1807,7 @@
           //phone
           visiblePhoneInput.addEventListener("input", () => {
             let method = getSelectedPaymentMethod() ;
-            if(method == 'visa') {
+            if(method == 'pend') {
               hiddenphoneInput.value = visiblePhoneInput.value;
               validateInputs() ;
             }
@@ -1778,7 +1815,7 @@
         
          visiblePhoneInput2.addEventListener("input", () => {
             let method = getSelectedPaymentMethod() ;
-            if(method == 'VFcash') {
+            if(method == 'part') {
               hiddenphoneInput.value = visiblePhoneInput2.value;
               validateInputs() ;
             }
@@ -1795,12 +1832,13 @@
          // On page load, set hidden inputs based on selected payment method
          window.addEventListener('load', () => {
             let method = getSelectedPaymentMethod();
-            if (method == 'visa') {
+            if (method == 'pend') {
                 hiddenNameInput.value = visibleNameInput.value;
                 hiddenphoneInput.value = visiblePhoneInput.value;
-            } else if (method == 'VFcash') {
+            } else if (method == 'part') {
                 hiddenNameInput.value = visibleNameInput2.value;
                 hiddenphoneInput.value = visiblePhoneInput2.value;
+                hiddenPartInput.value = visiblePartInput.value;
             } else if (method == 'cash') {
                 hiddenNameInput.value = visibleNameInput3.value;
                 hiddenphoneInput.value = visiblePhoneInput3.value;

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تنبيه - موعد الرحلة</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* إعدادات المتغيرات للألوان لسهولة التعديل */
+        :root {
+            --primary-color: #e74c3c; /* لون أحمر هادئ للتحذير */
+            --secondary-color: #2c3e50; /* لون نص داكن */
+            --bg-color: #f4f7f6; /* لون خلفية الصفحة */
+            --card-bg: #ffffff;
+            --text-color: #555555;
+            --btn-hover: #c0392b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); /* ظل ناعم */
+            text-align: center;
+            max-width: 450px;
+            width: 100%;
+            border-top: 5px solid var(--primary-color); /* شريط علوي جمالي */
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* تنسيق الأيقونة */
+        .icon-wrapper {
+            background-color: #fcebea; /* خلفية باهتة للأيقونة */
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px auto;
+        }
+
+        .icon-wrapper svg {
+            width: 40px;
+            height: 40px;
+            fill: var(--primary-color);
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: var(--text-color);
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+
+        /* تأثير ظهور بسيط */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="icon-wrapper">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM12.5 7H11V13L16.25 16.15L17 14.92L12.5 12.25V7Z"/>
+            </svg>
+        </div>
+
+        <h1>عفواً، لا يمكن التعديل</h1>
+        <p>
+            لقد مر أكثر من نصف ساعة على موعد انطلاق هذه الرحلة. <br>
+            وفقاً لسياسة الحجز، لا يمكنك إجراء أي تعديلات على التذكرة في الوقت الحالي.
+        </p>
+
+        <a href="#" class="btn" onclick="window.history.back()">العودة للصفحة السابقة</a>
+    </div>
+
+</body>
+</html>

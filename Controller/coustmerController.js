@@ -1,4 +1,6 @@
 import prisma from "../prisma/prisma.js";
+import { DateTime } from "luxon";
+import {generateCustomerReportEXCEL} from "../util/service/coustmerprint.js";
 
 export const GetCoustmerEditForm = async (req, res, next) => {
   try {
@@ -258,6 +260,7 @@ export const CoustmerTicket = async (req, res, next) => {
 
 export const EditCoustmerTicketForm = async (req, res, next) => {
   try {
+    const { user } = req;
     let CancelPermetion = req.user.role.includes("Cancel");
     let BookPermetion = req.user.role.includes("Book");
     const { ticketid } = req.params;
@@ -269,8 +272,21 @@ export const EditCoustmerTicketForm = async (req, res, next) => {
         cancelReason: true,
         settledprice: true,
         refundAmount: true,
+        trip_date: true,
+        takeoff: true,
       },
     });
+    if (!user.role.includes("Admin")) {
+      const tripTime = DateTime.fromFormat(
+        `${ticket.trip_date} ${ticket.takeoff}`,
+        "yyyy-MM-dd h:mm a",
+        { zone: "Africa/Cairo" }
+      );
+
+      const isExpired =
+        DateTime.now().setZone("Africa/Cairo") > tripTime.plus({ minutes: 30 });
+        if(isExpired) return res.render("expireEditTicket");
+    }
 
     res.render("EditCoustmerTicket", {
       ticket,
@@ -405,3 +421,68 @@ export const EditCoustmerTicket = async (req, res, next) => {
     next(error);
   }
 };
+
+export const printAllCoustmers = async (req, res, next) => {
+  try{
+    const coustmers = await prisma.coustmer.findMany({
+      include: {
+        tickets: {
+          where: {
+            status: {
+              not: "Cancelled",
+            },
+          },
+        },
+      },
+    });
+
+    const coustmerMapped = await Promise.all(
+      coustmers.map(async (coustmer) => {
+        let CancelledTickets = 0;
+        let numberTickets = 0;
+        let numberSeats = 0;
+        let money = 0;
+
+        const CANCELLEDTickets = await prisma.coustmer.findUnique({
+          where: { id: coustmer.id },
+          include: { tickets: { where: { status: "Cancelled" } } },
+        });
+
+        CancelledTickets = CANCELLEDTickets.tickets.length;
+
+        for (let Coustmer of coustmer.tickets) {
+          if (Coustmer.Back_trip_id && Coustmer.Back_trip_id.length > 0) {
+            numberTickets += 2;
+          } else {
+            numberTickets++;
+          }
+
+          numberSeats =
+            numberSeats +
+            Coustmer.seatsCounter +
+            (Coustmer.Back_seatsCounter || 0);
+        }
+
+        coustmer.tickets.forEach((ticket) => {
+          money += ticket.price;
+        });
+
+        return {
+          name: coustmer.name,
+          phone: coustmer.phone,
+          tickets: numberTickets,
+          seats: numberSeats,
+          price: money,
+          cancel: CancelledTickets,
+        };
+      })
+    );
+
+    const sortedbyPrice = coustmerMapped.sort((a, b) => b.price - a.price);
+    generateCustomerReportEXCEL(sortedbyPrice, "تقرير العملاء", res);
+    
+  }
+  catch(error){
+    next(error);
+  }
+}
