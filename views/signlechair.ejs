@@ -17,6 +17,92 @@
         <link href="assets/css/style.css" rel="stylesheet" type="text/css" />
         <!-- <link href="assets/css/style-en.css" rel="stylesheet" type="text/css" /> -->
         <link href="assets/css/mobile.css" rel="stylesheet" type="text/css" />
+
+       <style>
+    .checkH {
+        display: flex;
+        flex-wrap: wrap; 
+        gap: 15px; 
+        margin-bottom: 25px; 
+    }
+
+    .checkH .radio {
+        flex: 1 1 auto; 
+        min-width: 200px; 
+    }
+
+    .checkH .radio input[type="radio"].action {
+        display: none;
+    }
+
+    /* * تنسيق الـ label (الزر) - (الحالة غير المختارة) 
+     */
+    .checkH .radio label {
+        display: flex; 
+        align-items: center;
+        justify-content: center;
+        padding: 15px 20px;
+        min-height: 70px; 
+        border: 2px solid #007bff; 
+        border-radius: 8px;
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.3s ease;
+        background-color: #ffffff; 
+        
+        /* <<< الجديد: إزالة الظل والإطار */
+        outline: none;
+        box-shadow: none;
+    }
+    
+    /* * تنسيق النص (Span) - (الحالة غير المختارة) 
+     */
+    .checkH .radio label span {
+        font-size: 1.15rem;   
+        font-weight: 600;    
+        color: #007bff;      
+        transition: color 0.3s ease;
+    }
+
+    /* * تأثير عند تمرير الماوس (Hover) على *غير المختار* */
+    .checkH .radio label:not(:has(input[type="radio"].action:checked)):hover {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    
+    .checkH .radio label:not(:has(input[type="radio"].action:checked)):hover span {
+        color: #ffffff;
+    }
+
+    /* * --- حالة الاختيار (Selected State) ---
+     */
+    
+    /* تنسيق الزر (الـ label) عند اختياره */
+    .checkH .radio label:has(input[type="radio"].action:checked) {
+        background-color: #007bff; 
+        border-color: #007bff;   
+        
+        /* <<< الجديد: إزالة الظل والإطار عند الاختيار */
+        outline: none;
+        box-shadow: none;
+    }
+    
+    /* تنسيق النص داخل الزر (الـ span) عند اختياره */
+    .checkH .radio label:has(input[type="radio"].action:checked) span {
+        color: #ffffff; 
+    }
+
+    /* * <<< هذا هو أهم جزء: 
+     * نستهدف الـ label عندما يكون الـ input الذي بداخله في حالة focus 
+     * (وهذا ما يحدث عند الاختيار أو التنقل بـ "Tab")
+     */
+    .checkH .radio label:has(input[type="radio"].action:focus),
+    .checkH .radio label:focus,
+    .checkH .radio label:active {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+</style>
     </head>
     
     <body>
@@ -385,31 +471,25 @@
                                                                 <div class="radio">
                                                                 
                                                                     <label>
-                                                                        <input type="radio" class="action" name="action"
-                                                                            value="pend" />
-                                                                        <span><img src="assets/images/pend.svg"
-                                                                                alt="#" /></span>
-                                                                    </label>
+                                                                    <input type="radio" class="action" name="action" value="pend" />
+                                                                    <span>تحصيل مع السواق</span>
+                                                                </label>
                                                                     
                                                                 </div>
                                                                 <div class="radio">
                                                                    
-                                                                    <label>
-                                                                        <input type="radio" class="action" name="action"
-                                                                            value="part" />
-                                                                        <span><img src="assets/images/part.svg"
-                                                                                alt="#" /></span>
-                                                                    </label>
-                                                                  
+                                                                                <label>
+                                                        <input type="radio" class="action" name="action" value="part" />
+                                                        <span>استلام جزء من المال</span>
+                                                    </label>
+                                                                            
                                                                 </div>
                                                                 <div class="radio">
                                                                    
                                                                     <label>
-                                                                        <input type="radio" class="action" name="action"
-                                                                            value="cash" />
-                                                                        <span><img src="assets/images/cashA.png"
-                                                                                alt="#" /></span>
-                                                                    </label>
+                                                    <input type="radio" class="action" name="action" value="cash" />
+                                                    <span>استلام المال بالكامل</span>
+                                                </label>
                                                                     
                                                                 </div>
                                                             </div>
@@ -1363,106 +1443,100 @@
                                                                 برجاء اختيار وسيلة الدفع المناسبة لك , برجاء الضغط علي ايقونة الدفع
                                                             </h2>
                                                         </div>
-                                                        <form id="paymentForm" action="/payment" method="POST">
-                                                            <!-- Form-group -->
-                                                            <div class="form-group">
-                                                                <div class="checkH">
-                                                                    <div class="radio">
+                                                       <form id="paymentForm" action="/payment" method="POST">
+                                                        <!-- Form-group -->
+                                                        <div class="form-group">
+                                                            <div class="checkH">
+                                                                <div class="radio">
+                                                                
+                                                                    <label>
+                                                                    <input type="radio" class="action" name="action" value="pend" />
+                                                                    <span>تحصيل مع السواق</span>
+                                                                </label>
+                                                                    
+                                                                </div>
+                                                                <div class="radio">
                                                                    
-                                                                        <label>
-                                                                            <input type="radio" class="action" name="action"
-                                                                                value="pend" />
-                                                                            <span><img src="assets/images/pend.svg"
-                                                                                    alt="#" /></span>
-                                                                        </label>
-                                                                        
-                                                                    </div>
-                                                                    <div class="radio">
-                                                                      
-                                                                        <label>
-                                                                            <input type="radio" class="action" name="action"
-                                                                                value="part" />
-                                                                            <span><img src="assets/images/part.svg"
-                                                                                    alt="#" /></span>
-                                                                        </label>
-                                                                      
-                                                                    </div>
-                                                                    <div class="radio">
-                                                                      
-                                                                        <label>
-                                                                            <input type="radio" class="action" name="action"
-                                                                                value="cash" />
-                                                                            <span><img src="assets/images/cashA.png"
-                                                                                    alt="#" /></span>
-                                                                        </label>
-                                                                        
-                                                                    </div>
+                                                                                <label>
+                                                        <input type="radio" class="action" name="action" value="part" />
+                                                        <span>استلام جزء من المال</span>
+                                                    </label>
+                                                                            
+                                                                </div>
+                                                                <div class="radio">
+                                                                   
+                                                                    <label>
+                                                    <input type="radio" class="action" name="action" value="cash" />
+                                                    <span>استلام المال بالكامل</span>
+                                                </label>
+                                                                    
                                                                 </div>
                                                             </div>
-                                                            <!-- /Form-group -->
-        
-                                                            <!-- Form-group -->
-                                                            <div id="pend" class="show-hide">
-                                                                <div class="form-group">
-                                                                    <label>
-                                                                        الاسم
-                                                                    </label>
-                                                                    <input type="text" class="form-control"
-                                                                        placeholder="الاسم ثلاثي علي الاقل" id="visibleNameInput" />
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label>
-                                                                        رقم الجوال
-                                                                    </label>
-                                                                    <input type="tel" class="form-control"
-                                                                        placeholder="رقم الجوال يجب ان يكون 11 رقم" id="visiblePhoneInput"/>
-                                                                </div>
+                                                        </div>
+                                                        <!-- /Form-group -->
+    
+                                                        <!-- Form-group -->
+                                                        <div id="pend" class="show-hide">
+                                                            <div class="form-group">
+                                                                <label>
+                                                                    الاسم
+                                                                </label>
+                                                                <input type="text" class="form-control"
+                                                                    placeholder="الاسم ثلاثي علي الاقل" id="visibleNameInput" />
                                                             </div>
-                                                            <!-- /Form-group -->
-        
-                                                            <!-- Form-group -->
-                                                            <div id="part" class="show-hide">
-                                                                <div class="form-group">
-                                                                    <label>
-                                                                        الاسم
-                                                                    </label>
-                                                                    <input type="text" class="form-control"
-                                                                    placeholder="الاسم ثلاثي علي الاقل" id="visibleNameInput2" />
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label>
-                                                                        رقم الجوال
-                                                                    </label>
-                                                                    <input type="tel" class="form-control"
-                                                                    placeholder="رقم الجوال يجب ان يكون 11 رقم"  id="visiblePhoneInput2" />
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label>
-                                                                       المبلغ المدفوع حاليا
-                                                                    </label>
-                                                                    <input type="number" class="form-control"
-                                                                    placeholder="ادخل المبلغ المدفوع حاليا"  id="visiblePartInput" />
-                                                                </div>
+                                                            <div class="form-group">
+                                                                <label>
+                                                                    رقم الجوال
+                                                                </label>
+                                                                <input type="tel" class="form-control"
+                                                                    placeholder="رقم الجوال يجب ان يكون 11 رقم" id="visiblePhoneInput"/>
                                                             </div>
-                                                            <!-- /Form-group -->
-        
-                                                            <!-- Form-group -->
-                                                            <div id="cash" class="show-hide">
-                                                                <div class="form-group">
-                                                                    <label>
-                                                                        الاسم
-                                                                    </label>
-                                                                    <input type="text" class="form-control"
-                                                                    placeholder="الاسم ثلاثي علي الاقل"  id="visibleNameInput3" />
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label>
-                                                                        رقم الجوال
-                                                                    </label>
-                                                                    <input type="tel" class="form-control"
-                                                                    placeholder="رقم الجوال يجب ان يكون 11 رقم"  id="visiblePhoneInput3" />
-                                                                </div>
+                                                        </div>
+                                                        <!-- /Form-group -->
+    
+                                                        <!-- Form-group -->
+                                                        <div id="part" class="show-hide">
+                                                            <div class="form-group">
+                                                                <label>
+                                                                    الاسم
+                                                                </label>
+                                                                <input type="text" class="form-control"
+                                                                placeholder="الاسم ثلاثي علي الاقل" id="visibleNameInput2" />
                                                             </div>
+                                                            <div class="form-group">
+                                                                <label>
+                                                                    رقم الجوال
+                                                                </label>
+                                                                <input type="tel" class="form-control"
+                                                                placeholder="رقم الجوال يجب ان يكون 11 رقم"  id="visiblePhoneInput2" />
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>
+                                                                   المبلغ المدفوع حاليا
+                                                                </label>
+                                                                <input type="number" class="form-control"
+                                                                placeholder="المبلغ المدفوع حاليا"  id="visiblePartInput" />
+                                                            </div>
+                                                        </div>
+                                                        <!-- /Form-group -->
+    
+                                                        <!-- Form-group -->
+                                                        <div id="cash" class="show-hide">
+                                                            <div class="form-group">
+                                                                <label>
+                                                                    الاسم
+                                                                </label>
+                                                                <input type="text" class="form-control"
+                                                                placeholder="الاسم ثلاثي علي الاقل"  id="visibleNameInput3" />
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>
+                                                                    رقم الجوال
+                                                                </label>
+                                                                <input type="tel" class="form-control"
+                                                                placeholder="رقم الجوال يجب ان يكون 11 رقم"  id="visiblePhoneInput3" />
+                                                            </div>
+                                                        </div>
                                                             <!-- /Form-group -->
                                                             <form id="paymentForm" action="/payment" method="POST">
                                                                 <!-- Hidden Inputs to Store Data -->
