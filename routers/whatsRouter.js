@@ -1,6 +1,6 @@
 import express from "express"
 const router = express.Router();
-import { viewWhats , EditWhats , Editwhatsform , viewAds , sendBroadcast } from "../Controller/whatsController.js";
+import { viewWhats , EditWhats  , viewAds , sendBroadcast , Editwhatsform } from "../Controller/whatsController.js";
 import {authMiddleware} from "../middleware/Authmiddleware.js"
 
 
