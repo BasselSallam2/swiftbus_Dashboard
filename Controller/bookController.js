@@ -262,17 +262,25 @@ const DoubleCashpayment = async (PaymentData) => {
 كراسي الذهاب: ${NewTicket.seats}
 كراسي العودة: ${NewTicket.Backseats}
 
+
+
+
 تفاصيل رحلة الذهاب:
 محطة الركوب ${firstStation1?.Arabicname} الساعه${TAKEOFF1} بتاريخ ${date1}
 محطة الوصول ${secondStation1?.Arabicname}  الساعه ${ARRIVE1} 
 
 عنوان محطة الركوب: ${firstStation1?.address}
-
+لوكيشن محطة الركوب: 
+(${firstStation1?.location})
 
 تفاصيل رحلة العودة:
 محطة الركوب ${firstStation2?.Arabicname} الساعه${TAKEOFF2} بتاريخ ${date2}
 محطة الوصول ${secondStation2?.Arabicname}  الساعه ${ARRIVE2}
-`,
+
+
+
+برجاء الاحتفاظ بالتذكرة: 
+(https://www.swiftbusegypt.com/ticket?id=${NewTicket.pay_id})`,
     };
 
     const whatsappMSG = await fetch(
@@ -514,7 +522,6 @@ const Cashpayment = async (PaymentData) => {
     const ARRIVE = `${arrive.split(" ")[0]} ${ARRIVETYPE}`;
 
     const whats = await prisma.whatsapp.findFirst();
-    console.log("CLIENT" , whats.client);
 
     const data = {
       client_id: `${whats.client}`,
@@ -533,8 +540,12 @@ const Cashpayment = async (PaymentData) => {
 محطة الركوب ${firstStation?.Arabicname} الساعه${TAKEOFF} بتاريخ ${date}
 محطة الوصول ${secondStation?.Arabicname}  الساعه ${ARRIVE} 
 
-عنوان محطة الركوب: ${firstStation?.address} `
+عنوان محطة الركوب: ${firstStation?.address} 
+لوكيشن محطة الركوب: 
+(${firstStation?.location})
 
+برجاء الاحتفاظ بالتذكرة: 
+(https://www.swiftbusegypt.com/ticket?id=${NewTicket.pay_id})`,
     };
 
     const whatsappMSG = await fetch(
@@ -549,94 +560,91 @@ const Cashpayment = async (PaymentData) => {
       }
     );
 
-    const result = await whatsappMSG.json();
-    console.log(result);
+    const msg = {
+      to: "dahabawybus@gmail.com",
+      from: "	bassela.sallam@gmail.com",
+      subject: `🚌 New Cash Single Reservation from an agent (#${NewTicket.ticket_code})`,
+      html: `
+        <div style="font-family:Arial, sans-serif;max-width:600px;margin:auto;background:#f7f7f7;padding:20px;border-radius:10px;">
+          <h2 style="color:#333;">🎟️ New Reservation Received!</h2>
+          <p>You've received a new <strong>cash reservation</strong>. Here are the details:</p>
+          <table style="width:100%;border-collapse:collapse;">
+            <tr>
+              <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Ticket Number:</strong></td>
+              <td style="padding:8px;border-bottom:1px solid #ddd;">#${
+                NewTicket.ticket_code
+              }</td>
+            </tr>
+            <tr>
+              <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Trip ID:</strong></td>
+              <td style="padding:8px;border-bottom:1px solid #ddd;">${trip_id}</td>
+            </tr>
+            <tr>
+              <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Customer name:</strong></td>
+              <td style="padding:8px;border-bottom:1px solid #ddd;">${
+                actualCoustmer.name
+              }</td>
+            </tr>
+            <tr>
+              <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Customer phone:</strong></td>
+              <td style="padding:8px;border-bottom:1px solid #ddd;">${
+                actualCoustmer.phone
+              }</td>
+            </tr>
+            <tr>
+              <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Trip Date:</strong></td>
+              <td style="padding:8px;border-bottom:1px solid #ddd;">${date}</td>
+            </tr>
+            <tr>
+              <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Departure:</strong></td>
+              <td style="padding:8px;border-bottom:1px solid #ddd;">${take_off}</td>
+            </tr>
+            <tr>
+              <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Arrival:</strong></td>
+              <td style="padding:8px;border-bottom:1px solid #ddd;">${arrive}</td>
+            </tr>
+            <tr>
+              <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Route:</strong></td>
+              <td style="padding:8px;border-bottom:1px solid #ddd;">${city_from} → ${city_to}</td>
+            </tr>
+            <tr>
+              <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Stations:</strong></td>
+              <td style="padding:8px;border-bottom:1px solid #ddd;">${station_from} → ${station_to}</td>
+            </tr>
+            <tr>
+              <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Seats Reserved:</strong></td>
+              <td style="padding:8px;border-bottom:1px solid #ddd;">${ReservedCounter} (${chairs})</td>
+            </tr>
+            <tr>
+              <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Voucher:</strong></td>
+              <td style="padding:8px;border-bottom:1px solid #ddd;">${
+                actualvoucher?.code || "None"
+              }</td>
+            </tr>
+            <tr>
+              <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Total Price:</strong></td>
+              <td style="padding:8px;border-bottom:1px solid #ddd;">${price}</td>
+            </tr>
+            <tr>
+              <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Payment Method:</strong></td>
+              <td style="padding:8px;border-bottom:1px solid #ddd;">${paymentmethod}</td>
+            </tr>
+            <tr>
+              <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Agent Name:</strong></td>
+              <td style="padding:8px;border-bottom:1px solid #ddd;">${employeename}</td>
+            </tr>
+          </table>
+          <p style="margin-top:20px;">
+            Please follow up to confirm payment and finalize this reservation.
+          </p>
+          <p style="color:#888;font-size:12px;">
+            This is an automated message from your booking system.
+          </p>
+        </div>
+        `,
+    };
 
-    // const msg = {
-    //   to: "dahabawybus@gmail.com",
-    //   from: "	bassela.sallam@gmail.com",
-    //   subject: `🚌 New Cash Single Reservation from an agent (#${NewTicket.ticket_code})`,
-    //   html: `
-    //     <div style="font-family:Arial, sans-serif;max-width:600px;margin:auto;background:#f7f7f7;padding:20px;border-radius:10px;">
-    //       <h2 style="color:#333;">🎟️ New Reservation Received!</h2>
-    //       <p>You've received a new <strong>cash reservation</strong>. Here are the details:</p>
-    //       <table style="width:100%;border-collapse:collapse;">
-    //         <tr>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Ticket Number:</strong></td>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;">#${
-    //             NewTicket.ticket_code
-    //           }</td>
-    //         </tr>
-    //         <tr>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Trip ID:</strong></td>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;">${trip_id}</td>
-    //         </tr>
-    //         <tr>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Customer name:</strong></td>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;">${
-    //             actualCoustmer.name
-    //           }</td>
-    //         </tr>
-    //         <tr>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Customer phone:</strong></td>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;">${
-    //             actualCoustmer.phone
-    //           }</td>
-    //         </tr>
-    //         <tr>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Trip Date:</strong></td>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;">${date}</td>
-    //         </tr>
-    //         <tr>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Departure:</strong></td>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;">${take_off}</td>
-    //         </tr>
-    //         <tr>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Arrival:</strong></td>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;">${arrive}</td>
-    //         </tr>
-    //         <tr>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Route:</strong></td>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;">${city_from} → ${city_to}</td>
-    //         </tr>
-    //         <tr>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Stations:</strong></td>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;">${station_from} → ${station_to}</td>
-    //         </tr>
-    //         <tr>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Seats Reserved:</strong></td>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;">${ReservedCounter} (${chairs})</td>
-    //         </tr>
-    //         <tr>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Voucher:</strong></td>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;">${
-    //             actualvoucher?.code || "None"
-    //           }</td>
-    //         </tr>
-    //         <tr>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Total Price:</strong></td>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;">${price}</td>
-    //         </tr>
-    //         <tr>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Payment Method:</strong></td>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;">${paymentmethod}</td>
-    //         </tr>
-    //         <tr>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;"><strong>Agent Name:</strong></td>
-    //           <td style="padding:8px;border-bottom:1px solid #ddd;">${employeename}</td>
-    //         </tr>
-    //       </table>
-    //       <p style="margin-top:20px;">
-    //         Please follow up to confirm payment and finalize this reservation.
-    //       </p>
-    //       <p style="color:#888;font-size:12px;">
-    //         This is an automated message from your booking system.
-    //       </p>
-    //     </div>
-    //     `,
-    // };
-
-    // await sgMail.send(msg);
+    await sgMail.send(msg);
   } catch (error) {
     console.log(error);
   }
