@@ -9,7 +9,7 @@ import PDFDocument from "pdfkit";
 import {
   generateTicketTableEXCEl,
   generateTicketTablePDF,
-  generateTicketTablePDFAgent
+  generateTicketTablePDFAgent,
 } from "../util/service/Reservationprint.js";
 import {
   ticketMapper,
@@ -225,8 +225,6 @@ export const PrintReservationPDF = async (req, res, next) => {
       });
     }
 
-    
-
     // التأكد من وجود الحجز والرحلة قبل المتابعة
     if (!reservation || !reservation.Trips) {
       return res.status(404).json({ message: "Reservation not found." });
@@ -268,8 +266,7 @@ export const PrintReservationPDF = async (req, res, next) => {
     const ResultGo = await ticketMapper(Gotickets);
     const ResultBack = await ticketMapperBack(Backtickets);
 
-    if(user.role.includes("Admin")){
-      
+    if (user.role.includes("Admin")) {
       await generateTicketTablePDF(
         ResultGo,
         ResultBack,
@@ -279,8 +276,10 @@ export const PrintReservationPDF = async (req, res, next) => {
         tripTime,
         res
       );
-    }else{
-      const agentPercentage = reservation.Gotickets[0]?.BookEmployeeID?.percentage || reservation?.Backtickets[0]?.BookEmployeeID.percentage ;
+    } else {
+      const agentPercentage =
+        reservation.Gotickets[0]?.BookEmployeeID?.percentage ||
+        reservation?.Backtickets[0]?.BookEmployeeID.percentage;
       await generateTicketTablePDFAgent(
         ResultGo,
         ResultBack,
@@ -293,7 +292,6 @@ export const PrintReservationPDF = async (req, res, next) => {
       );
     }
   } catch (error) {
-
     next(error);
   }
 };
@@ -341,34 +339,27 @@ export const sendDriverPhone = async (req, res, next) => {
     for (let i = 0; i < customersPhone.length; i++) {
       let data = {
         client_id: `${whatsapp.client}`,
-        mobile: `+2${customersPhone[i]}`,
+        mobile: `2${customersPhone[i]}@s.whatsapp.net`,
         text: `نشكركم علي الحجز معانا شركة سويفت باص
  ${driverPhone} رقم السائق
 الاتصال فقط في حالة تأخره عن الميعاد
-رحلة سعيدة وآمنه`
+رحلة سعيدة وآمنه`,
       };
 
-      const whatsappMSG = await fetch(
-        "https://v2.whats360.live/api/user/v2/send_message",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${whatsapp.token}`,
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const encodedMsg = encodeURIComponent(data.text);
+
+      const url = `https://crm.whats360.live/api/v1/send-text?token=${whatsapp.token}&instance_id=${data.client_id}&jid=${data.mobile}&msg=${encodedMsg}`;
+      const whatsappMSG = await fetch(url, {
+        method: "GET",
+      });
     }
 
     res.status(200).json({ message: "Driver phone sent successfully." });
-    
   } catch (error) {
-   res.staus(500).json({ message: "Failed to send driver phone." });
+    res.staus(500).json({ message: "Failed to send driver phone." });
     next(error);
   }
 };
-
 
 export const sendMessage = async (req, res, next) => {
   const { ID } = req.params;
@@ -411,27 +402,22 @@ export const sendMessage = async (req, res, next) => {
     for (let i = 0; i < customersPhone.length; i++) {
       let data = {
         client_id: `${whatsapp.client}`,
-        mobile: `+2${customersPhone[i]}`,
-        text: message
+        mobile: `2${customersPhone[i]}@s.whatsapp.net`,
+        text: message,
       };
 
-      const whatsappMSG = await fetch(
-        "https://v2.whats360.live/api/user/v2/send_message",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${whatsapp.token}`,
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const encodedMsg = encodeURIComponent(data.text);
+
+      const url = `https://crm.whats360.live/api/v1/send-text?token=${whatsapp.token}&instance_id=${data.client_id}&jid=${data.mobile}&msg=${encodedMsg}`;
+
+      const whatsappMSG = await fetch(url, {
+        method: "GET",
+      });
     }
 
     res.status(200).json({ message: "Message sent successfully." });
-    
   } catch (error) {
-   res.staus(500).json({ message: "Failed to send driver phone." });
+    res.staus(500).json({ message: "Failed to send driver phone." });
     next(error);
   }
 };
