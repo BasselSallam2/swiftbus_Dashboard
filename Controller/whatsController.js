@@ -85,7 +85,7 @@ export const sendBroadcast = async (req, res, next) => {
 
           const encodedMsg = encodeURIComponent(data.text);
 
-          const url = `https://crm.whats360.live/api/v1/send-text?token=${whatsapp.token}&instance_id=${data.client_id}&jid=${data.mobile}&msg=${encodedMsg}`;
+          const url = `https://pro.whats360.live/api/v1/send-text?token=${whatsapp.token}&instance_id=${data.client_id}&jid=${data.mobile}&msg=${encodedMsg}`;
           
           const whatsappMSG = await fetch(url, {
             method: "GET",

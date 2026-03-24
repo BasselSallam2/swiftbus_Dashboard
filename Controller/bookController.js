@@ -287,7 +287,7 @@ https://www.swiftbusegypt.com/ticket?id=${NewTicket.pay_id}
 
     const encodedMsg = encodeURIComponent(data.text);
 
-    const url = `https://crm.whats360.live/api/v1/send-text?token=${whatsapp.token}&instance_id=${data.client_id}&jid=${data.mobile}&msg=${encodedMsg}`;
+    const url = `https://pro.whats360.live/api/v1/send-text?token=${whatsapp.token}&instance_id=${data.client_id}&jid=${data.mobile}&msg=${encodedMsg}`;
 
     const whatsappMSG = await fetch(url, {
       method: "GET",
@@ -551,7 +551,7 @@ https://www.swiftbusegypt.com/ticket?id=${NewTicket.pay_id}
 
     const encodedMsg = encodeURIComponent(data.text);
 
-    const url = `https://crm.whats360.live/api/v1/send-text?token=${whats.token}&instance_id=${data.client_id}&jid=${data.mobile}&msg=${encodedMsg}`;
+    const url = `https://pro.whats360.live/api/v1/send-text?token=${whats.token}&instance_id=${data.client_id}&jid=${data.mobile}&msg=${encodedMsg}`;
 
     console.log(url);
     const whatsappMSG = await fetch(url, {
