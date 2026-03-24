@@ -804,6 +804,11 @@ export const SelectSingleTrip = async (req, res, next) => {
   try {
     //const { trip_id, trip_date, bus_type, trip_day, trip_takeoff, trip_from, trip_to, trip_fare, trip_specialfare , city_from, city_to, payment , chairsNumber , trip_arrive } = req.body;
     const Data = req.body;
+    const currentUser = req.user ;
+    let isAdmin = false;
+    if(currentUser.role.includes("Admin")){
+      isAdmin = true;
+    }
 
     const [month, day, year] = Data.trip_date.split("/");
     const formattedDate = new Date(`${year}-${month}-${day}`)
@@ -835,6 +840,7 @@ export const SelectSingleTrip = async (req, res, next) => {
       tempReservation,
       footerinfo,
       ArabicFrontpage,
+      isAdmin,
     });
   } catch (error) {
     console.log(error);
@@ -846,6 +852,11 @@ export const SelectdoubleTrip = async (req, res, next) => {
   try {
     //const { trip_id, trip_date, bus_type, trip_day, trip_takeoff, trip_from, trip_to, trip_fare, trip_specialfare , city_from, city_to, payment , chairsNumber , trip_arrive , twowaydiscount } = req.body;
     const Data = req.body;
+    const currentUser = req.user ;
+    let isAdmin = false;
+    if(currentUser.role.includes("Admin")){
+      isAdmin = true;
+    }
 
     const [month, day, year] = Data.trip_date1.split("/");
     const formattedDate = new Date(`${year}-${month}-${day}`)
@@ -890,6 +901,7 @@ export const SelectdoubleTrip = async (req, res, next) => {
       tempReservation2,
       ArabicFrontpage,
       footerinfo,
+      isAdmin,
     });
   } catch (error) {
     console.log(error);

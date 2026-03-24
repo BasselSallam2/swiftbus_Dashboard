@@ -468,14 +468,17 @@
                                                         <!-- Form-group -->
                                                         <div class="form-group">
                                                             <div class="checkH">
+                                                                <% if(isAdmin) { %>
                                                                 <div class="radio">
                                                                 
                                                                     <label>
                                                                     <input type="radio" class="action" name="action" value="pend" />
                                                                     <span>تحصيل مع السواق</span>
                                                                 </label>
-                                                                    
+
                                                                 </div>
+                                                                <% } %>
+                                                                <% if(isAdmin) { %>
                                                                 <div class="radio">
                                                                    
                                                                                 <label>
@@ -484,6 +487,7 @@
                                                     </label>
                                                                             
                                                                 </div>
+                                                                <% } %>
                                                                 <div class="radio">
                                                                    
                                                                     <label>
@@ -1447,6 +1451,7 @@
                                                         <!-- Form-group -->
                                                         <div class="form-group">
                                                             <div class="checkH">
+                                                                <% if(isAdmin) { %>
                                                                 <div class="radio">
                                                                 
                                                                     <label>
@@ -1455,6 +1460,8 @@
                                                                 </label>
                                                                     
                                                                 </div>
+                                                                <% } %>
+                                                                <% if(isAdmin) { %>
                                                                 <div class="radio">
                                                                    
                                                                                 <label>
@@ -1463,6 +1470,7 @@
                                                     </label>
                                                                             
                                                                 </div>
+                                                                <% } %>
                                                                 <div class="radio">
                                                                    
                                                                     <label>
